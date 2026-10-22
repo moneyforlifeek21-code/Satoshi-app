@@ -19,7 +19,15 @@
     }
 
     body {
-      background-color: #0b0e11;
+      /* SFONDO BLOCKCHAIN TECH SCURO */
+      background-color: #080b10;
+      background-image: 
+        radial-gradient(circle at 50% 30%, rgba(247, 147, 26, 0.08) 0%, transparent 60%),
+        radial-gradient(rgba(247, 147, 26, 0.15) 1px, transparent 1px),
+        linear-gradient(to right, rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+      background-size: 100% 100%, 24px 24px, 40px 40px, 40px 40px;
+      background-position: center, 0 0, 0 0, 0 0;
       color: #ffffff;
       min-height: 100vh;
       display: flex;
@@ -35,10 +43,11 @@
       justify-content: space-between;
       align-items: center;
       padding: 8px 12px;
-      background: rgba(26, 31, 38, 0.8);
-      border: 1px solid #2a313d;
+      background: rgba(18, 24, 34, 0.85);
+      border: 1px solid rgba(247, 147, 26, 0.3);
       border-radius: 14px;
-      backdrop-filter: blur(10px);
+      backdrop-filter: blur(12px);
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
     }
 
     .brand {
@@ -48,6 +57,7 @@
       font-weight: 800;
       font-size: 16px;
       color: #F7931A;
+      text-shadow: 0 0 10px rgba(247, 147, 26, 0.4);
     }
 
     .header-actions {
@@ -56,8 +66,8 @@
     }
 
     .icon-btn {
-      background: #252d3a;
-      border: 1px solid #3a4454;
+      background: #1a2230;
+      border: 1px solid #2e3a4e;
       color: #fff;
       padding: 6px 12px;
       border-radius: 20px;
@@ -92,7 +102,7 @@
       font-size: 42px;
       font-weight: 900;
       color: #F7931A;
-      text-shadow: 0 0 20px rgba(247, 147, 26, 0.3);
+      text-shadow: 0 0 25px rgba(247, 147, 26, 0.4);
       display: flex;
       align-items: center;
       justify-content: center;
@@ -122,7 +132,7 @@
       border-radius: 50%;
       background: radial-gradient(circle at 35% 35%, #ffb84d 0%, #F7931A 50%, #ab5a00 100%);
       border: 6px solid #ffd185;
-      box-shadow: 0 10px 40px rgba(247, 147, 26, 0.4), inset 0 0 15px rgba(0,0,0,0.5);
+      box-shadow: 0 10px 45px rgba(247, 147, 26, 0.45), inset 0 0 15px rgba(0,0,0,0.5);
       display: flex;
       align-items: center;
       justify-content: center;
@@ -139,11 +149,12 @@
     /* ENERGIA E TIMER */
     .energy-container {
       width: 100%;
-      background: #1a1f26;
-      border: 1px solid #2a313d;
+      background: rgba(18, 24, 34, 0.85);
+      border: 1px solid rgba(247, 147, 26, 0.2);
       padding: 14px;
       border-radius: 16px;
       margin-top: 20px;
+      backdrop-filter: blur(8px);
     }
 
     .energy-header {
@@ -157,7 +168,7 @@
     .energy-bar-bg {
       width: 100%;
       height: 12px;
-      background: #0f1318;
+      background: #0b0f14;
       border-radius: 6px;
       overflow: hidden;
     }
@@ -177,12 +188,12 @@
       margin-top: 8px;
     }
 
-    /* MODAL GUIDA "COME FUNZIONA" */
+    /* MODAL GUIDA */
     .modal-overlay {
       position: fixed;
       top: 0; left: 0; right: 0; bottom: 0;
       background: rgba(0,0,0,0.85);
-      backdrop-filter: blur(5px);
+      backdrop-filter: blur(6px);
       display: none;
       justify-content: center;
       align-items: center;
@@ -191,7 +202,7 @@
     }
 
     .modal-card {
-      background: #151a21;
+      background: #121822;
       border: 1px solid #F7931A;
       border-radius: 20px;
       padding: 24px;
@@ -268,9 +279,9 @@
 
     .btn-sub {
       flex: 1;
-      background: #252d3a;
+      background: #1a2230;
       color: #fff;
-      border: 1px solid #3a4454;
+      border: 1px solid #2e3a4e;
       padding: 14px;
       border-radius: 14px;
       font-weight: 700;
@@ -286,8 +297,8 @@
     }
 
     .item-card {
-      background: #1a1f26;
-      border: 1px solid #2a313d;
+      background: rgba(18, 24, 34, 0.85);
+      border: 1px solid #2e3a4e;
       padding: 14px;
       border-radius: 14px;
       display: flex;
@@ -300,8 +311,8 @@
       position: fixed;
       bottom: 0; left: 0; right: 0;
       height: 65px;
-      background: #12161c;
-      border-top: 1px solid #252d3a;
+      background: #0d121a;
+      border-top: 1px solid #1e2838;
       display: flex;
       justify-content: space-around;
       align-items: center;
@@ -329,6 +340,11 @@
   </style>
 </head>
 <body>
+
+  <!-- ELEMENTO AUDIO DI SOTTOFONDO CONTINUO -->
+  <audio id="bg-music" loop preload="auto">
+    <source src="https://actions.google.com/sounds/v1/science_fiction/arcade_game_loop.ogg" type="audio/ogg">
+  </audio>
 
   <!-- BARRA SUPERIORE -->
   <header class="top-header">
@@ -455,7 +471,7 @@
     </div>
     <div class="item-card" style="flex-direction: column; gap: 12px; align-items: stretch;">
       <label style="font-size: 12px; color: #8a94a6;">Indirizzo Bitcoin (BTC / TON)</label>
-      <input type="text" placeholder="Inserisci il tuo indirizzo..." style="background: #12161c; border: 1px solid #2a313d; padding: 12px; border-radius: 10px; color: #fff; font-size: 13px;">
+      <input type="text" placeholder="Inserisci il tuo indirizzo..." style="background: #0d121a; border: 1px solid #2e3a4e; padding: 12px; border-radius: 10px; color: #fff; font-size: 13px;">
       <button class="btn-main">Salva Indirizzo</button>
     </div>
   </main>
@@ -506,6 +522,8 @@
 
     // 3. TAP LOGIC
     function handleTap(e) {
+      startMusicOnFirstInteraction();
+
       if (energy <= 0) {
         if (tg && tg.HapticFeedback) tg.HapticFeedback.notificationOccurred('error');
         return;
@@ -555,9 +573,32 @@
       }
     }, 1000);
 
-    // 5. AUDIO 8-BIT SINTETIZZATO
+    // 5. AUDIO MANAGEMENT (MUSICA DI SOTTOFONDO CONTINUA + EFFETTO TAP)
+    const bgMusic = document.getElementById('bg-music');
     let audioEnabled = true;
+    let musicStarted = false;
     let audioCtx = null;
+
+    function startMusicOnFirstInteraction() {
+      if (!musicStarted && audioEnabled) {
+        bgMusic.play().then(() => {
+          musicStarted = true;
+        }).catch(() => {});
+      }
+    }
+
+    function toggleAudio() {
+      audioEnabled = !audioEnabled;
+      const btn = document.getElementById('sound-btn');
+
+      if (audioEnabled) {
+        btn.innerText = '🔊 Audio';
+        bgMusic.play().then(() => { musicStarted = true; }).catch(() => {});
+      } else {
+        btn.innerText = '🔇 Mute';
+        bgMusic.pause();
+      }
+    }
 
     function getAudioContext() {
       if (!audioCtx) {
@@ -584,13 +625,9 @@
       } catch(e) {}
     }
 
-    function toggleAudio() {
-      audioEnabled = !audioEnabled;
-      document.getElementById('sound-btn').innerText = audioEnabled ? '🔊 Audio' : '🔇 Mute';
-    }
-
     // 6. SHARE MULTI-SOCIAL
     async function shareReferral() {
+      startMusicOnFirstInteraction();
       const shareText = "Unisciti a me su Satoshi Tap e inizia a guadagnare Bitcoin gratis! 🚀";
 
       if (navigator.share) {
@@ -609,6 +646,7 @@
     }
 
     function copyReferral() {
+      startMusicOnFirstInteraction();
       if (navigator.clipboard) {
         navigator.clipboard.writeText(referralLink);
         alert("Link di invito copiato!");
@@ -619,6 +657,7 @@
 
     // 7. GUIDA MODAL CONTROLS
     function openHowTo() {
+      startMusicOnFirstInteraction();
       document.getElementById('guide-modal').style.display = 'flex';
     }
 
@@ -628,12 +667,17 @@
 
     // 8. NAVIGATION
     function switchTab(tabName, element) {
+      startMusicOnFirstInteraction();
       document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
       document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
 
       document.getElementById(`screen-${tabName}`).classList.add('active');
       element.classList.add('active');
     }
+
+    // Avvia l'audio al primo tocco ovunque sullo schermo
+    document.addEventListener('click', startMusicOnFirstInteraction, { once: true });
+    document.addEventListener('touchstart', startMusicOnFirstInteraction, { once: true });
   </script>
 </body>
 </html>
