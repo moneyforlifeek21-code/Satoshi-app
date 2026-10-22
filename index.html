@@ -30,7 +30,7 @@
       overflow-x: hidden;
     }
 
-    /* INTRO ANIMAZIONE / LOGO INITIAL SCREEN */
+    /* INTRO ANIMAZIONE / LOGO INITIAL SCREEN FIX */
     #intro-screen {
       position: fixed;
       top: 0;
@@ -43,7 +43,13 @@
       justify-content: center;
       align-items: center;
       z-index: 9999;
-      transition: opacity 0.6s ease, visibility 0.6s ease;
+      transition: opacity 0.5s ease;
+      cursor: pointer;
+    }
+
+    #intro-screen.fade-out {
+      opacity: 0;
+      pointer-events: none;
     }
 
     .logo-container {
@@ -383,7 +389,7 @@
 </head>
 <body>
 
-  <!-- INTRO INTRODUCING LOGO ANIMATION -->
+  <!-- INTRO INITIAL LOGO SCREEN -->
   <div id="intro-screen">
     <div class="logo-container">
       <div class="btc-logo-img">₿</div>
@@ -565,12 +571,19 @@
     document.getElementById('user-balance').innerText = balance;
     updateEnergyUI();
 
-    // 3. INTRO ANIMATION HIDE
-    setTimeout(() => {
+    // 3. INTRO ANIMATION HIDE (Automatico + Tap per saltare)
+    function hideIntro() {
       const intro = document.getElementById('intro-screen');
-      intro.style.opacity = '0';
-      setTimeout(() => intro.style.display = 'none', 600);
-    }, 2200);
+      if (intro) {
+        intro.classList.add('fade-out');
+        setTimeout(() => {
+          intro.style.display = 'none';
+        }, 500);
+      }
+    }
+
+    setTimeout(hideIntro, 2000);
+    document.getElementById('intro-screen').addEventListener('click', hideIntro);
 
     // 4. TAP LOGIC
     function handleTap(e) {
@@ -623,7 +636,7 @@
       }
     }, 1000);
 
-    // 6. AUDIO 8-BIT SINTETIZZATO (MARIO STYLE BGM + TAP SOUND)
+    // 6. AUDIO 8-BIT SINTETIZZATO
     let audioEnabled = true;
     let audioCtx = null;
 
@@ -642,4 +655,66 @@
         const gain = ctx.createGain();
         osc.type = 'square';
         osc.frequency.setValueAtTime(600, ctx.currentTime);
-        osc.frequency
+        osc.frequency.exponentialRampToValueAtTime(1200, ctx.currentTime + 0.05);
+        gain.gain.setValueAtTime(0.08, ctx.currentTime);
+        gain.gain.linearRampToValueAtTime(0.01, ctx.currentTime + 0.05);
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.start();
+        osc.stop(ctx.currentTime + 0.05);
+      } catch(e) {}
+    }
+
+    function toggleAudio() {
+      audioEnabled = !audioEnabled;
+      document.getElementById('sound-btn').innerText = audioEnabled ? '🔊 Audio' : '🔇 Mute';
+    }
+
+    // 7. SHARE MULTI-SOCIAL
+    async function shareReferral() {
+      const shareText = "Unisciti a me su Satoshi Tap e inizia a guadagnare Bitcoin gratis! 🚀";
+
+      if (navigator.share) {
+        try {
+          await navigator.share({
+            title: 'Satoshi Tap',
+            text: shareText,
+            url: referralLink
+          });
+        } catch(e) {}
+      } else {
+        const url = `https://t.me/share/url?url=${encodeURIComponent(referralLink)}&text=${encodeURIComponent(shareText)}`;
+        if (tg) tg.openTelegramLink(url);
+        else window.open(url, '_blank');
+      }
+    }
+
+    function copyReferral() {
+      if (navigator.clipboard) {
+        navigator.clipboard.writeText(referralLink);
+        alert("Link di invito copiato!");
+      } else {
+        prompt("Copia il tuo link:", referralLink);
+      }
+    }
+
+    // 8. GUIDA MODAL CONTROLS
+    function openHowTo() {
+      document.getElementById('guide-modal').style.display = 'flex';
+    }
+
+    function closeHowTo() {
+      document.getElementById('guide-modal').style.display = 'none';
+    }
+
+    // 9. NAVIGATION
+    function switchTab(tabName, element) {
+      document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+      document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+
+      document.getElementById(`screen-${tabName}`).classList.add('active');
+      element.classList.add('active');
+    }
+  </script>
+</body>
+  </html>
