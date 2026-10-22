@@ -1,386 +1,645 @@
 <!DOCTYPE html>
-<html lang="it" class="dark">
+<html lang="it">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Satoshi Tap - Bitcoin Mini App</title>
-    <!-- Tailwind CSS CDN -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <!-- FontAwesome Icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Telegram WebApp SDK -->
-    <script src="https://telegram.org/js/telegram-web-app.js"></script>
-    <!-- Adsgram SDK -->
-    <script src="https://adsgram.ai/js/adv_engine.js"></script>
-    <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
-    <style>
-        body {
-            font-family: 'Inter', sans-serif;
-            touch-action: manipulation;
-            user-select: none;
-            -webkit-user-select: none;
-        }
-        .coin-btn {
-            transition: transform 0.05s ease;
-        }
-        .coin-btn:active {
-            transform: scale(0.92);
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Satoshi Tap - Bitcoin Miner</title>
+
+  <!-- SDK Telegram Mini App -->
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+
+  <style>
+    /* RESET E TEMA BITCOIN */
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      user-select: none;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      background-color: #0b0e11;
+      color: #ffffff;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 12px 12px 75px 12px;
+      overflow-x: hidden;
+    }
+
+    /* INTRO ANIMAZIONE / LOGO INITIAL SCREEN */
+    #intro-screen {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: #0b0e11;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      z-index: 9999;
+      transition: opacity 0.6s ease, visibility 0.6s ease;
+    }
+
+    .logo-container {
+      position: relative;
+      width: 130px;
+      height: 130px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(247,147,26,0.3) 0%, rgba(11,14,17,1) 70%);
+      animation: pulseGlow 2s infinite ease-in-out;
+    }
+
+    .btc-logo-img {
+      font-size: 70px;
+      animation: spinBounce 2s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+    }
+
+    .intro-title {
+      margin-top: 20px;
+      font-size: 24px;
+      font-weight: 800;
+      color: #F7931A;
+      letter-spacing: 2px;
+    }
+
+    @keyframes pulseGlow {
+      0%, 100% { box-shadow: 0 0 20px rgba(247, 147, 26, 0.2); }
+      50% { box-shadow: 0 0 45px rgba(247, 147, 26, 0.6); }
+    }
+
+    @keyframes spinBounce {
+      0% { transform: scale(0) rotate(-180deg); }
+      60% { transform: scale(1.2) rotate(10deg); }
+      100% { transform: scale(1) rotate(0deg); }
+    }
+
+    /* BARRA SUPERIORE AUDIO & INFO */
+    .top-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 8px 12px;
+      background: rgba(26, 31, 38, 0.8);
+      border: 1px solid #2a313d;
+      border-radius: 14px;
+      backdrop-filter: blur(10px);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-weight: 800;
+      font-size: 16px;
+      color: #F7931A;
+    }
+
+    .header-actions {
+      display: flex;
+      gap: 8px;
+    }
+
+    .icon-btn {
+      background: #252d3a;
+      border: 1px solid #3a4454;
+      color: #fff;
+      padding: 6px 12px;
+      border-radius: 20px;
+      font-size: 14px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    /* SCHERMATE PRINCIPALI */
+    .screen {
+      display: none;
+      flex: 1;
+      flex-direction: column;
+      max-width: 480px;
+      margin: 15px auto 0;
+      width: 100%;
+    }
+
+    .screen.active {
+      display: flex;
+    }
+
+    /* BALANCE DISPLAY */
+    .balance-box {
+      text-align: center;
+      margin: 15px 0 10px;
+    }
+
+    .balance-val {
+      font-size: 42px;
+      font-weight: 900;
+      color: #F7931A;
+      text-shadow: 0 0 20px rgba(247, 147, 26, 0.3);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .balance-label {
+      color: #8a94a6;
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    /* TAP AREA */
+    .tap-area {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      position: relative;
+    }
+
+    .btc-coin-btn {
+      width: 210px;
+      height: 210px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 35% 35%, #ffb84d 0%, #F7931A 50%, #ab5a00 100%);
+      border: 6px solid #ffd185;
+      box-shadow: 0 10px 40px rgba(247, 147, 26, 0.4), inset 0 0 15px rgba(0,0,0,0.5);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 105px;
+      cursor: pointer;
+      transition: transform 0.05s ease;
+      touch-action: manipulation;
+    }
+
+    .btc-coin-btn:active {
+      transform: scale(0.92);
+    }
+
+    /* ENERGIA E TIMER */
+    .energy-container {
+      width: 100%;
+      background: #1a1f26;
+      border: 1px solid #2a313d;
+      padding: 14px;
+      border-radius: 16px;
+      margin-top: 20px;
+    }
+
+    .energy-header {
+      display: flex;
+      justify-content: space-between;
+      font-size: 13px;
+      color: #a0aab8;
+      margin-bottom: 8px;
+    }
+
+    .energy-bar-bg {
+      width: 100%;
+      height: 12px;
+      background: #0f1318;
+      border-radius: 6px;
+      overflow: hidden;
+    }
+
+    .energy-bar-fill {
+      height: 100%;
+      width: 100%;
+      background: linear-gradient(90deg, #F7931A, #ffc875);
+      border-radius: 6px;
+      transition: width 0.2s ease;
+    }
+
+    .timer-info {
+      text-align: center;
+      font-size: 11px;
+      color: #6c788a;
+      margin-top: 8px;
+    }
+
+    /* MODAL GUIDA "COME FUNZIONA" */
+    .modal-overlay {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0,0,0,0.85);
+      backdrop-filter: blur(5px);
+      display: none;
+      justify-content: center;
+      align-items: center;
+      z-index: 10000;
+      padding: 20px;
+    }
+
+    .modal-card {
+      background: #151a21;
+      border: 1px solid #F7931A;
+      border-radius: 20px;
+      padding: 24px;
+      max-width: 400px;
+      width: 100%;
+      color: #fff;
+    }
+
+    .modal-card h3 {
+      color: #F7931A;
+      font-size: 20px;
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .modal-card p {
+      font-size: 13px;
+      color: #a0aab8;
+      line-height: 1.5;
+      margin-bottom: 10px;
+    }
+
+    .modal-card ul {
+      margin: 10px 0 20px 20px;
+      font-size: 13px;
+      color: #d1d5db;
+    }
+
+    .modal-card li {
+      margin-bottom: 6px;
+    }
+
+    .btn-close {
+      width: 100%;
+      background: #F7931A;
+      color: #fff;
+      border: none;
+      padding: 12px;
+      border-radius: 12px;
+      font-weight: bold;
+      font-size: 14px;
+      cursor: pointer;
+    }
+
+    /* SCHERMATA FRIENDS */
+    .friends-box {
+      text-align: center;
+    }
+
+    .friends-icon {
+      font-size: 50px;
+      margin-bottom: 10px;
+    }
+
+    .action-btn-group {
+      display: flex;
+      gap: 10px;
+      margin: 20px 0;
+    }
+
+    .btn-main {
+      flex: 2;
+      background: #F7931A;
+      color: #fff;
+      border: none;
+      padding: 14px;
+      border-radius: 14px;
+      font-weight: 800;
+      cursor: pointer;
+      font-size: 15px;
+    }
+
+    .btn-sub {
+      flex: 1;
+      background: #252d3a;
+      color: #fff;
+      border: 1px solid #3a4454;
+      padding: 14px;
+      border-radius: 14px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    /* CARDS & CARDS LIST */
+    .card-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-top: 15px;
+    }
+
+    .item-card {
+      background: #1a1f26;
+      border: 1px solid #2a313d;
+      padding: 14px;
+      border-radius: 14px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    /* NAVBAR IN BASSO */
+    .navbar {
+      position: fixed;
+      bottom: 0; left: 0; right: 0;
+      height: 65px;
+      background: #12161c;
+      border-top: 1px solid #252d3a;
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      z-index: 1000;
+    }
+
+    .nav-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      color: #6c788a;
+      font-size: 11px;
+      cursor: pointer;
+      width: 20%;
+    }
+
+    .nav-item.active {
+      color: #F7931A;
+    }
+
+    .nav-icon {
+      font-size: 20px;
+    }
+  </style>
 </head>
-<body class="bg-slate-900 text-white min-h-screen flex flex-col justify-between p-4 pb-24">
+<body>
 
-    <!-- Header -->
-    <header class="flex justify-between items-center bg-slate-800 p-3 rounded-2xl border border-slate-700 shadow-lg">
-        <div class="flex items-center gap-2">
-            <i class="fa-brands fa-bitcoin text-amber-500 text-2xl"></i>
-            <span class="font-bold text-lg tracking-wide">Satoshi Tap</span>
-        </div>
-        <div class="bg-amber-500/10 text-amber-400 font-semibold px-3 py-1 rounded-full border border-amber-500/30 text-sm">
-            v1.4
-        </div>
-    </header>
+  <!-- INTRO INTRODUCING LOGO ANIMATION -->
+  <div id="intro-screen">
+    <div class="logo-container">
+      <div class="btc-logo-img">₿</div>
+    </div>
+    <div class="intro-title">SATOSHI TAP</div>
+  </div>
 
-    <!-- Main Game Section -->
-    <main id="tab-mine" class="tab-content flex flex-col items-center justify-center my-auto gap-4">
-        <div class="text-center">
-            <p class="text-slate-400 text-sm font-medium tracking-wider uppercase mb-1">I tuoi Satoshi</p>
-            <div class="flex items-center justify-center gap-2">
-                <i class="fa-brands fa-bitcoin text-amber-400 text-4xl"></i>
-                <span id="score" class="text-5xl font-extrabold text-amber-400">0</span>
-            </div>
-        </div>
+  <!-- BARRA SUPERIORE -->
+  <header class="top-header">
+    <div class="brand">
+      <span>₿</span> SATOSHI TAP
+    </div>
+    <div class="header-actions">
+      <button class="icon-btn" onclick="openHowTo()">❓ Guida</button>
+      <button class="icon-btn" id="sound-btn" onclick="toggleAudio()">🔊 Audio</button>
+    </div>
+  </header>
 
-        <!-- Tap Button -->
-        <button id="tapBtn" class="coin-btn relative rounded-full p-2 bg-amber-500/20 border-4 border-amber-500/40 shadow-[0_0_50px_rgba(245,158,11,0.3)] focus:outline-none my-2">
-            <div class="w-40 h-40 rounded-full bg-gradient-to-tr from-amber-600 to-yellow-400 flex items-center justify-center border-4 border-amber-300 shadow-inner">
-                <i class="fa-brands fa-bitcoin text-white text-7xl drop-shadow-lg"></i>
-            </div>
-        </button>
+  <!-- MODAL GUIDA -->
+  <div class="modal-overlay" id="guide-modal">
+    <div class="modal-card">
+      <h3>🪙 Come funziona?</h3>
+      <p>Benvenuto in Satoshi Tap! Ecco come iniziare a minare:</p>
+      <ul>
+        <li><strong>1 Tap = 1 Satoshi:</strong> Tocca la moneta centrale per raccogliere token.</li>
+        <li><strong>Scorta Tap (1000 max):</strong> Hai fino a 1000 tap disponibili.</li>
+        <li><strong>Ricarica Automatica:</strong> Quando finisci i tap, ricevi 1 Satoshi ogni 20 minuti finché la scorta non torna piena.</li>
+        <li><strong>Invita Amici:</strong> Condividi il tuo link su WhatsApp o altri social per ricevere bonus!</li>
+      </ul>
+      <button class="btn-close" onclick="closeHowTo()">Ho Capito!</button>
+    </div>
+  </div>
 
-        <!-- Earn Rewarded Ad Button -->
-        <button id="adBtn" onclick="watchAdForReward()" class="w-full max-w-xs bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white font-bold py-2.5 px-5 rounded-2xl shadow-lg border border-purple-400/30 flex items-center justify-center gap-3 active:scale-95 transition text-sm">
-            <i class="fa-solid fa-play-circle text-lg text-yellow-300"></i>
-            <span>Guarda Video (+100 Satoshi)</span>
-        </button>
-
-        <!-- Stats Bar -->
-        <div class="w-full max-w-xs bg-slate-800/80 backdrop-blur p-3 rounded-2xl border border-slate-700/50 flex justify-around text-center">
-            <div>
-                <p class="text-xs text-slate-400">Energia</p>
-                <p id="energyDisplay" class="font-bold text-slate-200">1000 / 1000</p>
-                <p id="timerDisplay" class="text-[10px] text-amber-400 font-mono mt-0.5">Prossimo: 20:00</p>
-            </div>
-            <div class="border-r border-slate-700"></div>
-            <div>
-                <p class="text-xs text-slate-400">Tap Power</p>
-                <p id="tapPowerDisplay" class="font-bold text-amber-400">+1</p>
-            </div>
-        </div>
-
-        <!-- Potenziamenti Crypto VIP -->
-        <div class="w-full max-w-xs flex flex-col gap-2 mt-1">
-            <p class="text-xs text-slate-400 font-bold tracking-wider uppercase text-left">Pacchetti Crypto VIP</p>
-            
-            <!-- Pack 1 -->
-            <div class="bg-slate-800 border border-amber-500/30 p-2.5 rounded-xl flex justify-between items-center">
-                <div class="flex items-center gap-3 text-left">
-                    <div class="w-10 h-10 bg-gradient-to-tr from-amber-500 to-yellow-400 rounded-xl flex items-center justify-center text-slate-900 shadow-md">
-                        <i class="fa-solid fa-bolt text-xl"></i>
-                    </div>
-                    <div>
-                        <p class="font-bold text-xs">Mega Tap (+5 Power)</p>
-                        <p class="text-[10px] text-amber-400 font-semibold">Prezzo: 0.5 TON / Crypto</p>
-                    </div>
-                </div>
-                <button onclick="openCryptoPay('Mega Tap (+5)', '0.5 TON', 'fa-bolt', 'amber')" class="bg-gradient-to-r from-amber-500 to-yellow-500 text-slate-900 font-bold px-3 py-1.5 rounded-lg text-xs active:scale-95 transition">
-                    Acquista
-                </button>
-            </div>
-
-            <!-- Pack 2 -->
-            <div class="bg-slate-800 border border-blue-500/30 p-2.5 rounded-xl flex justify-between items-center">
-                <div class="flex items-center gap-3 text-left">
-                    <div class="w-10 h-10 bg-gradient-to-tr from-blue-500 to-indigo-500 rounded-xl flex items-center justify-center text-white shadow-md">
-                        <i class="fa-solid fa-robot text-xl"></i>
-                    </div>
-                    <div>
-                        <p class="font-bold text-xs">Auto-Miner Pro (+10/s)</p>
-                        <p class="text-[10px] text-blue-400 font-semibold">Prezzo: 1.5 TON / Crypto</p>
-                    </div>
-                </div>
-                <button onclick="openCryptoPay('Auto-Miner Pro', '1.5 TON', 'fa-robot', 'blue')" class="bg-gradient-to-r from-blue-500 to-indigo-500 text-white font-bold px-3 py-1.5 rounded-lg text-xs active:scale-95 transition">
-                    Acquista
-                </button>
-            </div>
-        </div>
-    </main>
-
-    <!-- Modal Pagamento Crypto -->
-    <div id="cryptoModal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden flex-col items-center justify-center p-4">
-        <div class="bg-slate-800 border border-slate-700 rounded-2xl p-5 w-full max-w-xs text-center space-y-3">
-            <div id="modalIconContainer" class="w-16 h-16 mx-auto rounded-2xl flex items-center justify-center text-3xl shadow-lg border border-white/10">
-                <i id="modalIcon" class="fa-solid fa-bolt"></i>
-            </div>
-            <h3 id="modalTitle" class="text-xl font-bold text-amber-400">Acquista Potenziamento</h3>
-            <p id="modalDesc" class="text-xs text-slate-300">Invia il pagamento al seguente indirizzo per attivare il pacchetto:</p>
-            
-            <div class="bg-slate-900 p-3 rounded-xl border border-slate-700 text-left">
-                <p class="text-[10px] text-slate-400 uppercase">Indirizzo di pagamento Admin:</p>
-                <p id="adminWallet" class="text-xs font-mono text-amber-300 break-all select-all font-bold my-1">
-                    1M2xeN5edX8xjQnXar74dseBdivULloSzt
-                </p>
-                <p id="modalAmount" class="text-xs text-slate-300 font-bold mt-1">Importo: 0.5 TON</p>
-            </div>
-
-            <div class="space-y-2">
-                <input type="text" id="txHashInput" placeholder="Inserisci Hash / ID Transazione" class="w-full bg-slate-900 border border-slate-700 text-white placeholder-slate-500 text-xs rounded-xl p-2.5 focus:outline-none focus:border-amber-500 text-center">
-                <button onclick="submitCryptoPay()" class="w-full bg-amber-500 hover:bg-amber-600 text-slate-900 font-bold py-2.5 rounded-xl text-xs transition">
-                    Conferma Pagamento
-                </button>
-                <button onclick="closeCryptoPay()" class="w-full bg-slate-700 text-slate-300 font-semibold py-2 rounded-xl text-xs">
-                    Annulla
-                </button>
-            </div>
-        </div>
+  <!-- 1. SCHERMATA MINE (HOME) -->
+  <main id="screen-mine" class="screen active">
+    <div class="balance-box">
+      <div class="balance-label">Saldo Totale</div>
+      <div class="balance-val">₿ <span id="user-balance">0</span></div>
     </div>
 
-    <!-- Wallet View Direct Input -->
-    <main id="tab-wallet" class="tab-content hidden flex-col items-center justify-center my-auto gap-4 text-center p-4">
-        <div class="w-16 h-16 bg-amber-500/10 rounded-full flex items-center justify-center border border-amber-500/30 mb-2">
-            <i class="fa-solid fa-wallet text-amber-400 text-3xl"></i>
+    <div class="tap-area">
+      <div class="btc-coin-btn" onclick="handleTap(event)">
+        ₿
+      </div>
+    </div>
+
+    <div class="energy-container">
+      <div class="energy-header">
+        <span>⚡ Scorta Tap</span>
+        <span><strong id="energy-val">1000</strong> / 1000</span>
+      </div>
+      <div class="energy-bar-bg">
+        <div id="energy-fill" class="energy-bar-fill"></div>
+      </div>
+      <div class="timer-info" id="timer-status">
+        Scorta al massimo!
+      </div>
+    </div>
+  </main>
+
+  <!-- 2. SCHERMATA UPGRADES -->
+  <main id="screen-upgrades" class="screen">
+    <div style="text-align: center; margin-bottom: 15px;">
+      <h2>🚀 Potenziamenti</h2>
+      <p style="color: #8a94a6; font-size: 13px;">Aumenta le tue prestazioni di mining</p>
+    </div>
+    <div class="card-list">
+      <div class="item-card">
+        <div>
+          <strong style="color: #fff;">Multi-Tap</strong>
+          <p style="color: #8a94a6; font-size: 12px;">+1 Satoshi per ogni tocco</p>
         </div>
-        <h2 class="text-2xl font-bold">Ritiro Satoshi</h2>
-        <p class="text-slate-400 text-sm max-w-xs">Inserisci il tuo indirizzo Wallet per ricevere le ricompense guadagnate nel gioco.</p>
-        
-        <div class="w-full max-w-xs my-2">
-            <input type="text" id="walletAddressInput" placeholder="Inserisci il tuo indirizzo Wallet (TON / BTC)" class="w-full bg-slate-800 border border-slate-700 text-white placeholder-slate-500 text-sm rounded-xl p-3 focus:outline-none focus:border-amber-500 text-center">
+        <button class="btn-sub" style="padding: 8px 12px; font-size: 12px;">100 🪙</button>
+      </div>
+      <div class="item-card">
+        <div>
+          <strong style="color: #fff;">Auto-Miner 8-bit</strong>
+          <p style="color: #8a94a6; font-size: 12px;">Mina automaticamente in background</p>
         </div>
+        <button class="btn-sub" style="padding: 8px 12px; font-size: 12px;">500 🪙</button>
+      </div>
+    </div>
+  </main>
 
-        <button id="withdrawBtn" onclick="processWithdraw()" class="w-full max-w-xs bg-amber-500 hover:bg-amber-600 text-slate-900 font-bold py-3 px-6 rounded-2xl shadow-lg active:scale-95 transition flex items-center justify-center gap-2">
-            <i class="fa-solid fa-arrow-up-right-from-square"></i>
-            <span>Richiedi Prelievo</span>
-        </button>
-    </main>
+  <!-- 3. SCHERMATA TASKS -->
+  <main id="screen-tasks" class="screen">
+    <div style="text-align: center; margin-bottom: 15px;">
+      <h2>📋 Missioni</h2>
+      <p style="color: #8a94a6; font-size: 13px;">Completa le task per guadagnare bonus</p>
+    </div>
+    <div class="card-list">
+      <div class="item-card">
+        <div>
+          <strong style="color: #fff;">Unisciti al canale Telegram</strong>
+          <p style="color: #F7931A; font-size: 12px;">+200 Satoshi</p>
+        </div>
+        <button class="btn-sub" style="padding: 8px 12px; font-size: 12px;">Esegui</button>
+      </div>
+    </div>
+  </main>
 
-    <!-- Generic View -->
-    <main id="tab-generic" class="tab-content hidden flex-col items-center justify-center my-auto gap-4 text-center p-4">
-        <i class="fa-solid fa-screwdriver-wrench text-amber-400 text-4xl"></i>
-        <h2 id="generic-title" class="text-2xl font-bold">Sezione in arrivo</h2>
-        <p class="text-slate-400 text-sm">Stiamo aggiornando questa sezione. Torna a trovarci presto!</p>
-    </main>
+  <!-- 4. SCHERMATA FRIENDS -->
+  <main id="screen-friends" class="screen">
+    <div class="friends-box">
+      <div class="friends-icon">🤝</div>
+      <h2>Invita i tuoi Amici!</h2>
+      <p style="color: #8a94a6; font-size: 13px; margin-top: 6px;">
+        Guadagna il <strong style="color: #F7931A;">10%</strong> di tutti i Satoshi raccolti dai tuoi amici.
+      </p>
 
-    <!-- Navigation Bar -->
-    <nav class="fixed bottom-0 left-0 right-0 bg-slate-800/95 backdrop-blur border-t border-slate-700/80 px-2 py-2 flex justify-around items-center text-xs text-slate-400 z-50">
-        <button onclick="switchTab('mine')" id="nav-mine" class="flex flex-col items-center gap-1 text-amber-400 font-semibold transition">
-            <i class="fa-solid fa-hammer text-lg"></i>
-            <span>Mine</span>
-        </button>
-        <button onclick="switchTab('tasks')" id="nav-tasks" class="flex flex-col items-center gap-1 hover:text-white transition">
-            <i class="fa-solid fa-list-check text-lg"></i>
-            <span>Tasks</span>
-        </button>
-        <button onclick="switchTab('daily')" id="nav-daily" class="flex flex-col items-center gap-1 hover:text-white transition">
-            <i class="fa-solid fa-fire text-lg"></i>
-            <span>Daily</span>
-        </button>
-        <button onclick="switchTab('friends')" id="nav-friends" class="flex flex-col items-center gap-1 hover:text-white transition">
-            <i class="fa-solid fa-users text-lg"></i>
-            <span>Friends</span>
-        </button>
-        <button onclick="switchTab('wallet')" id="nav-wallet" class="flex flex-col items-center gap-1 hover:text-white transition">
-            <i class="fa-solid fa-wallet text-lg"></i>
-            <span>Wallet</span>
-        </button>
-    </nav>
+      <div class="action-btn-group">
+        <button class="btn-main" onclick="shareReferral()">🚀 Invita Amici</button>
+        <button class="btn-sub" onclick="copyReferral()">📋 Copia Link</button>
+      </div>
 
-    <!-- JavaScript Logica -->
-    <script>
-        const tg = window.Telegram.WebApp;
-        tg.expand();
+      <div style="text-align: left; margin-top: 20px;">
+        <h3 style="font-size: 15px; margin-bottom: 10px;">I tuoi Amici Invitati</h3>
+        <div class="item-card" style="justify-content: center; color: #8a94a6; font-size: 13px;">
+          Nessun amico invitato finora.
+        </div>
+      </div>
+    </div>
+  </main>
 
-        let score = parseInt(localStorage.getItem('satoshi_score')) || 115;
-        let tapPower = parseInt(localStorage.getItem('satoshi_tap_power')) || 1;
-        let energy = parseInt(localStorage.getItem('satoshi_energy')) || 1000;
-        const maxEnergy = 1000;
-        const RECHARGE_TIME_SECONDS = 1200; // 20 Minuti in secondi (20 * 60)
+  <!-- 5. SCHERMATA WALLET -->
+  <main id="screen-wallet" class="screen">
+    <div style="text-align: center; margin-bottom: 15px;">
+      <h2>👛 Portafoglio Crypto</h2>
+      <p style="color: #8a94a6; font-size: 13px;">Collega il tuo wallet per i futuri prelievi</p>
+    </div>
+    <div class="item-card" style="flex-direction: column; gap: 12px; align-items: stretch;">
+      <label style="font-size: 12px; color: #8a94a6;">Indirizzo Bitcoin (BTC / TON)</label>
+      <input type="text" placeholder="Inserisci il tuo indirizzo..." style="background: #12161c; border: 1px solid #2a313d; padding: 12px; border-radius: 10px; color: #fff; font-size: 13px;">
+      <button class="btn-main">Salva Indirizzo</button>
+    </div>
+  </main>
 
-        let lastRechargeTime = parseInt(localStorage.getItem('last_recharge_time')) || Date.now();
+  <!-- NAVBAR IN BASSO -->
+  <nav class="navbar">
+    <div class="nav-item active" onclick="switchTab('mine', this)">
+      <span class="nav-icon">🔨</span>
+      <span>Mine</span>
+    </div>
+    <div class="nav-item" onclick="switchTab('upgrades', this)">
+      <span class="nav-icon">🚀</span>
+      <span>Shop</span>
+    </div>
+    <div class="nav-item" onclick="switchTab('tasks', this)">
+      <span class="nav-icon">📋</span>
+      <span>Tasks</span>
+    </div>
+    <div class="nav-item" onclick="switchTab('friends', this)">
+      <span class="nav-icon">👥</span>
+      <span>Friends</span>
+    </div>
+    <div class="nav-item" onclick="switchTab('wallet', this)">
+      <span class="nav-icon">👛</span>
+      <span>Wallet</span>
+    </div>
+  </nav>
 
-        const scoreEl = document.getElementById('score');
-        const tapBtn = document.getElementById('tapBtn');
-        const tapPowerDisplay = document.getElementById('tapPowerDisplay');
-        const energyDisplay = document.getElementById('energyDisplay');
-        const timerDisplay = document.getElementById('timerDisplay');
+  <script>
+    // 1. INIZIALIZZAZIONE TELEGRAM
+    const tg = window.Telegram ? window.Telegram.WebApp : null;
+    if (tg) {
+      tg.expand();
+      tg.ready();
+    }
 
-        function updateUI() {
-            if (scoreEl) scoreEl.innerText = score.toLocaleString();
-            if (tapPowerDisplay) tapPowerDisplay.innerText = `+${tapPower}`;
-            if (energyDisplay) energyDisplay.innerText = `${energy} / ${maxEnergy}`;
+    const BOT_USERNAME = "Satoshiap_bot";
+    const userId = tg?.initDataUnsafe?.user?.id || "12345678";
+    const referralLink = `https://t.me/${BOT_USERNAME}?start=ref_${userId}`;
+
+    // 2. STATO GAME
+    let balance = parseInt(localStorage.getItem('btc_balance')) || 0;
+    let energy = parseInt(localStorage.getItem('btc_energy')) || 1000;
+    const maxEnergy = 1000;
+
+    document.getElementById('user-balance').innerText = balance;
+    updateEnergyUI();
+
+    // 3. INTRO ANIMATION HIDE
+    setTimeout(() => {
+      const intro = document.getElementById('intro-screen');
+      intro.style.opacity = '0';
+      setTimeout(() => intro.style.display = 'none', 600);
+    }, 2200);
+
+    // 4. TAP LOGIC
+    function handleTap(e) {
+      if (energy <= 0) {
+        if (tg && tg.HapticFeedback) tg.HapticFeedback.notificationOccurred('error');
+        return;
+      }
+
+      balance += 1;
+      energy -= 1;
+
+      document.getElementById('user-balance').innerText = balance;
+      updateEnergyUI();
+      playTapSound();
+
+      if (tg && tg.HapticFeedback) {
+        tg.HapticFeedback.impactOccurred('light');
+      }
+
+      localStorage.setItem('btc_balance', balance);
+      localStorage.setItem('btc_energy', energy);
+    }
+
+    function updateEnergyUI() {
+      document.getElementById('energy-val').innerText = energy;
+      const pct = (energy / maxEnergy) * 100;
+      document.getElementById('energy-fill').style.width = `${pct}%`;
+    }
+
+    // 5. TIMER 1 SATOSHI OGNI 20 MINUTI (1200 SECONDI)
+    let secondsLeft = 1200;
+
+    setInterval(() => {
+      if (energy < maxEnergy) {
+        secondsLeft--;
+        const mins = Math.floor(secondsLeft / 60);
+        const secs = secondsLeft % 60;
+        document.getElementById('timer-status').innerText = 
+          `Ricarica +1 Satoshi in: ${mins.toString().padStart(2,'0')}:${secs.toString().padStart(2,'0')}`;
+
+        if (secondsLeft <= 0) {
+          energy = Math.min(maxEnergy, energy + 1);
+          updateEnergyUI();
+          localStorage.setItem('btc_energy', energy);
+          secondsLeft = 1200;
         }
+      } else {
+        document.getElementById('timer-status').innerText = "Scorta al massimo!";
+        secondsLeft = 1200;
+      }
+    }, 1000);
 
-        // Calcolo ricarica in background basato sul tempo trascorso
-        function syncEnergyWithTime() {
-            if (energy >= maxEnergy) {
-                lastRechargeTime = Date.now();
-                localStorage.setItem('last_recharge_time', lastRechargeTime);
-                if (timerDisplay) timerDisplay.innerText = "Energia Max";
-                return;
-            }
+    // 6. AUDIO 8-BIT SINTETIZZATO (MARIO STYLE BGM + TAP SOUND)
+    let audioEnabled = true;
+    let audioCtx = null;
 
-            const now = Date.now();
-            const elapsedSeconds = Math.floor((now - lastRechargeTime) / 1000);
-            const energyToAdd = Math.floor(elapsedSeconds / RECHARGE_TIME_SECONDS);
+    function getAudioContext() {
+      if (!audioCtx) {
+        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      }
+      return audioCtx;
+    }
 
-            if (energyToAdd > 0) {
-                energy = Math.min(maxEnergy, energy + energyToAdd);
-                lastRechargeTime += energyToAdd * RECHARGE_TIME_SECONDS * 1000;
-                localStorage.setItem('satoshi_energy', energy);
-                localStorage.setItem('last_recharge_time', lastRechargeTime);
-                updateUI();
-            }
-
-            // Calcola il countdown per il prossimo 1 Satoshi di energia
-            if (energy < maxEnergy) {
-                const remainingSeconds = RECHARGE_TIME_SECONDS - Math.floor((now - lastRechargeTime) / 1000);
-                const minutes = Math.floor(remainingSeconds / 60);
-                const seconds = remainingSeconds % 60;
-                if (timerDisplay) {
-                    timerDisplay.innerText = `Prossimo: ${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
-                }
-            } else {
-                if (timerDisplay) timerDisplay.innerText = "Energia Max";
-            }
-        }
-
-        updateUI();
-        syncEnergyWithTime();
-
-        // Aggiorna il timer ogni secondo
-        setInterval(syncEnergyWithTime, 1000);
-
-        tapBtn.addEventListener('click', () => {
-            if (energy >= tapPower) {
-                score += tapPower;
-                energy -= tapPower;
-                
-                if (energy < maxEnergy && localStorage.getItem('last_recharge_time') === null) {
-                    lastRechargeTime = Date.now();
-                    localStorage.setItem('last_recharge_time', lastRechargeTime);
-                }
-
-                localStorage.setItem('satoshi_score', score);
-                localStorage.setItem('satoshi_energy', energy);
-                updateUI();
-
-                if (tg.HapticFeedback) tg.HapticFeedback.impactOccurred('light');
-            } else {
-                if (tg.showAlert) tg.showAlert("Energia esaurita! Attendi il timer di ricarica.");
-            }
-        });
-
-        // Modale Pagamento Crypto
-        let currentSelectedPack = '';
-
-        function openCryptoPay(packName, amount, iconClass, colorScheme) {
-            currentSelectedPack = packName;
-            document.getElementById('modalTitle').innerText = packName;
-            document.getElementById('modalAmount').innerText = `Importo: ${amount}`;
-            
-            const iconEl = document.getElementById('modalIcon');
-            const containerEl = document.getElementById('modalIconContainer');
-            
-            iconEl.className = `fa-solid ${iconClass}`;
-            
-            if (colorScheme === 'amber') {
-                containerEl.className = "w-16 h-16 mx-auto rounded-2xl flex items-center justify-center text-3xl shadow-lg bg-gradient-to-tr from-amber-500 to-yellow-400 text-slate-900";
-            } else {
-                containerEl.className = "w-16 h-16 mx-auto rounded-2xl flex items-center justify-center text-3xl shadow-lg bg-gradient-to-tr from-blue-500 to-indigo-500 text-white";
-            }
-
-            document.getElementById('cryptoModal').classList.remove('hidden');
-            document.getElementById('cryptoModal').classList.add('flex');
-        }
-
-        function closeCryptoPay() {
-            document.getElementById('cryptoModal').classList.add('hidden');
-            document.getElementById('cryptoModal').classList.remove('flex');
-        }
-
-        function submitCryptoPay() {
-            const txHash = document.getElementById('txHashInput').value.trim();
-            if (!txHash) {
-                if (tg.showAlert) tg.showAlert("Inserisci l'ID o Hash della transazione di pagamento!");
-                return;
-            }
-
-            if (tg.showAlert) {
-                tg.showAlert(`Pagamento inviato per la verifica!\n\nPacchetto: ${currentSelectedPack}\nTx Hash: ${txHash}\n\nL'attivazione avverrà dopo la conferma della blockchain.`);
-            } else {
-                alert("Pagamento inviato per la verifica!");
-            }
-            closeCryptoPay();
-        }
-
-        // Adsgram Config
-        const AdController = window.Adsgram.init({ blockId: "55502" });
-
-        function watchAdForReward() {
-            AdController.show().then((result) => {
-                score += 100;
-                scoreEl.innerText = score.toLocaleString();
-                localStorage.setItem('satoshi_score', score);
-                if (tg.showAlert) tg.showAlert("Complimenti! Hai ricevuto +100 Satoshi!");
-            }).catch((error) => console.log("Errore Ads:", error));
-        }
-
-        // Wallet Direct Input
-        const savedAddress = localStorage.getItem('user_wallet_address') || '';
-        if (savedAddress) document.getElementById('walletAddressInput').value = savedAddress;
-
-        function processWithdraw() {
-            const walletInput = document.getElementById('walletAddressInput').value.trim();
-            if (!walletInput) {
-                if (tg.showAlert) tg.showAlert("Inserisci un indirizzo Wallet valido prima di proseguire!");
-                return;
-            }
-            localStorage.setItem('user_wallet_address', walletInput);
-
-            if (score < 1000) {
-                const msg = `Indirizzo salvato:\n${walletInput}\n\nSoglia minima di ritiro: 1.000 Satoshi.\nIl tuo bilancio attuale: ${score} Satoshi.`;
-                if (tg.showAlert) tg.showAlert(msg); else alert(msg);
-            } else {
-                const msg = `Richiesta di prelievo inviata con successo!\n\nIndirizzo: ${walletInput}\nImporto: ${score} Satoshi.`;
-                if (tg.showAlert) tg.showAlert(msg); else alert(msg);
-            }
-        }
-
-        // Navigazione schede
-        function switchTab(tabName) {
-            document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
-            document.querySelectorAll('nav button').forEach(el => {
-                el.classList.remove('text-amber-400', 'font-semibold');
-                el.classList.add('text-slate-400');
-            });
-
-            const activeNav = document.getElementById('nav-' + tabName);
-            if (activeNav) {
-                activeNav.classList.remove('text-slate-400');
-                activeNav.classList.add('text-amber-400', 'font-semibold');
-            }
-
-            if (tabName === 'mine') {
-                document.getElementById('tab-mine').classList.remove('hidden');
-            } else if (tabName === 'wallet') {
-                document.getElementById('tab-wallet').classList.remove('hidden');
-                document.getElementById('tab-wallet').classList.add('flex');
-            } else {
-                document.getElementById('generic-title').innerText = tabName.toUpperCase();
-                document.getElementById('tab-generic').classList.remove('hidden');
-                document.getElementById('tab-generic').classList.add('flex');
-            }
-        }
-    </script>
-</body>
-</html>
+    function playTapSound() {
+      if (!audioEnabled) return;
+      try {
+        const ctx = getAudioContext();
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.type = 'square';
+        osc.frequency.setValueAtTime(600, ctx.currentTime);
+        osc.frequency
