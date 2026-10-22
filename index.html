@@ -29,7 +29,7 @@
         }
     </style>
 </head>
-<body class="bg-slate-900 text-white min-h-screen flex flex-col justify-between p-4 pb-20">
+<body class="bg-slate-900 text-white min-h-screen flex flex-col justify-between p-4 pb-24">
 
     <!-- Header -->
     <header class="flex justify-between items-center bg-slate-800 p-3 rounded-2xl border border-slate-700 shadow-lg">
@@ -38,12 +38,12 @@
             <span class="font-bold text-lg tracking-wide">Satoshi Tap</span>
         </div>
         <div class="bg-amber-500/10 text-amber-400 font-semibold px-3 py-1 rounded-full border border-amber-500/30 text-sm">
-            v1.0
+            v1.1
         </div>
     </header>
 
     <!-- Main Game Section -->
-    <main id="tab-mine" class="tab-content flex flex-col items-center justify-center my-auto gap-5">
+    <main id="tab-mine" class="tab-content flex flex-col items-center justify-center my-auto gap-4">
         <div class="text-center">
             <p class="text-slate-400 text-sm font-medium tracking-wider uppercase mb-1">I tuoi Satoshi</p>
             <div class="flex items-center justify-center gap-2">
@@ -53,28 +53,65 @@
         </div>
 
         <!-- Tap Button -->
-        <button id="tapBtn" class="coin-btn relative rounded-full p-2 bg-amber-500/20 border-4 border-amber-500/40 shadow-[0_0_50px_rgba(245,158,11,0.3)] focus:outline-none">
-            <div class="w-44 h-44 rounded-full bg-gradient-to-tr from-amber-600 to-yellow-400 flex items-center justify-center border-4 border-amber-300 shadow-inner">
-                <i class="fa-brands fa-bitcoin text-white text-8xl drop-shadow-lg"></i>
+        <button id="tapBtn" class="coin-btn relative rounded-full p-2 bg-amber-500/20 border-4 border-amber-500/40 shadow-[0_0_50px_rgba(245,158,11,0.3)] focus:outline-none my-2">
+            <div class="w-40 h-40 rounded-full bg-gradient-to-tr from-amber-600 to-yellow-400 flex items-center justify-center border-4 border-amber-300 shadow-inner">
+                <i class="fa-brands fa-bitcoin text-white text-7xl drop-shadow-lg"></i>
             </div>
         </button>
 
         <!-- Earn Rewarded Ad Button -->
-        <button id="adBtn" onclick="watchAdForReward()" class="w-full max-w-xs bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white font-bold py-3 px-6 rounded-2xl shadow-lg border border-purple-400/30 flex items-center justify-center gap-3 active:scale-95 transition">
-            <i class="fa-solid fa-play-circle text-xl text-yellow-300"></i>
+        <button id="adBtn" onclick="watchAdForReward()" class="w-full max-w-xs bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white font-bold py-2.5 px-5 rounded-2xl shadow-lg border border-purple-400/30 flex items-center justify-center gap-3 active:scale-95 transition text-sm">
+            <i class="fa-solid fa-play-circle text-lg text-yellow-300"></i>
             <span>Guarda Video (+100 Satoshi)</span>
         </button>
 
-        <!-- Stats -->
-        <div class="w-full max-w-xs bg-slate-800/80 backdrop-blur p-3 rounded-2xl border border-slate-700/50 flex justify-around text-center mt-2">
+        <!-- Stats Bar -->
+        <div class="w-full max-w-xs bg-slate-800/80 backdrop-blur p-3 rounded-2xl border border-slate-700/50 flex justify-around text-center">
             <div>
                 <p class="text-xs text-slate-400">Energia</p>
-                <p class="font-bold text-slate-200">1000 / 1000</p>
+                <p id="energyDisplay" class="font-bold text-slate-200">1000 / 1000</p>
             </div>
             <div class="border-r border-slate-700"></div>
             <div>
                 <p class="text-xs text-slate-400">Tap Power</p>
-                <p class="font-bold text-amber-400">+1</p>
+                <p id="tapPowerDisplay" class="font-bold text-amber-400">+1</p>
+            </div>
+        </div>
+
+        <!-- Potenziamenti / Boosters Section -->
+        <div class="w-full max-w-xs flex flex-col gap-2 mt-1">
+            <p class="text-xs text-slate-400 font-bold tracking-wider uppercase text-left">Potenziamenti Mining</p>
+            
+            <!-- Boost 1: Multi-Tap -->
+            <div class="bg-slate-800 border border-slate-700 p-2.5 rounded-xl flex justify-between items-center">
+                <div class="flex items-center gap-2.5 text-left">
+                    <div class="w-9 h-9 bg-amber-500/20 rounded-lg flex items-center justify-center text-amber-400 text-lg">
+                        <i class="fa-solid fa-hand-pointer"></i>
+                    </div>
+                    <div>
+                        <p class="font-bold text-xs">Multi-Tap (+1)</p>
+                        <p class="text-[10px] text-slate-400">Costo: <span id="multitapCost">100</span> Satoshi</p>
+                    </div>
+                </div>
+                <button onclick="buyMultiTap()" class="bg-amber-500 hover:bg-amber-600 text-slate-900 font-bold px-3 py-1.5 rounded-lg text-xs active:scale-95 transition">
+                    Aumenta
+                </button>
+            </div>
+
+            <!-- Boost 2: Auto-Miner Bot -->
+            <div class="bg-slate-800 border border-slate-700 p-2.5 rounded-xl flex justify-between items-center">
+                <div class="flex items-center gap-2.5 text-left">
+                    <div class="w-9 h-9 bg-blue-500/20 rounded-lg flex items-center justify-center text-blue-400 text-lg">
+                        <i class="fa-solid fa-robot"></i>
+                    </div>
+                    <div>
+                        <p class="font-bold text-xs">Auto-Miner (+1/s)</p>
+                        <p class="text-[10px] text-slate-400">Costo: <span id="autominerCost">500</span> Satoshi</p>
+                    </div>
+                </div>
+                <button id="autominerBtn" onclick="buyAutoMiner()" class="bg-blue-500 hover:bg-blue-600 text-white font-bold px-3 py-1.5 rounded-lg text-xs active:scale-95 transition">
+                    Attiva
+                </button>
             </div>
         </div>
     </main>
@@ -87,12 +124,10 @@
         <h2 class="text-2xl font-bold">Ritiro Satoshi</h2>
         <p class="text-slate-400 text-sm max-w-xs">Inserisci il tuo indirizzo Wallet per ricevere le ricompense guadagnate nel gioco.</p>
         
-        <!-- Input per l'indirizzo del Wallet -->
         <div class="w-full max-w-xs my-2">
             <input type="text" id="walletAddressInput" placeholder="Inserisci il tuo indirizzo Wallet (TON / BTC)" class="w-full bg-slate-800 border border-slate-700 text-white placeholder-slate-500 text-sm rounded-xl p-3 focus:outline-none focus:border-amber-500 text-center">
         </div>
 
-        <!-- Pulsante di Prelievo -->
         <button id="withdrawBtn" onclick="processWithdraw()" class="w-full max-w-xs bg-amber-500 hover:bg-amber-600 text-slate-900 font-bold py-3 px-6 rounded-2xl shadow-lg active:scale-95 transition flex items-center justify-center gap-2">
             <i class="fa-solid fa-arrow-up-right-from-square"></i>
             <span>Richiedi Prelievo</span>
@@ -135,21 +170,104 @@
         const tg = window.Telegram.WebApp;
         tg.expand();
 
+        // Variabili di gioco
         let score = parseInt(localStorage.getItem('satoshi_score')) || 115;
+        let tapPower = parseInt(localStorage.getItem('satoshi_tap_power')) || 1;
+        let multitapCost = parseInt(localStorage.getItem('satoshi_multitap_cost')) || 100;
+        let hasAutoMiner = localStorage.getItem('satoshi_autominer') === 'true';
+        let energy = 1000;
+        const maxEnergy = 1000;
+
+        // Elementi DOM
         const scoreEl = document.getElementById('score');
         const tapBtn = document.getElementById('tapBtn');
+        const tapPowerDisplay = document.getElementById('tapPowerDisplay');
+        const multitapCostEl = document.getElementById('multitapCost');
+        const autominerBtn = document.getElementById('autominerBtn');
 
-        if (scoreEl) scoreEl.innerText = score.toLocaleString();
-
-        tapBtn.addEventListener('click', () => {
-            score += 1;
-            scoreEl.innerText = score.toLocaleString();
-            localStorage.setItem('satoshi_score', score);
+        function updateUI() {
+            if (scoreEl) scoreEl.innerText = score.toLocaleString();
+            if (tapPowerDisplay) tapPowerDisplay.innerText = `+${tapPower}`;
+            if (multitapCostEl) multitapCostEl.innerText = multitapCost.toLocaleString();
             
-            if (tg.HapticFeedback) {
-                tg.HapticFeedback.impactOccurred('light');
+            if (hasAutoMiner && autominerBtn) {
+                autominerBtn.innerText = "Attivo";
+                autominerBtn.classList.remove('bg-blue-500', 'hover:bg-blue-600');
+                autominerBtn.classList.add('bg-slate-700', 'text-slate-400');
+                autominerBtn.disabled = true;
+            }
+        }
+
+        updateUI();
+
+        // Tap Event
+        tapBtn.addEventListener('click', () => {
+            if (energy >= tapPower) {
+                score += tapPower;
+                energy -= tapPower;
+                document.getElementById('energyDisplay').innerText = `${energy} / ${maxEnergy}`;
+                scoreEl.innerText = score.toLocaleString();
+                localStorage.setItem('satoshi_score', score);
+                
+                if (tg.HapticFeedback) {
+                    tg.HapticFeedback.impactOccurred('light');
+                }
+            } else {
+                if (tg.showAlert) tg.showAlert("Energia esaurita! Attendi la ricarica.");
             }
         });
+
+        // Ricarica energia automatica
+        setInterval(() => {
+            if (energy < maxEnergy) {
+                energy = Math.min(maxEnergy, energy + 1);
+                document.getElementById('energyDisplay').innerText = `${energy} / ${maxEnergy}`;
+            }
+        }, 1000);
+
+        // Auto-Miner Loop (guadagno automatico ogni secondo)
+        setInterval(() => {
+            if (hasAutoMiner) {
+                score += 1;
+                scoreEl.innerText = score.toLocaleString();
+                localStorage.setItem('satoshi_score', score);
+            }
+        }, 1000);
+
+        // Acquisto Multi-Tap
+        function buyMultiTap() {
+            if (score >= multitapCost) {
+                score -= multitapCost;
+                tapPower += 1;
+                multitapCost = Math.floor(multitapCost * 2);
+                
+                localStorage.setItem('satoshi_score', score);
+                localStorage.setItem('satoshi_tap_power', tapPower);
+                localStorage.setItem('satoshi_multitap_cost', multitapCost);
+                
+                updateUI();
+                if (tg.showAlert) tg.showAlert(`Potenziamento acquistato! Ora guadagni +${tapPower} ad ogni Tap!`);
+            } else {
+                if (tg.showAlert) tg.showAlert(`Satoshi insufficienti! Ti servono ${multitapCost} Satoshi.`);
+            }
+        }
+
+        // Acquisto Auto-Miner
+        function buyAutoMiner() {
+            const cost = 500;
+            if (score >= cost) {
+                score -= cost;
+                hasAutoMiner = true;
+                
+                localStorage.setItem('satoshi_score', score);
+                localStorage.setItem('satoshi_autominer', 'true');
+                
+                updateUI();
+                if (tg.showAlert) tg.showAlert("Auto-Miner attivato! Guadagnerai +1 Satoshi ogni secondo!");
+            } else {
+                if (tg.showAlert) tg.showAlert(`Satoshi insufficienti! Servono ${cost} Satoshi per l'Auto-Miner.`);
+            }
+        }
 
         // Adsgram Config
         const AdController = window.Adsgram.init({ blockId: "55502" });
