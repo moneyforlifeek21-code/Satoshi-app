@@ -38,7 +38,7 @@
             <span class="font-bold text-lg tracking-wide">Satoshi Tap</span>
         </div>
         <div class="bg-amber-500/10 text-amber-400 font-semibold px-3 py-1 rounded-full border border-amber-500/30 text-sm">
-            v1.2
+            v1.3
         </div>
     </header>
 
@@ -78,56 +78,53 @@
             </div>
         </div>
 
-        <!-- Potenziamenti da acquistare in Crypto -->
+        <!-- Potenziamenti da acquistare in Crypto con Immagini -->
         <div class="w-full max-w-xs flex flex-col gap-2 mt-1">
             <p class="text-xs text-slate-400 font-bold tracking-wider uppercase text-left">Pacchetti Crypto VIP</p>
             
-            <!-- Pack 1 -->
-            <div class="bg-slate-800 border border-amber-500/30 p-3 rounded-xl flex justify-between items-center">
-                <div class="flex items-center gap-2.5 text-left">
-                    <div class="w-9 h-9 bg-amber-500/20 rounded-lg flex items-center justify-center text-amber-400 text-lg">
-                        <i class="fa-solid fa-bolt"></i>
-                    </div>
+            <!-- Pack 1 con Immagine -->
+            <div class="bg-slate-800 border border-amber-500/30 p-2.5 rounded-xl flex justify-between items-center">
+                <div class="flex items-center gap-3 text-left">
+                    <img src="https://cdn-icons-png.flaticon.com/512/190/190411.png" alt="Mega Tap" class="w-10 h-10 object-contain drop-shadow">
                     <div>
                         <p class="font-bold text-xs">Mega Tap (+5 Power)</p>
                         <p class="text-[10px] text-amber-400 font-semibold">Prezzo: 0.5 TON / Crypto</p>
                     </div>
                 </div>
-                <button onclick="openCryptoPay('Mega Tap (+5)', '0.5 TON / Crypto')" class="bg-gradient-to-r from-amber-500 to-yellow-500 text-slate-900 font-bold px-3 py-1.5 rounded-lg text-xs active:scale-95 transition">
+                <button onclick="openCryptoPay('Mega Tap (+5)', '0.5 TON', 'https://cdn-icons-png.flaticon.com/512/190/190411.png')" class="bg-gradient-to-r from-amber-500 to-yellow-500 text-slate-900 font-bold px-3 py-1.5 rounded-lg text-xs active:scale-95 transition">
                     Acquista
                 </button>
             </div>
 
-            <!-- Pack 2 -->
-            <div class="bg-slate-800 border border-blue-500/30 p-3 rounded-xl flex justify-between items-center">
-                <div class="flex items-center gap-2.5 text-left">
-                    <div class="w-9 h-9 bg-blue-500/20 rounded-lg flex items-center justify-center text-blue-400 text-lg">
-                        <i class="fa-solid fa-robot"></i>
-                    </div>
+            <!-- Pack 2 con Immagine -->
+            <div class="bg-slate-800 border border-blue-500/30 p-2.5 rounded-xl flex justify-between items-center">
+                <div class="flex items-center gap-3 text-left">
+                    <img src="https://cdn-icons-png.flaticon.com/512/4712/4712109.png" alt="Auto-Miner Pro" class="w-10 h-10 object-contain drop-shadow">
                     <div>
                         <p class="font-bold text-xs">Auto-Miner Pro (+10/s)</p>
                         <p class="text-[10px] text-blue-400 font-semibold">Prezzo: 1.5 TON / Crypto</p>
                     </div>
                 </div>
-                <button onclick="openCryptoPay('Auto-Miner Pro', '1.5 TON / Crypto')" class="bg-gradient-to-r from-blue-500 to-indigo-500 text-white font-bold px-3 py-1.5 rounded-lg text-xs active:scale-95 transition">
+                <button onclick="openCryptoPay('Auto-Miner Pro', '1.5 TON', 'https://cdn-icons-png.flaticon.com/512/4712/4712109.png')" class="bg-gradient-to-r from-blue-500 to-indigo-500 text-white font-bold px-3 py-1.5 rounded-lg text-xs active:scale-95 transition">
                     Acquista
                 </button>
             </div>
         </div>
     </main>
 
-    <!-- Modal Pagamento Crypto -->
+    <!-- Modal Pagamento Crypto con Immagine Anteprima -->
     <div id="cryptoModal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden flex-col items-center justify-center p-4">
-        <div class="bg-slate-800 border border-slate-700 rounded-2xl p-5 w-full max-w-xs text-center space-y-4">
+        <div class="bg-slate-800 border border-slate-700 rounded-2xl p-5 w-full max-w-xs text-center space-y-3">
+            <img id="modalImg" src="" alt="Pack Preview" class="w-16 h-16 object-contain mx-auto drop-shadow-md">
             <h3 id="modalTitle" class="text-xl font-bold text-amber-400">Acquista Potenziamento</h3>
             <p id="modalDesc" class="text-xs text-slate-300">Invia il pagamento al seguente indirizzo per attivare il pacchetto:</p>
             
             <div class="bg-slate-900 p-3 rounded-xl border border-slate-700 text-left">
                 <p class="text-[10px] text-slate-400 uppercase">Indirizzo di pagamento Admin:</p>
                 <p id="adminWallet" class="text-xs font-mono text-amber-300 break-all select-all font-bold my-1">
-                    1M2xeN5edX8xjQnXar74dseBdivuLLoSzt
+                    1M2xeN5edX8xjQnXar74dseBdivULloSzt
                 </p>
-                <p id="modalAmount" class="text-xs text-slate-300 font-bold mt-1">Importo: 0.5 TON / Crypto</p>
+                <p id="modalAmount" class="text-xs text-slate-300 font-bold mt-1">Importo: 0.5 TON</p>
             </div>
 
             <div class="space-y-2">
@@ -154,4 +151,174 @@
             <input type="text" id="walletAddressInput" placeholder="Inserisci il tuo indirizzo Wallet (TON / BTC)" class="w-full bg-slate-800 border border-slate-700 text-white placeholder-slate-500 text-sm rounded-xl p-3 focus:outline-none focus:border-amber-500 text-center">
         </div>
 
-        <button id="withdrawBtn" onclick="processWithdraw()" class="w-full max-w-xs bg-amber-500 hover:bg-amber-600 text
+        <button id="withdrawBtn" onclick="processWithdraw()" class="w-full max-w-xs bg-amber-500 hover:bg-amber-600 text-slate-900 font-bold py-3 px-6 rounded-2xl shadow-lg active:scale-95 transition flex items-center justify-center gap-2">
+            <i class="fa-solid fa-arrow-up-right-from-square"></i>
+            <span>Richiedi Prelievo</span>
+        </button>
+    </main>
+
+    <!-- Generic View -->
+    <main id="tab-generic" class="tab-content hidden flex-col items-center justify-center my-auto gap-4 text-center p-4">
+        <i class="fa-solid fa-screwdriver-wrench text-amber-400 text-4xl"></i>
+        <h2 id="generic-title" class="text-2xl font-bold">Sezione in arrivo</h2>
+        <p class="text-slate-400 text-sm">Stiamo aggiornando questa sezione. Torna a trovarci presto!</p>
+    </main>
+
+    <!-- Navigation Bar -->
+    <nav class="fixed bottom-0 left-0 right-0 bg-slate-800/95 backdrop-blur border-t border-slate-700/80 px-2 py-2 flex justify-around items-center text-xs text-slate-400 z-50">
+        <button onclick="switchTab('mine')" id="nav-mine" class="flex flex-col items-center gap-1 text-amber-400 font-semibold transition">
+            <i class="fa-solid fa-hammer text-lg"></i>
+            <span>Mine</span>
+        </button>
+        <button onclick="switchTab('tasks')" id="nav-tasks" class="flex flex-col items-center gap-1 hover:text-white transition">
+            <i class="fa-solid fa-list-check text-lg"></i>
+            <span>Tasks</span>
+        </button>
+        <button onclick="switchTab('daily')" id="nav-daily" class="flex flex-col items-center gap-1 hover:text-white transition">
+            <i class="fa-solid fa-fire text-lg"></i>
+            <span>Daily</span>
+        </button>
+        <button onclick="switchTab('friends')" id="nav-friends" class="flex flex-col items-center gap-1 hover:text-white transition">
+            <i class="fa-solid fa-users text-lg"></i>
+            <span>Friends</span>
+        </button>
+        <button onclick="switchTab('wallet')" id="nav-wallet" class="flex flex-col items-center gap-1 hover:text-white transition">
+            <i class="fa-solid fa-wallet text-lg"></i>
+            <span>Wallet</span>
+        </button>
+    </nav>
+
+    <!-- JavaScript Logica -->
+    <script>
+        const tg = window.Telegram.WebApp;
+        tg.expand();
+
+        let score = parseInt(localStorage.getItem('satoshi_score')) || 115;
+        let tapPower = parseInt(localStorage.getItem('satoshi_tap_power')) || 1;
+        let energy = 1000;
+        const maxEnergy = 1000;
+
+        const scoreEl = document.getElementById('score');
+        const tapBtn = document.getElementById('tapBtn');
+        const tapPowerDisplay = document.getElementById('tapPowerDisplay');
+
+        function updateUI() {
+            if (scoreEl) scoreEl.innerText = score.toLocaleString();
+            if (tapPowerDisplay) tapPowerDisplay.innerText = `+${tapPower}`;
+        }
+
+        updateUI();
+
+        tapBtn.addEventListener('click', () => {
+            if (energy >= tapPower) {
+                score += tapPower;
+                energy -= tapPower;
+                document.getElementById('energyDisplay').innerText = `${energy} / ${maxEnergy}`;
+                scoreEl.innerText = score.toLocaleString();
+                localStorage.setItem('satoshi_score', score);
+                if (tg.HapticFeedback) tg.HapticFeedback.impactOccurred('light');
+            } else {
+                if (tg.showAlert) tg.showAlert("Energia esaurita! Attendi la ricarica.");
+            }
+        });
+
+        setInterval(() => {
+            if (energy < maxEnergy) {
+                energy = Math.min(maxEnergy, energy + 1);
+                document.getElementById('energyDisplay').innerText = `${energy} / ${maxEnergy}`;
+            }
+        }, 1000);
+
+        // Modale Pagamento Crypto con immagine
+        let currentSelectedPack = '';
+
+        function openCryptoPay(packName, amount, imgSrc) {
+            currentSelectedPack = packName;
+            document.getElementById('modalTitle').innerText = packName;
+            document.getElementById('modalAmount').innerText = `Importo: ${amount}`;
+            document.getElementById('modalImg').src = imgSrc;
+            document.getElementById('cryptoModal').classList.remove('hidden');
+            document.getElementById('cryptoModal').classList.add('flex');
+        }
+
+        function closeCryptoPay() {
+            document.getElementById('cryptoModal').classList.add('hidden');
+            document.getElementById('cryptoModal').classList.remove('flex');
+        }
+
+        function submitCryptoPay() {
+            const txHash = document.getElementById('txHashInput').value.trim();
+            if (!txHash) {
+                if (tg.showAlert) tg.showAlert("Inserisci l'ID o Hash della transazione di pagamento!");
+                return;
+            }
+
+            if (tg.showAlert) {
+                tg.showAlert(`Pagamento inviato per la verifica!\n\nPacchetto: ${currentSelectedPack}\nTx Hash: ${txHash}\n\nL'attivazione avverrà dopo la conferma della blockchain.`);
+            } else {
+                alert("Pagamento inviato per la verifica!");
+            }
+            closeCryptoPay();
+        }
+
+        // Adsgram Config
+        const AdController = window.Adsgram.init({ blockId: "55502" });
+
+        function watchAdForReward() {
+            AdController.show().then((result) => {
+                score += 100;
+                scoreEl.innerText = score.toLocaleString();
+                localStorage.setItem('satoshi_score', score);
+                if (tg.showAlert) tg.showAlert("Complimenti! Hai ricevuto +100 Satoshi!");
+            }).catch((error) => console.log("Errore Ads:", error));
+        }
+
+        // Wallet Direct Input
+        const savedAddress = localStorage.getItem('user_wallet_address') || '';
+        if (savedAddress) document.getElementById('walletAddressInput').value = savedAddress;
+
+        function processWithdraw() {
+            const walletInput = document.getElementById('walletAddressInput').value.trim();
+            if (!walletInput) {
+                if (tg.showAlert) tg.showAlert("Inserisci un indirizzo Wallet valido prima di proseguire!");
+                return;
+            }
+            localStorage.setItem('user_wallet_address', walletInput);
+
+            if (score < 1000) {
+                const msg = `Indirizzo salvato:\n${walletInput}\n\nSoglia minima di ritiro: 1.000 Satoshi.\nIl tuo bilancio attuale: ${score} Satoshi.`;
+                if (tg.showAlert) tg.showAlert(msg); else alert(msg);
+            } else {
+                const msg = `Richiesta di prelievo inviata con successo!\n\nIndirizzo: ${walletInput}\nImporto: ${score} Satoshi.`;
+                if (tg.showAlert) tg.showAlert(msg); else alert(msg);
+            }
+        }
+
+        // Navigazione schede
+        function switchTab(tabName) {
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+            document.querySelectorAll('nav button').forEach(el => {
+                el.classList.remove('text-amber-400', 'font-semibold');
+                el.classList.add('text-slate-400');
+            });
+
+            const activeNav = document.getElementById('nav-' + tabName);
+            if (activeNav) {
+                activeNav.classList.remove('text-slate-400');
+                activeNav.classList.add('text-amber-400', 'font-semibold');
+            }
+
+            if (tabName === 'mine') {
+                document.getElementById('tab-mine').classList.remove('hidden');
+            } else if (tabName === 'wallet') {
+                document.getElementById('tab-wallet').classList.remove('hidden');
+                document.getElementById('tab-wallet').classList.add('flex');
+            } else {
+                document.getElementById('generic-title').innerText = tabName.toUpperCase();
+                document.getElementById('tab-generic').classList.remove('hidden');
+                document.getElementById('tab-generic').classList.add('flex');
+            }
+        }
+    </script>
+</body>
+    </html>
