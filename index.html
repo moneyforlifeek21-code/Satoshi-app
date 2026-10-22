@@ -38,7 +38,7 @@
             <span class="font-bold text-lg tracking-wide">Satoshi Tap</span>
         </div>
         <div class="bg-amber-500/10 text-amber-400 font-semibold px-3 py-1 rounded-full border border-amber-500/30 text-sm">
-            v1.7
+            v1.8
         </div>
     </header>
 
@@ -365,37 +365,53 @@
 
                     if (tg && tg.HapticFeedback) tg.HapticFeedback.impactOccurred('light');
                 } else {
-                    if (tg && tg.showAlert) tg.showAlert("Energia esaurita! Attendi il timer di ricarica."); else alert("Energia esaurita!");
+                    const msg = "Energia esaurita! Attendi il timer di ricarica.";
+                    if (tg && tg.showAlert) tg.showAlert(msg); else alert(msg);
                 }
             });
         }
 
+        // Funzione Adsgram con Diagnostica Errore Visibile
         function watchAdForReward() {
             if (videoTaskCount >= 5) {
-                if (tg && tg.showAlert) tg.showAlert("Hai già raggiunto il limite massimo di 5 video per oggi!"); else alert("Hai già raggiunto il limite massimo di 5 video per oggi!");
+                const msg = "Hai già raggiunto il limite massimo di 5 video per oggi!";
+                if (tg && tg.showAlert) tg.showAlert(msg); else alert(msg);
                 return;
             }
 
             if (!window.Adsgram) {
-                if (tg && tg.showAlert) tg.showAlert("Annunci in caricamento, riprova tra poco!"); else alert("Annunci in caricamento, riprova tra poco!");
+                const msg = "Errore: SDK Adsgram non caricato! Verifica la tua connessione.";
+                if (tg && tg.showAlert) tg.showAlert(msg); else alert(msg);
                 return;
             }
 
-            const AdController = window.Adsgram.init({ blockId: "55502" });
-            AdController.show().then((result) => {
-                videoTaskCount += 1;
-                score += 100;
-                localStorage.setItem('video_task_count', videoTaskCount);
-                localStorage.setItem('last_video_date', todayStr);
-                localStorage.setItem('satoshi_score', score);
-                updateUI();
+            try {
+                const AdController = window.Adsgram.init({ blockId: "55502" });
+                
+                AdController.show().then((result) => {
+                    videoTaskCount += 1;
+                    score += 100;
+                    localStorage.setItem('video_task_count', videoTaskCount);
+                    localStorage.setItem('last_video_date', todayStr);
+                    localStorage.setItem('satoshi_score', score);
+                    updateUI();
 
-                if (videoTaskCount < 5) {
-                    if (tg && tg.showAlert) tg.showAlert(`Complimenti! (+100 Satoshi)\nVideo visti oggi: ${videoTaskCount}/5`); else alert(`Complimenti! (+100 Satoshi)\nVideo visti oggi: ${videoTaskCount}/5`);
-                } else {
-                    if (tg && tg.showAlert) tg.showAlert("Hai completato i 5 video giornalieri!\nVai nella scheda Tasks per riscattare +300 Satoshi!"); else alert("Hai completato i 5 video giornalieri!");
-                }
-            }).catch((error) => console.log("Errore Ads:", error));
+                    if (videoTaskCount < 5) {
+                        const msg = `Complimenti! (+100 Satoshi)\nVideo visti oggi: ${videoTaskCount}/5`;
+                        if (tg && tg.showAlert) tg.showAlert(msg); else alert(msg);
+                    } else {
+                        const msg = "Hai completato i 5 video giornalieri!\nVai nella scheda Tasks per riscattare +300 Satoshi!";
+                        if (tg && tg.showAlert) tg.showAlert(msg); else alert(msg);
+                    }
+                }).catch((error) => {
+                    // Visualizza la causa esatta dell'errore restituito da Adsgram
+                    const errDetail = typeof error === 'object' ? JSON.stringify(error) : error;
+                    const msg = `Stato Adsgram: ${errDetail}\n\n(Se indica "banner_not_loaded" o "no fill", Adsgram sta approvando il blocco 55502 o non ha sponsor al momento per il tuo profilo).`;
+                    if (tg && tg.showAlert) tg.showAlert(msg); else alert(msg);
+                });
+            } catch (e) {
+                alert("Errore del codice: " + e.message);
+            }
         }
 
         function watchTaskVideo() {
@@ -409,7 +425,8 @@
                 localStorage.setItem('satoshi_score', score);
                 localStorage.setItem('video_task_claimed', 'true');
                 updateUI();
-                if (tg && tg.showAlert) tg.showAlert("Super Bonus di +300 Satoshi riscattato con successo!"); else alert("Bonus +300 Satoshi riscattato!");
+                const msg = "Super Bonus di +300 Satoshi riscattato con successo!";
+                if (tg && tg.showAlert) tg.showAlert(msg); else alert(msg);
             }
         }
 
@@ -419,7 +436,8 @@
                 score += 150;
                 localStorage.setItem('satoshi_score', score);
                 updateUI();
-                if (tg && tg.showAlert) tg.showAlert("Grazie per essere dei nostri! +150 Satoshi aggiunti!"); else alert("+150 Satoshi aggiunti!");
+                const msg = "Grazie per essere dei nostri! +150 Satoshi aggiunti!";
+                if (tg && tg.showAlert) tg.showAlert(msg); else alert(msg);
             }, 2000);
         }
 
@@ -453,15 +471,13 @@
         function submitCryptoPay() {
             const txHash = document.getElementById('txHashInput').value.trim();
             if (!txHash) {
-                if (tg && tg.showAlert) tg.showAlert("Inserisci l'ID o Hash della transazione di pagamento!"); else alert("Inserisci l'ID della transazione!");
+                const msg = "Inserisci l'ID o Hash della transazione di pagamento!";
+                if (tg && tg.showAlert) tg.showAlert(msg); else alert(msg);
                 return;
             }
 
-            if (tg && tg.showAlert) {
-                tg.showAlert(`Pagamento inviato per la verifica!\n\nPacchetto: ${currentSelectedPack}\nTx Hash: ${txHash}\n\nL'attivazione avverrà dopo la conferma della blockchain.`);
-            } else {
-                alert("Pagamento inviato per la verifica!");
-            }
+            const msg = `Pagamento inviato per la verifica!\n\nPacchetto: ${currentSelectedPack}\nTx Hash: ${txHash}\n\nL'attivazione avverrà dopo la conferma della blockchain.`;
+            if (tg && tg.showAlert) tg.showAlert(msg); else alert(msg);
             closeCryptoPay();
         }
 
@@ -473,7 +489,8 @@
         function processWithdraw() {
             const walletInput = document.getElementById('walletAddressInput').value.trim();
             if (!walletInput) {
-                if (tg && tg.showAlert) tg.showAlert("Inserisci un indirizzo Wallet valido prima di proseguire!"); else alert("Inserisci un indirizzo Wallet!");
+                const msg = "Inserisci un indirizzo Wallet valido prima di proseguire!";
+                if (tg && tg.showAlert) tg.showAlert(msg); else alert(msg);
                 return;
             }
             localStorage.setItem('user_wallet_address', walletInput);
@@ -516,4 +533,4 @@
         }
     </script>
 </body>
-</html>
+            </html>
