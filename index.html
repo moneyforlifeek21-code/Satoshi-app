@@ -263,22 +263,33 @@
     }
 
     // 2. CONFIGURAZIONE DEL BOT
-    // MODIFICA QUESTA RIGA: Inserisci il nome del tuo bot senza il simbolo @
     const BOT_USERNAME = "Satoshiap_bot";
 
     // Recupera l'ID dell'utente Telegram
     const userId = tg?.initDataUnsafe?.user?.id || "12345678";
     const referralLink = `https://t.me/${BOT_USERNAME}?start=ref_${userId}`;
 
-    // 3. FUNZIONE PER CONDIVIDERE IL LINK IN CHAT
-    function inviteFriend() {
+    // 3. FUNZIONE PER CONDIVIDERE IL LINK (WhatsApp, Telegram, ecc.)
+    async function inviteFriend() {
       const shareText = "Unisciti a me su Satoshi Tap e inizia a guadagnare token! 🚀";
-      const shareUrl = `https://t.me/share/url?url=${encodeURIComponent(referralLink)}&text=${encodeURIComponent(shareText)}`;
 
-      if (tg) {
-        tg.openTelegramLink(shareUrl);
+      if (navigator.share) {
+        try {
+          await navigator.share({
+            title: 'Satoshi Tap',
+            text: shareText,
+            url: referralLink,
+          });
+        } catch (err) {
+          console.log("Condivisione annullata");
+        }
       } else {
-        window.open(shareUrl, '_blank');
+        const shareUrl = `https://t.me/share/url?url=${encodeURIComponent(referralLink)}&text=${encodeURIComponent(shareText)}`;
+        if (tg) {
+          tg.openTelegramLink(shareUrl);
+        } else {
+          window.open(shareUrl, '_blank');
+        }
       }
     }
 
@@ -337,7 +348,6 @@
 
     // 6. CARICAMENTO DATI ALL'AVVIO
     document.addEventListener('DOMContentLoaded', () => {
-      // Modello di test locale: sostituire con la chiamata al proprio server/database se presente
       const initialData = {
         totalFriends: 0,
         totalEarnings: 0,
