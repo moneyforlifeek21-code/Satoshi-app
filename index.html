@@ -9,7 +9,6 @@
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
 
   <style>
-    /* RESET E TEMA BITCOIN */
     * {
       box-sizing: border-box;
       margin: 0;
@@ -28,64 +27,6 @@
       justify-content: space-between;
       padding: 12px 12px 75px 12px;
       overflow-x: hidden;
-    }
-
-    /* INTRO ANIMAZIONE / LOGO INITIAL SCREEN FIX */
-    #intro-screen {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100vw;
-      height: 100vh;
-      background: #0b0e11;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      z-index: 9999;
-      transition: opacity 0.5s ease;
-      cursor: pointer;
-    }
-
-    #intro-screen.fade-out {
-      opacity: 0;
-      pointer-events: none;
-    }
-
-    .logo-container {
-      position: relative;
-      width: 130px;
-      height: 130px;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      border-radius: 50%;
-      background: radial-gradient(circle, rgba(247,147,26,0.3) 0%, rgba(11,14,17,1) 70%);
-      animation: pulseGlow 2s infinite ease-in-out;
-    }
-
-    .btc-logo-img {
-      font-size: 70px;
-      animation: spinBounce 2s cubic-bezier(0.68, -0.55, 0.27, 1.55);
-    }
-
-    .intro-title {
-      margin-top: 20px;
-      font-size: 24px;
-      font-weight: 800;
-      color: #F7931A;
-      letter-spacing: 2px;
-    }
-
-    @keyframes pulseGlow {
-      0%, 100% { box-shadow: 0 0 20px rgba(247, 147, 26, 0.2); }
-      50% { box-shadow: 0 0 45px rgba(247, 147, 26, 0.6); }
-    }
-
-    @keyframes spinBounce {
-      0% { transform: scale(0) rotate(-180deg); }
-      60% { transform: scale(1.2) rotate(10deg); }
-      100% { transform: scale(1) rotate(0deg); }
     }
 
     /* BARRA SUPERIORE AUDIO & INFO */
@@ -389,14 +330,6 @@
 </head>
 <body>
 
-  <!-- INTRO INITIAL LOGO SCREEN -->
-  <div id="intro-screen">
-    <div class="logo-container">
-      <div class="btc-logo-img">₿</div>
-    </div>
-    <div class="intro-title">SATOSHI TAP</div>
-  </div>
-
   <!-- BARRA SUPERIORE -->
   <header class="top-header">
     <div class="brand">
@@ -571,21 +504,7 @@
     document.getElementById('user-balance').innerText = balance;
     updateEnergyUI();
 
-    // 3. INTRO ANIMATION HIDE (Automatico + Tap per saltare)
-    function hideIntro() {
-      const intro = document.getElementById('intro-screen');
-      if (intro) {
-        intro.classList.add('fade-out');
-        setTimeout(() => {
-          intro.style.display = 'none';
-        }, 500);
-      }
-    }
-
-    setTimeout(hideIntro, 2000);
-    document.getElementById('intro-screen').addEventListener('click', hideIntro);
-
-    // 4. TAP LOGIC
+    // 3. TAP LOGIC
     function handleTap(e) {
       if (energy <= 0) {
         if (tg && tg.HapticFeedback) tg.HapticFeedback.notificationOccurred('error');
@@ -613,7 +532,7 @@
       document.getElementById('energy-fill').style.width = `${pct}%`;
     }
 
-    // 5. TIMER 1 SATOSHI OGNI 20 MINUTI (1200 SECONDI)
+    // 4. TIMER 1 SATOSHI OGNI 20 MINUTI (1200 SECONDI)
     let secondsLeft = 1200;
 
     setInterval(() => {
@@ -636,7 +555,7 @@
       }
     }, 1000);
 
-    // 6. AUDIO 8-BIT SINTETIZZATO
+    // 5. AUDIO 8-BIT SINTETIZZATO
     let audioEnabled = true;
     let audioCtx = null;
 
@@ -670,7 +589,7 @@
       document.getElementById('sound-btn').innerText = audioEnabled ? '🔊 Audio' : '🔇 Mute';
     }
 
-    // 7. SHARE MULTI-SOCIAL
+    // 6. SHARE MULTI-SOCIAL
     async function shareReferral() {
       const shareText = "Unisciti a me su Satoshi Tap e inizia a guadagnare Bitcoin gratis! 🚀";
 
@@ -698,7 +617,7 @@
       }
     }
 
-    // 8. GUIDA MODAL CONTROLS
+    // 7. GUIDA MODAL CONTROLS
     function openHowTo() {
       document.getElementById('guide-modal').style.display = 'flex';
     }
@@ -707,7 +626,7 @@
       document.getElementById('guide-modal').style.display = 'none';
     }
 
-    // 9. NAVIGATION
+    // 8. NAVIGATION
     function switchTab(tabName, element) {
       document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
       document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
@@ -717,4 +636,4 @@
     }
   </script>
 </body>
-  </html>
+</html>
