@@ -12,8 +12,6 @@
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <!-- Adsgram SDK -->
     <script src="https://adsgram.ai/js/adv_engine.js"></script>
-    <!-- TON Connect SDK -->
-    <script src="https://unpkg.com/@tonconnect/ui@latest/dist/tonconnect-ui.min.js"></script>
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
     <style>
@@ -81,16 +79,18 @@
         </div>
     </main>
 
-    <!-- Wallet View (TON Connect) -->
+    <!-- Wallet View Direct Input -->
     <main id="tab-wallet" class="tab-content hidden flex-col items-center justify-center my-auto gap-4 text-center p-4">
         <div class="w-16 h-16 bg-amber-500/10 rounded-full flex items-center justify-center border border-amber-500/30 mb-2">
             <i class="fa-solid fa-wallet text-amber-400 text-3xl"></i>
         </div>
         <h2 class="text-2xl font-bold">Ritiro Satoshi</h2>
-        <p class="text-slate-400 text-sm max-w-xs">Collega il tuo Wallet TON per prelevare le ricompense guadagnate nel gioco.</p>
+        <p class="text-slate-400 text-sm max-w-xs">Inserisci il tuo indirizzo Wallet per ricevere le ricompense guadagnate nel gioco.</p>
         
-        <!-- Contenitore del pulsante TON Connect -->
-        <div id="ton-connect" class="my-3 flex justify-center"></div>
+        <!-- Input per l'indirizzo del Wallet -->
+        <div class="w-full max-w-xs my-2">
+            <input type="text" id="walletAddressInput" placeholder="Inserisci il tuo indirizzo Wallet (TON / BTC)" class="w-full bg-slate-800 border border-slate-700 text-white placeholder-slate-500 text-sm rounded-xl p-3 focus:outline-none focus:border-amber-500 text-center">
+        </div>
 
         <!-- Pulsante di Prelievo -->
         <button id="withdrawBtn" onclick="processWithdraw()" class="w-full max-w-xs bg-amber-500 hover:bg-amber-600 text-slate-900 font-bold py-3 px-6 rounded-2xl shadow-lg active:scale-95 transition flex items-center justify-center gap-2">
@@ -170,32 +170,30 @@
             });
         }
 
-        // Inizializza TON Connect UI
-        const tonConnectUI = new TON_CONNECT_UI.TonConnectUI({
-            manifestUrl: 'https://moneyforlifeek21-code.github.io/Satoshi-app/tonconnect-manifest.json',
-            buttonRootId: 'ton-connect'
-        });
+        // Carica Wallet salvato se presente
+        const savedAddress = localStorage.getItem('user_wallet_address') || '';
+        if (savedAddress) {
+            document.getElementById('walletAddressInput').value = savedAddress;
+        }
 
         // Gestione Prelievo
         function processWithdraw() {
-            if (!tonConnectUI.connected) {
-                if (tg.showAlert) {
-                    tg.showAlert("Prima devi collegare il tuo Wallet TON!");
-                } else {
-                    alert("Prima devi collegare il tuo Wallet TON!");
-                }
+            const walletInput = document.getElementById('walletAddressInput').value.trim();
+
+            if (!walletInput) {
+                const msg = "Inserisci un indirizzo Wallet valido prima di proseguire!";
+                if (tg.showAlert) tg.showAlert(msg); else alert(msg);
                 return;
             }
 
-            const currentWallet = tonConnectUI.account.address;
+            localStorage.setItem('user_wallet_address', walletInput);
+
             if (score < 1000) {
-                const msg = `Soglia minima di ritiro: 1.000 Satoshi.\nIl tuo bilancio attuale: ${score} Satoshi.`;
-                if (tg.showAlert) tg.showAlert(msg);
-                else alert(msg);
+                const msg = `Indirizzo salvato:\n${walletInput}\n\nSoglia minima di ritiro: 1.000 Satoshi.\nIl tuo bilancio attuale: ${score} Satoshi.`;
+                if (tg.showAlert) tg.showAlert(msg); else alert(msg);
             } else {
-                const msg = `Richiesta inviata con successo per il wallet:\n${currentWallet}\n\nI Satoshi verranno elaborati a breve.`;
-                if (tg.showAlert) tg.showAlert(msg);
-                else alert(msg);
+                const msg = `Richiesta di prelievo inviata con successo!\n\nIndirizzo: ${walletInput}\nImporto: ${score} Satoshi.`;
+                if (tg.showAlert) tg.showAlert(msg); else alert(msg);
             }
         }
 
