@@ -1,0 +1,964 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Satoshi Tap - Bitcoin Telegram Mini App</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Telegram WebApp SDK -->
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        btc: '#F7931A',
+                        'btc-hover': '#e08312',
+                        'tg-bg': '#17212b',
+                        'tg-card': '#242f3d',
+                        'tg-border': '#2b394a',
+                        'tg-text': '#f5f5f5',
+                        'tg-subtext': '#7f91a4',
+                        'tg-button': '#f7931a',
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        mono: ['JetBrains Mono', 'monospace'],
+                    },
+                    animation: {
+                        'pulse-glow': 'pulseGlow 2s infinite',
+                        'float-up': 'floatUp 0.8s ease-out forwards',
+                        'spin-slow': 'spin 12s linear infinite',
+                    },
+                    keyframes: {
+                        pulseGlow: {
+                            '0%, 100%': { boxShadow: '0 0 15px rgba(247, 147, 26, 0.3)' },
+                            '50%': { boxShadow: '0 0 30px rgba(247, 147, 26, 0.7)' },
+                        },
+                        floatUp: {
+                            '0%': { opacity: '1', transform: 'translateY(0) scale(1)' },
+                            '100%': { opacity: '0', transform: 'translateY(-60px) scale(1.3)' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            user-select: none;
+            -webkit-user-select: none;
+            touch-action: manipulation;
+            background-color: #0f172a;
+            color: #f8fafc;
+            font-family: 'Inter', sans-serif;
+            overflow-x: hidden;
+        }
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 4px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #17212b;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #2b394a;
+            border-radius: 2px;
+        }
+        .tap-btn-active:active {
+            transform: scale(0.95);
+        }
+        .tab-active {
+            color: #F7931A;
+            border-top: 2px solid #F7931A;
+        }
+        /* Tap floating text layer */
+        #floating-text-container {
+            pointer-events: none;
+            position: absolute;
+            inset: 0;
+            overflow: hidden;
+            z-index: 50;
+        }
+        .floating-sat {
+            position: absolute;
+            font-weight: 800;
+            font-family: 'JetBrains Mono', monospace;
+            color: #F7931A;
+            text-shadow: 0 0 8px rgba(247, 147, 26, 0.8);
+            pointer-events: none;
+            animation: floatUp 0.8s ease-out forwards;
+        }
+    </style>
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col justify-between selection:bg-amber-500/30">
+
+    <!-- Header Navigation -->
+    <header class="bg-slate-900/90 backdrop-blur border-b border-slate-800 p-4 sticky top-0 z-40">
+        <div class="max-w-md mx-auto flex justify-between items-center">
+            <!-- User Profile (Telegram Data) -->
+            <div class="flex items-center space-x-3">
+                <div class="relative">
+                    <img id="user-avatar" src="https://placehold.co/100x100/f7931a/ffffff?text=BTC" alt="User Avatar" class="w-10 h-10 rounded-full border-2 border-amber-500 shadow-md">
+                    <span class="absolute bottom-0 right-0 w-3 h-3 bg-emerald-500 border-2 border-slate-900 rounded-full"></span>
+                </div>
+                <div>
+                    <h1 id="user-name" class="font-bold text-sm text-slate-100 leading-tight">Crypto Miner</h1>
+                    <span id="user-tag" class="text-xs text-amber-500 font-mono">@satoshi_miner</span>
+                </div>
+            </div>
+
+            <!-- Price Ticker badge -->
+            <div class="bg-slate-800/80 border border-slate-700/60 rounded-xl px-3 py-1.5 flex flex-col items-end">
+                <div class="flex items-center space-x-1">
+                    <i class="fa-brands fa-bitcoin text-amber-500 text-xs"></i>
+                    <span id="btc-price" class="text-xs font-mono font-bold text-slate-200">$96,450</span>
+                </div>
+                <span class="text-[10px] text-emerald-400 font-medium"><i class="fa-solid fa-caret-up"></i> +2.4% 24h</span>
+            </div>
+        </div>
+    </header>
+
+    <!-- Floating Text Container for Tap FX -->
+    <div id="floating-text-container"></div>
+
+    <!-- MAIN VIEW CONTAINER -->
+    <main class="max-w-md w-full mx-auto p-4 flex-1 flex flex-col justify-between pb-24">
+        
+        <!-- TAP MINER TAB -->
+        <section id="tab-miner" class="flex-1 flex flex-col justify-between items-center py-2 space-y-4">
+            
+            <!-- Balance Card -->
+            <div class="w-full bg-gradient-to-b from-slate-900 to-slate-900/80 border border-amber-500/20 rounded-2xl p-5 text-center shadow-xl relative overflow-hidden">
+                <div class="absolute -right-10 -top-10 w-32 h-32 bg-amber-500/10 rounded-full blur-2xl"></div>
+                <p class="text-xs font-medium text-slate-400 uppercase tracking-widest mb-1">Total Satoshi Balance</p>
+                <div class="flex items-center justify-center space-x-2 my-1">
+                    <i class="fa-brands fa-bitcoin text-amber-500 text-3xl animate-bounce"></i>
+                    <span id="sat-balance" class="text-4xl font-black font-mono tracking-tight text-white">0</span>
+                    <span class="text-xs font-bold text-amber-500 uppercase tracking-wider self-end mb-1">SATS</span>
+                </div>
+                <p id="fiat-balance" class="text-xs font-mono text-slate-400">≈ $0.00 USD (0.00 EUR)</p>
+            </div>
+
+            <!-- Energy & Rank Status -->
+            <div class="w-full space-y-1.5">
+                <div class="flex justify-between items-center text-xs text-slate-400 font-medium px-1">
+                    <span class="flex items-center space-x-1 text-amber-400">
+                        <i class="fa-solid fa-bolt"></i>
+                        <span>Energy</span>
+                    </span>
+                    <span class="font-mono"><span id="energy-curr">1000</span> / <span id="energy-max">1000</span></span>
+                </div>
+                <div class="w-full bg-slate-800 rounded-full h-3 border border-slate-700/60 p-0.5 overflow-hidden shadow-inner">
+                    <div id="energy-bar" class="bg-gradient-to-r from-amber-600 to-amber-400 h-full rounded-full transition-all duration-200" style="width: 100%;"></div>
+                </div>
+            </div>
+
+            <!-- Big Bitcoin Mining Tap Button -->
+            <div class="relative my-auto py-4 flex items-center justify-center">
+                <!-- Outer Pulse Rings -->
+                <div class="absolute w-64 h-64 bg-amber-500/10 rounded-full animate-ping pointer-events-none opacity-40"></div>
+                <div class="absolute w-56 h-56 border border-amber-500/20 rounded-full animate-spin-slow pointer-events-none"></div>
+                
+                <button id="tap-btn" class="relative w-52 h-52 rounded-full bg-gradient-to-br from-amber-400 via-amber-500 to-amber-600 p-3 shadow-2xl shadow-amber-500/30 border-4 border-amber-300/40 active:scale-95 transition-transform duration-75 flex items-center justify-center cursor-pointer select-none">
+                    <div class="w-full h-full rounded-full bg-slate-950/20 backdrop-blur-xs flex flex-col items-center justify-center border border-white/20 shadow-inner">
+                        <i class="fa-brands fa-bitcoin text-7xl text-white drop-shadow-[0_4px_12px_rgba(0,0,0,0.5)]"></i>
+                        <span class="text-[11px] font-bold text-amber-100 tracking-wider uppercase mt-1">Tap to Mine</span>
+                    </div>
+                </button>
+            </div>
+
+            <!-- Tap Stats summary -->
+            <div class="grid grid-cols-2 gap-3 w-full">
+                <div class="bg-slate-900/60 border border-slate-800 rounded-xl p-3 text-center">
+                    <span class="text-[10px] uppercase text-slate-400 block font-semibold">Earn Per Tap</span>
+                    <span class="text-sm font-bold font-mono text-amber-400">+1 Sat</span>
+                </div>
+                <div class="bg-slate-900/60 border border-slate-800 rounded-xl p-3 text-center">
+                    <span class="text-[10px] uppercase text-slate-400 block font-semibold">Recharge Speed</span>
+                    <span class="text-sm font-bold font-mono text-emerald-400">+3 Sats/sec</span>
+                </div>
+            </div>
+
+        </section>
+
+        <!-- TASKS & MISSIONS TAB -->
+        <section id="tab-tasks" class="hidden flex-1 space-y-4">
+            <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4">
+                <h2 class="text-lg font-bold text-white flex items-center space-x-2">
+                    <i class="fa-solid fa-list-check text-amber-500"></i>
+                    <span>Mission Center</span>
+                </h2>
+                <p class="text-xs text-slate-400 mt-0.5">Complete missions to instantly boost your Bitcoin balance.</p>
+            </div>
+
+            <!-- Rewarded Video Ad Special Task -->
+            <div class="bg-gradient-to-r from-amber-500/10 via-slate-900 to-slate-900 border border-amber-500/40 rounded-2xl p-4 relative overflow-hidden shadow-lg">
+                <div class="flex justify-between items-center">
+                    <div class="space-y-1">
+                        <span class="bg-amber-500/20 text-amber-400 text-[10px] font-bold px-2 py-0.5 rounded-full uppercase border border-amber-500/30">Bonus Reward</span>
+                        <h3 class="font-bold text-sm text-white">Watch Rewarded Video</h3>
+                        <p class="text-xs text-slate-400">Watch a 15s quick ad for instant bonus</p>
+                        <div class="flex items-center space-x-1 text-amber-400 text-xs font-mono font-bold pt-1">
+                            <i class="fa-solid fa-coins"></i>
+                            <span>+250 Sats</span>
+                        </div>
+                    </div>
+                    <button id="watch-ad-btn" class="bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-slate-950 font-bold text-xs px-4 py-2.5 rounded-xl shadow-md transition-all active:scale-95 flex items-center space-x-1.5">
+                        <i class="fa-solid fa-play"></i>
+                        <span>Watch Ad</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Task List -->
+            <div class="space-y-2.5">
+                <h3 class="text-xs font-bold uppercase text-slate-400 tracking-wider px-1">Daily Missions</h3>
+                
+                <div id="task-list" class="space-y-2">
+                    <!-- Dynamic tasks rendered via JS -->
+                </div>
+            </div>
+        </section>
+
+        <!-- STREAK / REWARDS TAB -->
+        <section id="tab-streak" class="hidden flex-1 space-y-4">
+            <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4 text-center space-y-2">
+                <div class="w-12 h-12 bg-amber-500/20 text-amber-500 rounded-full flex items-center justify-center mx-auto text-xl border border-amber-500/30">
+                    <i class="fa-solid fa-fire"></i>
+                </div>
+                <h2 class="text-lg font-bold text-white">Daily Mining Streak</h2>
+                <p class="text-xs text-slate-400">Check in consecutively every day to build your streak multiplier and earn higher Satoshi payouts!</p>
+                <div class="inline-block bg-slate-800 px-3 py-1 rounded-full border border-slate-700 text-xs font-mono text-amber-400">
+                    Current Streak: <span id="streak-count-display" class="font-bold text-white">1</span> Days
+                </div>
+            </div>
+
+            <!-- 7-Day Grid -->
+            <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5" id="streak-grid">
+                <!-- JS Populates 7 Day streak cards -->
+            </div>
+
+            <button id="claim-daily-btn" class="w-full py-3.5 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-slate-950 font-bold rounded-xl shadow-lg transition-all active:scale-95 text-sm flex items-center justify-center space-x-2">
+                <i class="fa-solid fa-gift"></i>
+                <span id="claim-btn-text">Claim Today's Bonus</span>
+            </button>
+        </section>
+
+        <!-- REFERRAL / FRIENDS TAB -->
+        <section id="tab-referral" class="hidden flex-1 space-y-4">
+            <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4 space-y-3">
+                <div class="flex items-center space-x-3">
+                    <div class="w-10 h-10 bg-amber-500/20 text-amber-500 rounded-xl flex items-center justify-center text-lg border border-amber-500/30">
+                        <i class="fa-solid fa-user-plus"></i>
+                    </div>
+                    <div>
+                        <h2 class="text-base font-bold text-white">Invite Friends</h2>
+                        <p class="text-xs text-slate-400">Earn 10% of all Sats mined by your invited friends!</p>
+                    </div>
+                </div>
+
+                <!-- Referral Stats -->
+                <div class="grid grid-cols-2 gap-2 pt-2">
+                    <div class="bg-slate-800/60 p-3 rounded-xl border border-slate-700/50 text-center">
+                        <span class="text-[10px] text-slate-400 uppercase font-semibold block">Invited Friends</span>
+                        <span id="ref-count" class="text-lg font-bold font-mono text-white">0</span>
+                    </div>
+                    <div class="bg-slate-800/60 p-3 rounded-xl border border-slate-700/50 text-center">
+                        <span class="text-[10px] text-slate-400 uppercase font-semibold block">Referral Earnings</span>
+                        <span id="ref-earnings" class="text-lg font-bold font-mono text-amber-400">0 Sats</span>
+                    </div>
+                </div>
+
+                <!-- Referral Link Box -->
+                <div class="space-y-1.5 pt-2">
+                    <label class="text-xs text-slate-300 font-medium">Your Unique Invite Link:</label>
+                    <div class="flex space-x-2">
+                        <input id="ref-link-input" type="text" readonly value="https://t.me/SatoshiMinerBot?start=ref_12345" class="bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs font-mono text-slate-300 w-full focus:outline-none">
+                        <button id="copy-ref-btn" class="bg-amber-500 hover:bg-amber-600 text-slate-950 px-4 py-2 rounded-xl font-bold text-xs shrink-0 transition-colors flex items-center space-x-1">
+                            <i class="fa-solid fa-copy"></i>
+                            <span>Copy</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Invited list placeholder -->
+            <div class="space-y-2">
+                <h3 class="text-xs font-bold uppercase text-slate-400 tracking-wider px-1">Your Friends List</h3>
+                <div id="friends-list" class="bg-slate-900 border border-slate-800 rounded-2xl p-4 text-center text-xs text-slate-500">
+                    No friends invited yet. Share your invite link to start earning passive Bitcoin!
+                </div>
+            </div>
+        </section>
+
+        <!-- WALLET / WITHDRAW TAB -->
+        <section id="tab-wallet" class="hidden flex-1 space-y-4">
+            <div class="bg-gradient-to-br from-slate-900 via-slate-900 to-amber-950/30 border border-amber-500/30 rounded-2xl p-5 space-y-4 shadow-xl">
+                <div class="flex justify-between items-start">
+                    <div>
+                        <span class="text-[10px] text-amber-400 font-mono uppercase tracking-wider font-semibold">Lightning Network Payouts</span>
+                        <h2 class="text-xl font-bold text-white flex items-center space-x-1.5 mt-0.5">
+                            <i class="fa-solid fa-bolt text-amber-500"></i>
+                            <span>Instant Withdrawal</span>
+                        </h2>
+                    </div>
+                    <span class="bg-emerald-500/20 text-emerald-400 text-[10px] font-bold px-2 py-0.5 rounded-full border border-emerald-500/30 flex items-center space-x-1">
+                        <span class="w-1.5 h-1.5 bg-emerald-400 rounded-full animate-ping"></span>
+                        <span>Zero Fees</span>
+                    </span>
+                </div>
+
+                <div class="bg-slate-950/60 rounded-xl p-3 border border-slate-800 space-y-1">
+                    <div class="text-xs text-slate-400 flex justify-between">
+                        <span>Available for Withdrawal:</span>
+                        <span class="text-slate-300 font-mono" id="withdraw-available-fiat">$0.00</span>
+                    </div>
+                    <div class="text-2xl font-black font-mono text-amber-400 flex items-center space-x-1">
+                        <span id="withdraw-available-sats">0</span>
+                        <span class="text-xs font-bold text-amber-500">SATS</span>
+                    </div>
+                </div>
+
+                <button id="open-withdraw-modal-btn" class="w-full py-3.5 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-slate-950 font-bold rounded-xl shadow-lg transition-all active:scale-95 text-sm flex items-center justify-center space-x-2">
+                    <i class="fa-solid fa-arrow-up-right-from-square"></i>
+                    <span>Withdraw to Lightning Wallet</span>
+                </button>
+            </div>
+
+            <!-- Transaction History -->
+            <div class="space-y-2">
+                <h3 class="text-xs font-bold uppercase text-slate-400 tracking-wider px-1">Recent Withdrawals</h3>
+                <div id="tx-history" class="space-y-2">
+                    <!-- Populated dynamically -->
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Bottom Navigation Bar -->
+    <nav class="fixed bottom-0 left-0 right-0 bg-slate-900/95 backdrop-blur-md border-t border-slate-800 z-40 px-2 py-1.5">
+        <div class="max-w-md mx-auto grid grid-cols-5 gap-1 text-center">
+            
+            <button data-tab="tab-miner" class="nav-tab nav-active flex flex-col items-center justify-center py-2 px-1 rounded-xl text-amber-500 transition-colors">
+                <i class="fa-solid fa-hammer text-lg"></i>
+                <span class="text-[10px] font-medium mt-1">Mine</span>
+            </button>
+
+            <button data-tab="tab-tasks" class="nav-tab flex flex-col items-center justify-center py-2 px-1 rounded-xl text-slate-400 hover:text-slate-200 transition-colors">
+                <i class="fa-solid fa-list-check text-lg"></i>
+                <span class="text-[10px] font-medium mt-1">Tasks</span>
+            </button>
+
+            <button data-tab="tab-streak" class="nav-tab flex flex-col items-center justify-center py-2 px-1 rounded-xl text-slate-400 hover:text-slate-200 transition-colors">
+                <i class="fa-solid fa-fire text-lg"></i>
+                <span class="text-[10px] font-medium mt-1">Daily</span>
+            </button>
+
+            <button data-tab="tab-referral" class="nav-tab flex flex-col items-center justify-center py-2 px-1 rounded-xl text-slate-400 hover:text-slate-200 transition-colors">
+                <i class="fa-solid fa-users text-lg"></i>
+                <span class="text-[10px] font-medium mt-1">Friends</span>
+            </button>
+
+            <button data-tab="tab-wallet" class="nav-tab flex flex-col items-center justify-center py-2 px-1 rounded-xl text-slate-400 hover:text-slate-200 transition-colors">
+                <i class="fa-solid fa-wallet text-lg"></i>
+                <span class="text-[10px] font-medium mt-1">Wallet</span>
+            </button>
+
+        </div>
+    </nav>
+
+    <!-- MODAL: LIGHTNING WITHDRAWAL -->
+    <div id="withdraw-modal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+        <div class="bg-slate-900 border border-slate-800 w-full max-w-sm rounded-2xl p-5 space-y-4 shadow-2xl relative animate-in fade-in zoom-in-95 duration-150">
+            
+            <button id="close-withdraw-modal" class="absolute top-4 right-4 text-slate-400 hover:text-white p-1">
+                <i class="fa-solid fa-xmark text-lg"></i>
+            </button>
+
+            <div class="text-center space-y-1">
+                <div class="w-12 h-12 bg-amber-500/20 text-amber-500 rounded-full flex items-center justify-center mx-auto text-xl border border-amber-500/30">
+                    <i class="fa-solid fa-bolt"></i>
+                </div>
+                <h3 class="text-lg font-bold text-white">Lightning Payout</h3>
+                <p class="text-xs text-slate-400">Instant withdrawal directly to your LN Wallet</p>
+            </div>
+
+            <form id="withdraw-form" class="space-y-3">
+                <div class="space-y-1">
+                    <label class="text-xs text-slate-300 font-medium">Lightning Address or LN Invoice:</label>
+                    <input id="ln-address-input" type="text" placeholder="e.g. user@getalby.com or lnbc..." required class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3.5 py-2.5 text-xs text-white focus:outline-none focus:border-amber-500 font-mono">
+                    <p class="text-[10px] text-slate-500">Supports Alby, Wallet of Satoshi, ZBD, Strike, etc.</p>
+                </div>
+
+                <div class="space-y-1">
+                    <label class="text-xs text-slate-300 font-medium">Amount to Withdraw (Sats):</label>
+                    <div class="relative">
+                        <input id="withdraw-amount-input" type="number" min="100" placeholder="Min 100 Sats" required class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3.5 py-2.5 text-xs text-white focus:outline-none focus:border-amber-500 font-mono pr-14">
+                        <button type="button" id="withdraw-max-btn" class="absolute right-2 top-1.5 bg-slate-800 hover:bg-slate-700 text-amber-400 text-[10px] font-bold px-2 py-1 rounded-lg">MAX</button>
+                    </div>
+                </div>
+
+                <div id="withdraw-error" class="hidden text-[11px] text-rose-400 bg-rose-500/10 border border-rose-500/20 rounded-lg p-2"></div>
+
+                <button type="submit" id="confirm-withdraw-btn" class="w-full py-3 bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold rounded-xl shadow-lg transition-all active:scale-95 text-xs flex items-center justify-center space-x-2">
+                    <i class="fa-solid fa-paper-plane"></i>
+                    <span>Confirm & Send Instantly</span>
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL: REWARDED AD SIMULATOR -->
+    <div id="ad-modal" class="fixed inset-0 bg-slate-950/90 backdrop-blur-md z-50 flex items-center justify-center p-4 hidden">
+        <div class="bg-slate-900 border border-slate-800 w-full max-w-sm rounded-2xl p-5 text-center space-y-4 shadow-2xl relative">
+            <span class="bg-amber-500/20 text-amber-400 text-[10px] font-bold px-2 py-0.5 rounded-full uppercase border border-amber-500/30 inline-block">Sponsored Video</span>
+            
+            <div class="aspect-video bg-slate-950 rounded-xl border border-slate-800 flex flex-col items-center justify-center p-4 relative overflow-hidden">
+                <i class="fa-brands fa-bitcoin text-5xl text-amber-500/40 animate-pulse mb-2"></i>
+                <p class="text-xs text-slate-300 font-medium">Simulating Rewarded Ad Streaming...</p>
+                <!-- Progress bar -->
+                <div class="w-full bg-slate-800 rounded-full h-2 mt-4 overflow-hidden">
+                    <div id="ad-progress" class="bg-amber-500 h-full w-0 transition-all duration-1000 ease-linear"></div>
+                </div>
+            </div>
+
+            <div class="flex items-center justify-between px-2">
+                <span class="text-xs text-slate-400">Reward: <strong class="text-amber-400 font-mono">+250 Sats</strong></span>
+                <span id="ad-timer" class="text-xs font-mono font-bold text-amber-400 bg-slate-800 px-2.5 py-1 rounded-lg">15s</span>
+            </div>
+
+            <button id="close-ad-btn" disabled class="w-full py-3 bg-slate-800 text-slate-500 font-bold rounded-xl text-xs transition-all cursor-not-allowed">
+                Watching Video...
+            </button>
+        </div>
+    </div>
+
+    <!-- TOAST NOTIFICATION POPUP -->
+    <div id="toast" class="fixed top-5 left-1/2 -translate-x-1/2 bg-slate-900 border border-amber-500/40 text-slate-100 text-xs px-4 py-2.5 rounded-xl shadow-2xl z-50 flex items-center space-x-2 transition-all duration-300 -translate-y-20 opacity-0 pointer-events-none">
+        <i id="toast-icon" class="fa-solid fa-circle-check text-emerald-400"></i>
+        <span id="toast-msg">Notification Message</span>
+    </div>
+
+    <!-- APPLICATION LOGIC SCRIPT -->
+    <script>
+        // State Management with LocalStorage
+        const defaultState = {
+            sats: 120,
+            energy: 1000,
+            maxEnergy: 1000,
+            streak: 1,
+            lastStreakClaim: null,
+            completedTasks: [],
+            referrals: 2,
+            refEarnings: 340,
+            withdrawals: [
+                { id: 'tx_1', amount: 500, address: 'satoshi@getalby.com', date: '2025-02-20', status: 'Completed' }
+            ]
+        };
+
+        let state = JSON.parse(localStorage.getItem('btc_miner_state')) || defaultState;
+
+        function saveState() {
+            localStorage.setItem('btc_miner_state', JSON.stringify(state));
+            updateUI();
+        }
+
+        // Live BTC Price mock data with minor real-time fluctuation
+        let btcPriceUsd = 96450;
+
+        // Dynamic Tasks List Definition
+        const tasks = [
+            { id: 't1', title: 'Join Official Telegram Channel', reward: 150, icon: 'fa-paper-plane', link: 'https://t.me/telegram' },
+            { id: 't2', title: 'Follow Satoshi Miner on X / Twitter', reward: 100, icon: 'fa-x-twitter', link: 'https://twitter.com' },
+            { id: 't3', title: 'Subscribe to YouTube Crypto Channel', reward: 200, icon: 'fa-youtube', link: 'https://youtube.com' },
+            { id: 't4', title: 'Invite 3 Friends to Mini App', reward: 500, icon: 'fa-user-plus', reqRef: 3 }
+        ];
+
+        // Telegram WebApp Initialization
+        let tg = window.Telegram ? window.Telegram.WebApp : null;
+
+        document.addEventListener('DOMContentLoaded', () => {
+            if (tg) {
+                tg.ready();
+                tg.expand();
+                // Inject User Telegram Profile Data if present
+                if (tg.initDataUnsafe && tg.initDataUnsafe.user) {
+                    const u = tg.initDataUnsafe.user;
+                    document.getElementById('user-name').innerText = `${u.first_name || ''} ${u.last_name || ''}`.trim() || 'Telegram User';
+                    document.getElementById('user-tag').innerText = `@${u.username || 'crypto_miner'}`;
+                    if (u.photo_url) {
+                        document.getElementById('user-avatar').src = u.photo_url;
+                    }
+                }
+            }
+
+            initApp();
+        });
+
+        function initApp() {
+            setupNavigation();
+            setupTapMiner();
+            setupStreakSystem();
+            setupTasks();
+            setupReferral();
+            setupWithdrawals();
+            setupAdSimulator();
+            startEnergyRegen();
+            startPriceTicker();
+            updateUI();
+        }
+
+        // Navigation Tab Switching
+        function setupNavigation() {
+            const tabs = document.querySelectorAll('.nav-tab');
+            tabs.forEach(tab => {
+                tab.addEventListener('click', () => {
+                    const targetId = tab.getAttribute('data-tab');
+
+                    // Hide all sections
+                    document.querySelectorAll('main > section').forEach(sec => sec.classList.add('hidden'));
+                    
+                    // Show target section
+                    document.getElementById(targetId).classList.remove('hidden');
+
+                    // Update active tab styles
+                    tabs.forEach(t => {
+                        t.classList.remove('text-amber-500');
+                        t.classList.add('text-slate-400');
+                    });
+                    tab.classList.remove('text-slate-400');
+                    tab.classList.add('text-amber-500');
+                });
+            });
+        }
+
+        // Tap-to-Earn Core Engine
+        function setupTapMiner() {
+            const tapBtn = document.getElementById('tap-btn');
+
+            const handleTap = (clientX, clientY) => {
+                if (state.energy <= 0) {
+                    showToast('Out of energy! Wait for recharge.', 'error');
+                    return;
+                }
+
+                // Deduct Energy & Add Satoshi
+                state.energy = Math.max(0, state.energy - 1);
+                state.sats += 1;
+
+                // Trigger Haptic Feedback via Telegram WebApp SDK if available
+                if (tg && tg.HapticFeedback) {
+                    tg.HapticFeedback.impactOccurred('light');
+                }
+
+                // Render Floating Text FX
+                createFloatingText(clientX, clientY);
+
+                saveState();
+            };
+
+            tapBtn.addEventListener('click', (e) => {
+                handleTap(e.clientX, e.clientY);
+            });
+
+            tapBtn.addEventListener('touchstart', (e) => {
+                e.preventDefault(); // Prevent default touch scrolling/zoom on button
+                // Support multi-finger tapping safely
+                for (let i = 0; i < e.touches.length; i++) {
+                    const touch = e.touches[i];
+                    handleTap(touch.clientX, touch.clientY);
+                }
+            }, { passive: false });
+        }
+
+        function createFloatingText(clientX, clientY) {
+            const container = document.getElementById('floating-text-container');
+            const el = document.createElement('div');
+            el.className = 'floating-sat';
+            el.innerText = '+1 Sat';
+
+            // Position calculating touch/click point
+            const rect = container.getBoundingClientRect();
+            let x = clientX !== undefined ? clientX : rect.width / 2;
+            let y = clientY !== undefined ? clientY : rect.height / 2;
+
+            // Add offset for organic feel
+            x += (Math.random() - 0.5) * 20;
+            y += (Math.random() - 0.5) * 10;
+
+            el.style.left = `${x - 20}px`;
+            el.style.top = `${y - 20}px`;
+
+            container.appendChild(el);
+
+            setTimeout(() => {
+                el.remove();
+            }, 800);
+        }
+
+        // Automatic Energy Regeneration Loop
+        function startEnergyRegen() {
+            setInterval(() => {
+                if (state.energy < state.maxEnergy) {
+                    state.energy = Math.min(state.maxEnergy, state.energy + 3);
+                    saveState();
+                }
+            }, 1000);
+        }
+
+        // Price Ticker Simulation
+        function startPriceTicker() {
+            setInterval(() => {
+                const delta = (Math.random() - 0.48) * 120;
+                btcPriceUsd = Math.max(50000, btcPriceUsd + delta);
+                document.getElementById('btc-price').innerText = `$${Math.round(btcPriceUsd).toLocaleString()}`;
+                updateFiatBalance();
+            }, 4000);
+        }
+
+        // UI Update Engine
+        function updateUI() {
+            document.getElementById('sat-balance').innerText = state.sats.toLocaleString();
+            document.getElementById('energy-curr').innerText = state.energy;
+            document.getElementById('energy-max').innerText = state.maxEnergy;
+            
+            const energyPercent = (state.energy / state.maxEnergy) * 100;
+            document.getElementById('energy-bar').style.width = `${energyPercent}%`;
+
+            document.getElementById('withdraw-available-sats').innerText = state.sats.toLocaleString();
+
+            updateFiatBalance();
+            updateStreakUI();
+        }
+
+        function updateFiatBalance() {
+            const usdVal = (state.sats / 100000000) * btcPriceUsd;
+            const eurVal = usdVal * 0.92;
+            const formattedVal = `≈ $${usdVal.toFixed(2)} USD (${eurVal.toFixed(2)} EUR)`;
+            
+            document.getElementById('fiat-balance').innerText = formattedVal;
+            document.getElementById('withdraw-available-fiat').innerText = `$${usdVal.toFixed(2)} USD`;
+        }
+
+        // Daily Streak System
+        function setupStreakSystem() {
+            const streakGrid = document.getElementById('streak-grid');
+            const claimBtn = document.getElementById('claim-daily-btn');
+
+            const streakRewards = [100, 200, 350, 500, 750, 1000, 2500];
+
+            streakGrid.innerHTML = '';
+            streakRewards.forEach((reward, index) => {
+                const dayNum = index + 1;
+                const isCurrentDay = dayNum === state.streak;
+                const isClaimed = dayNum < state.streak;
+
+                const card = document.createElement('div');
+                card.className = `p-3 rounded-xl border text-center flex flex-col items-center justify-between space-y-1.5 transition-all ${
+                    isCurrentDay 
+                        ? 'bg-amber-500/20 border-amber-500 shadow-lg shadow-amber-500/10' 
+                        : isClaimed 
+                        ? 'bg-slate-900/40 border-emerald-500/40 opacity-70' 
+                        : 'bg-slate-900 border-slate-800'
+                }`;
+
+                card.innerHTML = `
+                    <span class="text-[10px] uppercase font-bold text-slate-400">Day ${dayNum}</span>
+                    <i class="fa-solid ${isClaimed ? 'fa-circle-check text-emerald-400' : 'fa-coins text-amber-500'} text-lg"></i>
+                    <span class="text-xs font-mono font-bold text-white">+${reward}</span>
+                `;
+                streakGrid.appendChild(card);
+            });
+
+            document.getElementById('streak-count-display').innerText = state.streak;
+
+            // Check if user already claimed today
+            const todayStr = new Date().toISOString().split('T')[0];
+            const alreadyClaimedToday = state.lastStreakClaim === todayStr;
+
+            if (alreadyClaimedToday) {
+                claimBtn.disabled = true;
+                claimBtn.classList.add('opacity-50', 'cursor-not-allowed');
+                document.getElementById('claim-btn-text').innerText = 'Claimed Today (Come Back Tomorrow)';
+            } else {
+                claimBtn.disabled = false;
+                claimBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+                document.getElementById('claim-btn-text').innerText = `Claim Day ${state.streak} Bonus (+${streakRewards[state.streak - 1]} Sats)`;
+            }
+
+            claimBtn.onclick = () => {
+                if (alreadyClaimedToday) return;
+
+                const bonus = streakRewards[state.streak - 1];
+                state.sats += bonus;
+                state.lastStreakClaim = todayStr;
+                state.streak = state.streak >= 7 ? 1 : state.streak + 1;
+
+                showToast(`Claimed +${bonus} Sats Daily Bonus!`, 'success');
+                saveState();
+                setupStreakSystem();
+            };
+        }
+
+        function updateStreakUI() {
+            // Updated directly in setupStreakSystem
+        }
+
+        // Tasks / Missions Logic
+        function setupTasks() {
+            const taskContainer = document.getElementById('task-list');
+            taskContainer.innerHTML = '';
+
+            tasks.forEach(task => {
+                const isCompleted = state.completedTasks.includes(task.id);
+
+                const item = document.createElement('div');
+                item.className = 'bg-slate-900 border border-slate-800 rounded-xl p-3 flex items-center justify-between space-x-3';
+
+                item.innerHTML = `
+                    <div class="flex items-center space-x-3">
+                        <div class="w-9 h-9 bg-slate-800 rounded-lg flex items-center justify-center text-amber-500 shrink-0">
+                            <i class="fa-solid ${task.icon} text-base"></i>
+                        </div>
+                        <div>
+                            <h4 class="text-xs font-bold text-white">${task.title}</h4>
+                            <span class="text-xs font-mono font-bold text-amber-400">+${task.reward} Sats</span>
+                        </div>
+                    </div>
+                    <button id="task-btn-${task.id}" class="${
+                        isCompleted 
+                            ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30' 
+                            : 'bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold'
+                    } text-xs px-3 py-1.5 rounded-lg transition-colors shrink-0 flex items-center space-x-1">
+                        <span>${isCompleted ? 'Completed' : 'Start Task'}</span>
+                        <i class="fa-solid ${isCompleted ? 'fa-check' : 'fa-chevron-right'} text-[10px]"></i>
+                    </button>
+                `;
+
+                taskContainer.appendChild(item);
+
+                const btn = document.getElementById(`task-btn-${task.id}`);
+                if (!isCompleted) {
+                    btn.addEventListener('click', () => completeTask(task));
+                }
+            });
+        }
+
+        function completeTask(task) {
+            if (task.reqRef && state.referrals < task.reqRef) {
+                showToast(`Requires at least ${task.reqRef} invited friends!`, 'error');
+                return;
+            }
+
+            if (task.link) {
+                window.open(task.link, '_blank');
+            }
+
+            // Simulate verification delay
+            showToast('Verifying task completion...', 'info');
+
+            setTimeout(() => {
+                state.completedTasks.push(task.id);
+                state.sats += task.reward;
+                showToast(`Task Complete! +${task.reward} Sats added!`, 'success');
+                saveState();
+                setupTasks();
+            }, 1500);
+        }
+
+        // Rewarded Video Ad Simulator
+        function setupAdSimulator() {
+            const watchBtn = document.getElementById('watch-ad-btn');
+            const modal = document.getElementById('ad-modal');
+            const closeBtn = document.getElementById('close-ad-btn');
+            const timerText = document.getElementById('ad-timer');
+            const progressBar = document.getElementById('ad-progress');
+
+            watchBtn.addEventListener('click', () => {
+                modal.classList.remove('hidden');
+                let timeLeft = 15;
+                timerText.innerText = `${timeLeft}s`;
+                progressBar.style.width = '0%';
+                closeBtn.disabled = true;
+                closeBtn.classList.add('opacity-50', 'cursor-not-allowed');
+                closeBtn.innerText = 'Watching Video...';
+
+                const interval = setInterval(() => {
+                    timeLeft--;
+                    timerText.innerText = `${timeLeft}s`;
+                    progressBar.style.width = `${((15 - timeLeft) / 15) * 100}%`;
+
+                    if (timeLeft <= 0) {
+                        clearInterval(interval);
+                        closeBtn.disabled = false;
+                        closeBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+                        closeBtn.classList.add('bg-amber-500', 'text-slate-950', 'hover:bg-amber-600');
+                        closeBtn.innerText = 'Claim +250 Sats Reward';
+                    }
+                }, 1000);
+
+                closeBtn.onclick = () => {
+                    if (timeLeft <= 0) {
+                        state.sats += 250;
+                        showToast('Ad Reward Claimed! +250 Sats', 'success');
+                        modal.classList.add('hidden');
+                        saveState();
+                    }
+                };
+            });
+        }
+
+        // Referral Engine
+        function setupReferral() {
+            document.getElementById('ref-count').innerText = state.referrals;
+            document.getElementById('ref-earnings').innerText = `${state.refEarnings} Sats`;
+
+            const copyBtn = document.getElementById('copy-ref-btn');
+            const refInput = document.getElementById('ref-link-input');
+
+            copyBtn.addEventListener('click', () => {
+                refInput.select();
+                document.execCommand('copy');
+                showToast('Referral link copied to clipboard!', 'success');
+            });
+        }
+
+        // Lightning Network Withdrawal Hub
+        function setupWithdrawals() {
+            const modal = document.getElementById('withdraw-modal');
+            const openBtn = document.getElementById('open-withdraw-modal-btn');
+            const closeBtn = document.getElementById('close-withdraw-modal');
+            const maxBtn = document.getElementById('withdraw-max-btn');
+            const amountInput = document.getElementById('withdraw-amount-input');
+            const addressInput = document.getElementById('ln-address-input');
+            const form = document.getElementById('withdraw-form');
+            const errorDiv = document.getElementById('withdraw-error');
+
+            openBtn.addEventListener('click', () => modal.classList.remove('hidden'));
+            closeBtn.addEventListener('click', () => modal.classList.add('hidden'));
+
+            maxBtn.addEventListener('click', () => {
+                amountInput.value = state.sats;
+            });
+
+            form.addEventListener('submit', (e) => {
+                e.preventDefault();
+                errorDiv.classList.add('hidden');
+
+                const amount = parseInt(amountInput.value);
+                const address = addressInput.value.trim();
+
+                // Validation
+                if (amount < 100) {
+                    showError('Minimum withdrawal is 100 Sats.');
+                    return;
+                }
+
+                if (amount > state.sats) {
+                    showError('Insufficient Satoshi balance.');
+                    return;
+                }
+
+                // Simple LN address / invoice regex validation
+                const isLnAddress = address.includes('@') && address.includes('.');
+                const isInvoice = address.toLowerCase().startsWith('lnbc');
+
+                if (!isLnAddress && !isInvoice) {
+                    showError('Please enter a valid Lightning Address (e.g. user@getalby.com) or LN Invoice (lnbc...).');
+                    return;
+                }
+
+                // Execute Instant Simulated Withdrawal
+                state.sats -= amount;
+                const newTx = {
+                    id: `tx_${Date.now()}`,
+                    amount: amount,
+                    address: address,
+                    date: new Date().toISOString().split('T')[0],
+                    status: 'Completed'
+                };
+
+                state.withdrawals.unshift(newTx);
+                saveState();
+
+                modal.classList.add('hidden');
+                form.reset();
+                showToast(`Successfully paid ${amount} Sats to ${address}!`, 'success');
+                renderWithdrawalHistory();
+            });
+
+            function showError(msg) {
+                errorDiv.innerText = msg;
+                errorDiv.classList.remove('hidden');
+            }
+
+            renderWithdrawalHistory();
+        }
+
+        function renderWithdrawalHistory() {
+            const txContainer = document.getElementById('tx-history');
+            txContainer.innerHTML = '';
+
+            if (state.withdrawals.length === 0) {
+                txContainer.innerHTML = `<div class="bg-slate-900 border border-slate-800 rounded-2xl p-4 text-center text-xs text-slate-500">No withdrawal history yet.</div>`;
+                return;
+            }
+
+            state.withdrawals.forEach(tx => {
+                const item = document.createElement('div');
+                item.className = 'bg-slate-900 border border-slate-800 rounded-xl p-3 flex items-center justify-between text-xs';
+                item.innerHTML = `
+                    <div class="flex items-center space-x-2.5">
+                        <div class="w-8 h-8 bg-emerald-500/20 text-emerald-400 rounded-lg flex items-center justify-center shrink-0">
+                            <i class="fa-solid fa-bolt"></i>
+                        </div>
+                        <div class="truncate max-w-[150px]">
+                            <p class="font-bold text-white truncate">${tx.address}</p>
+                            <span class="text-[10px] text-slate-500 font-mono">${tx.date}</span>
+                        </div>
+                    </div>
+                    <div class="text-right">
+                        <span class="font-mono font-bold text-amber-400 block">-${tx.amount} Sats</span>
+                        <span class="text-[9px] text-emerald-400 bg-emerald-500/10 px-1.5 py-0.5 rounded border border-emerald-500/20">${tx.status}</span>
+                    </div>
+                `;
+                txContainer.appendChild(item);
+            });
+        }
+
+        // Custom Toast Notification System
+        function showToast(message, type = 'info') {
+            const toast = document.getElementById('toast');
+            const toastMsg = document.getElementById('toast-msg');
+            const toastIcon = document.getElementById('toast-icon');
+
+            toastMsg.innerText = message;
+
+            if (type === 'success') {
+                toastIcon.className = 'fa-solid fa-circle-check text-emerald-400';
+            } else if (type === 'error') {
+                toastIcon.className = 'fa-solid fa-triangle-exclamation text-rose-400';
+            } else {
+                toastIcon.className = 'fa-solid fa-circle-info text-amber-400';
+            }
+
+            toast.classList.remove('-translate-y-20', 'opacity-0', 'pointer-events-none');
+            toast.classList.add('translate-y-0', 'opacity-100');
+
+            setTimeout(() => {
+                toast.classList.add('-translate-y-20', 'opacity-0', 'pointer-events-none');
+                toast.classList.remove('translate-y-0', 'opacity-100');
+            }, 3000);
+        }
+    </script>
+</body>
+</html>
