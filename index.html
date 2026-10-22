@@ -1,331 +1,386 @@
 <!DOCTYPE html>
-<html lang="it">
+<html lang="it" class="dark">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Satoshi Tap - Friends</title>
-  
-  <!-- SDK Telegram Mini App -->
-  <script src="https://telegram.org/js/telegram-web-app.js"></script>
-
-  <style>
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-      user-select: none;
-    }
-
-    body {
-      background-color: #0d1117;
-      color: #ffffff;
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      padding: 16px;
-    }
-
-    .screen {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      max-width: 480px;
-      margin: 0 auto;
-      width: 100%;
-    }
-
-    .friends-header {
-      text-align: center;
-      padding: 24px 10px 16px;
-    }
-
-    .friends-header .icon-box {
-      font-size: 56px;
-      margin-bottom: 12px;
-      line-height: 1;
-    }
-
-    .friends-header h2 {
-      font-size: 26px;
-      font-weight: 700;
-      margin-bottom: 8px;
-      color: #ffffff;
-    }
-
-    .friends-header p {
-      color: #8b949e;
-      font-size: 14px;
-      line-height: 1.4;
-    }
-
-    .friends-header p strong {
-      color: #f7931a;
-    }
-
-    .stats-container {
-      display: flex;
-      gap: 12px;
-      margin: 16px 0;
-    }
-
-    .stat-card {
-      flex: 1;
-      background: #161b22;
-      border: 1px solid #30363d;
-      padding: 14px;
-      border-radius: 14px;
-      text-align: center;
-    }
-
-    .stat-title {
-      display: block;
-      font-size: 12px;
-      color: #8b949e;
-      margin-bottom: 6px;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-    }
-
-    .stat-value {
-      font-size: 20px;
-      font-weight: 700;
-      color: #f7931a;
-    }
-
-    .action-buttons {
-      display: flex;
-      gap: 10px;
-      margin-bottom: 24px;
-    }
-
-    .btn-primary {
-      flex: 2;
-      background: #f7931a;
-      color: #ffffff;
-      border: none;
-      padding: 14px;
-      border-radius: 12px;
-      font-weight: 700;
-      font-size: 15px;
-      cursor: pointer;
-      transition: background 0.2s ease, transform 0.1s ease;
-    }
-
-    .btn-primary:active {
-      transform: scale(0.98);
-      background: #e08213;
-    }
-
-    .btn-secondary {
-      flex: 1;
-      background: #21262d;
-      color: #c9d1d9;
-      border: 1px solid #30363d;
-      padding: 14px;
-      border-radius: 12px;
-      font-weight: 600;
-      font-size: 15px;
-      cursor: pointer;
-      transition: background 0.2s ease, transform 0.1s ease;
-    }
-
-    .btn-secondary:active {
-      transform: scale(0.98);
-      background: #30363d;
-    }
-
-    .friends-list-container {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-    }
-
-    .friends-list-container h3 {
-      font-size: 16px;
-      margin-bottom: 12px;
-      color: #ffffff;
-    }
-
-    .friends-list {
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-      max-height: 280px;
-      overflow-y: auto;
-      padding-right: 4px;
-    }
-
-    .friend-item {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      background: #161b22;
-      border: 1px solid #21262d;
-      padding: 12px 16px;
-      border-radius: 12px;
-    }
-
-    .friend-info {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-
-    .friend-avatar {
-      width: 36px;
-      height: 36px;
-      background: #30363d;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-weight: bold;
-      color: #f7931a;
-      font-size: 14px;
-    }
-
-    .friend-name {
-      font-weight: 600;
-      color: #ffffff;
-      font-size: 14px;
-    }
-
-    .friend-reward {
-      color: #3fb950;
-      font-weight: 700;
-      font-size: 14px;
-    }
-
-    .empty-state {
-      text-align: center;
-      color: #8b949e;
-      font-size: 14px;
-      padding: 30px 0;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Satoshi Tap - Bitcoin Mini App</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Telegram WebApp SDK -->
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <!-- Adsgram SDK -->
+    <script src="https://adsgram.ai/js/adv_engine.js"></script>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            touch-action: manipulation;
+            user-select: none;
+            -webkit-user-select: none;
+        }
+        .coin-btn {
+            transition: transform 0.05s ease;
+        }
+        .coin-btn:active {
+            transform: scale(0.92);
+        }
+    </style>
 </head>
-<body>
+<body class="bg-slate-900 text-white min-h-screen flex flex-col justify-between p-4 pb-24">
 
-  <main class="screen">
-    <div class="friends-header">
-      <div class="icon-box">🤝</div>
-      <h2>Invita Amici!</h2>
-      <p>Ricevi il <strong>10%</strong> di tutti i token guadagnati dai tuoi amici.</p>
+    <!-- Header -->
+    <header class="flex justify-between items-center bg-slate-800 p-3 rounded-2xl border border-slate-700 shadow-lg">
+        <div class="flex items-center gap-2">
+            <i class="fa-brands fa-bitcoin text-amber-500 text-2xl"></i>
+            <span class="font-bold text-lg tracking-wide">Satoshi Tap</span>
+        </div>
+        <div class="bg-amber-500/10 text-amber-400 font-semibold px-3 py-1 rounded-full border border-amber-500/30 text-sm">
+            v1.4
+        </div>
+    </header>
+
+    <!-- Main Game Section -->
+    <main id="tab-mine" class="tab-content flex flex-col items-center justify-center my-auto gap-4">
+        <div class="text-center">
+            <p class="text-slate-400 text-sm font-medium tracking-wider uppercase mb-1">I tuoi Satoshi</p>
+            <div class="flex items-center justify-center gap-2">
+                <i class="fa-brands fa-bitcoin text-amber-400 text-4xl"></i>
+                <span id="score" class="text-5xl font-extrabold text-amber-400">0</span>
+            </div>
+        </div>
+
+        <!-- Tap Button -->
+        <button id="tapBtn" class="coin-btn relative rounded-full p-2 bg-amber-500/20 border-4 border-amber-500/40 shadow-[0_0_50px_rgba(245,158,11,0.3)] focus:outline-none my-2">
+            <div class="w-40 h-40 rounded-full bg-gradient-to-tr from-amber-600 to-yellow-400 flex items-center justify-center border-4 border-amber-300 shadow-inner">
+                <i class="fa-brands fa-bitcoin text-white text-7xl drop-shadow-lg"></i>
+            </div>
+        </button>
+
+        <!-- Earn Rewarded Ad Button -->
+        <button id="adBtn" onclick="watchAdForReward()" class="w-full max-w-xs bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white font-bold py-2.5 px-5 rounded-2xl shadow-lg border border-purple-400/30 flex items-center justify-center gap-3 active:scale-95 transition text-sm">
+            <i class="fa-solid fa-play-circle text-lg text-yellow-300"></i>
+            <span>Guarda Video (+100 Satoshi)</span>
+        </button>
+
+        <!-- Stats Bar -->
+        <div class="w-full max-w-xs bg-slate-800/80 backdrop-blur p-3 rounded-2xl border border-slate-700/50 flex justify-around text-center">
+            <div>
+                <p class="text-xs text-slate-400">Energia</p>
+                <p id="energyDisplay" class="font-bold text-slate-200">1000 / 1000</p>
+                <p id="timerDisplay" class="text-[10px] text-amber-400 font-mono mt-0.5">Prossimo: 20:00</p>
+            </div>
+            <div class="border-r border-slate-700"></div>
+            <div>
+                <p class="text-xs text-slate-400">Tap Power</p>
+                <p id="tapPowerDisplay" class="font-bold text-amber-400">+1</p>
+            </div>
+        </div>
+
+        <!-- Potenziamenti Crypto VIP -->
+        <div class="w-full max-w-xs flex flex-col gap-2 mt-1">
+            <p class="text-xs text-slate-400 font-bold tracking-wider uppercase text-left">Pacchetti Crypto VIP</p>
+            
+            <!-- Pack 1 -->
+            <div class="bg-slate-800 border border-amber-500/30 p-2.5 rounded-xl flex justify-between items-center">
+                <div class="flex items-center gap-3 text-left">
+                    <div class="w-10 h-10 bg-gradient-to-tr from-amber-500 to-yellow-400 rounded-xl flex items-center justify-center text-slate-900 shadow-md">
+                        <i class="fa-solid fa-bolt text-xl"></i>
+                    </div>
+                    <div>
+                        <p class="font-bold text-xs">Mega Tap (+5 Power)</p>
+                        <p class="text-[10px] text-amber-400 font-semibold">Prezzo: 0.5 TON / Crypto</p>
+                    </div>
+                </div>
+                <button onclick="openCryptoPay('Mega Tap (+5)', '0.5 TON', 'fa-bolt', 'amber')" class="bg-gradient-to-r from-amber-500 to-yellow-500 text-slate-900 font-bold px-3 py-1.5 rounded-lg text-xs active:scale-95 transition">
+                    Acquista
+                </button>
+            </div>
+
+            <!-- Pack 2 -->
+            <div class="bg-slate-800 border border-blue-500/30 p-2.5 rounded-xl flex justify-between items-center">
+                <div class="flex items-center gap-3 text-left">
+                    <div class="w-10 h-10 bg-gradient-to-tr from-blue-500 to-indigo-500 rounded-xl flex items-center justify-center text-white shadow-md">
+                        <i class="fa-solid fa-robot text-xl"></i>
+                    </div>
+                    <div>
+                        <p class="font-bold text-xs">Auto-Miner Pro (+10/s)</p>
+                        <p class="text-[10px] text-blue-400 font-semibold">Prezzo: 1.5 TON / Crypto</p>
+                    </div>
+                </div>
+                <button onclick="openCryptoPay('Auto-Miner Pro', '1.5 TON', 'fa-robot', 'blue')" class="bg-gradient-to-r from-blue-500 to-indigo-500 text-white font-bold px-3 py-1.5 rounded-lg text-xs active:scale-95 transition">
+                    Acquista
+                </button>
+            </div>
+        </div>
+    </main>
+
+    <!-- Modal Pagamento Crypto -->
+    <div id="cryptoModal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden flex-col items-center justify-center p-4">
+        <div class="bg-slate-800 border border-slate-700 rounded-2xl p-5 w-full max-w-xs text-center space-y-3">
+            <div id="modalIconContainer" class="w-16 h-16 mx-auto rounded-2xl flex items-center justify-center text-3xl shadow-lg border border-white/10">
+                <i id="modalIcon" class="fa-solid fa-bolt"></i>
+            </div>
+            <h3 id="modalTitle" class="text-xl font-bold text-amber-400">Acquista Potenziamento</h3>
+            <p id="modalDesc" class="text-xs text-slate-300">Invia il pagamento al seguente indirizzo per attivare il pacchetto:</p>
+            
+            <div class="bg-slate-900 p-3 rounded-xl border border-slate-700 text-left">
+                <p class="text-[10px] text-slate-400 uppercase">Indirizzo di pagamento Admin:</p>
+                <p id="adminWallet" class="text-xs font-mono text-amber-300 break-all select-all font-bold my-1">
+                    1M2xeN5edX8xjQnXar74dseBdivULloSzt
+                </p>
+                <p id="modalAmount" class="text-xs text-slate-300 font-bold mt-1">Importo: 0.5 TON</p>
+            </div>
+
+            <div class="space-y-2">
+                <input type="text" id="txHashInput" placeholder="Inserisci Hash / ID Transazione" class="w-full bg-slate-900 border border-slate-700 text-white placeholder-slate-500 text-xs rounded-xl p-2.5 focus:outline-none focus:border-amber-500 text-center">
+                <button onclick="submitCryptoPay()" class="w-full bg-amber-500 hover:bg-amber-600 text-slate-900 font-bold py-2.5 rounded-xl text-xs transition">
+                    Conferma Pagamento
+                </button>
+                <button onclick="closeCryptoPay()" class="w-full bg-slate-700 text-slate-300 font-semibold py-2 rounded-xl text-xs">
+                    Annulla
+                </button>
+            </div>
+        </div>
     </div>
 
-    <div class="stats-container">
-      <div class="stat-card">
-        <span class="stat-title">Amici Invitati</span>
-        <span id="friends-count" class="stat-value">0</span>
-      </div>
-      <div class="stat-card">
-        <span class="stat-title">Guadagni Referral</span>
-        <span id="friends-earnings" class="stat-value">0 🪙</span>
-      </div>
-    </div>
+    <!-- Wallet View Direct Input -->
+    <main id="tab-wallet" class="tab-content hidden flex-col items-center justify-center my-auto gap-4 text-center p-4">
+        <div class="w-16 h-16 bg-amber-500/10 rounded-full flex items-center justify-center border border-amber-500/30 mb-2">
+            <i class="fa-solid fa-wallet text-amber-400 text-3xl"></i>
+        </div>
+        <h2 class="text-2xl font-bold">Ritiro Satoshi</h2>
+        <p class="text-slate-400 text-sm max-w-xs">Inserisci il tuo indirizzo Wallet per ricevere le ricompense guadagnate nel gioco.</p>
+        
+        <div class="w-full max-w-xs my-2">
+            <input type="text" id="walletAddressInput" placeholder="Inserisci il tuo indirizzo Wallet (TON / BTC)" class="w-full bg-slate-800 border border-slate-700 text-white placeholder-slate-500 text-sm rounded-xl p-3 focus:outline-none focus:border-amber-500 text-center">
+        </div>
 
-    <div class="action-buttons">
-      <button class="btn-primary" onclick="inviteFriend()">
-        🚀 Invita un Amico
-      </button>
-      <button class="btn-secondary" onclick="copyReferralLink()">
-        📋 Copia Link
-      </button>
-    </div>
+        <button id="withdrawBtn" onclick="processWithdraw()" class="w-full max-w-xs bg-amber-500 hover:bg-amber-600 text-slate-900 font-bold py-3 px-6 rounded-2xl shadow-lg active:scale-95 transition flex items-center justify-center gap-2">
+            <i class="fa-solid fa-arrow-up-right-from-square"></i>
+            <span>Richiedi Prelievo</span>
+        </button>
+    </main>
 
-    <div class="friends-list-container">
-      <h3>I tuoi Amici</h3>
-      <div id="friends-list" class="friends-list">
-        <p class="empty-state">Non hai ancora invitato nessun amico.</p>
-      </div>
-    </div>
-  </main>
+    <!-- Generic View -->
+    <main id="tab-generic" class="tab-content hidden flex-col items-center justify-center my-auto gap-4 text-center p-4">
+        <i class="fa-solid fa-screwdriver-wrench text-amber-400 text-4xl"></i>
+        <h2 id="generic-title" class="text-2xl font-bold">Sezione in arrivo</h2>
+        <p class="text-slate-400 text-sm">Stiamo aggiornando questa sezione. Torna a trovarci presto!</p>
+    </main>
 
-  <script>
-    const tg = window.Telegram ? window.Telegram.WebApp : null;
+    <!-- Navigation Bar -->
+    <nav class="fixed bottom-0 left-0 right-0 bg-slate-800/95 backdrop-blur border-t border-slate-700/80 px-2 py-2 flex justify-around items-center text-xs text-slate-400 z-50">
+        <button onclick="switchTab('mine')" id="nav-mine" class="flex flex-col items-center gap-1 text-amber-400 font-semibold transition">
+            <i class="fa-solid fa-hammer text-lg"></i>
+            <span>Mine</span>
+        </button>
+        <button onclick="switchTab('tasks')" id="nav-tasks" class="flex flex-col items-center gap-1 hover:text-white transition">
+            <i class="fa-solid fa-list-check text-lg"></i>
+            <span>Tasks</span>
+        </button>
+        <button onclick="switchTab('daily')" id="nav-daily" class="flex flex-col items-center gap-1 hover:text-white transition">
+            <i class="fa-solid fa-fire text-lg"></i>
+            <span>Daily</span>
+        </button>
+        <button onclick="switchTab('friends')" id="nav-friends" class="flex flex-col items-center gap-1 hover:text-white transition">
+            <i class="fa-solid fa-users text-lg"></i>
+            <span>Friends</span>
+        </button>
+        <button onclick="switchTab('wallet')" id="nav-wallet" class="flex flex-col items-center gap-1 hover:text-white transition">
+            <i class="fa-solid fa-wallet text-lg"></i>
+            <span>Wallet</span>
+        </button>
+    </nav>
 
-    if (tg) {
-      tg.expand();
-      tg.ready();
-    }
+    <!-- JavaScript Logica -->
+    <script>
+        const tg = window.Telegram.WebApp;
+        tg.expand();
 
-    // SOSTITUISCI CON IL NOME UTENTE DEL TUO BOT TELEGRAM (SENZA @)
-    const BOT_USERNAME = "SatoshiTapBot";
+        let score = parseInt(localStorage.getItem('satoshi_score')) || 115;
+        let tapPower = parseInt(localStorage.getItem('satoshi_tap_power')) || 1;
+        let energy = parseInt(localStorage.getItem('satoshi_energy')) || 1000;
+        const maxEnergy = 1000;
+        const RECHARGE_TIME_SECONDS = 1200; // 20 Minuti in secondi (20 * 60)
 
-    const userId = tg?.initDataUnsafe?.user?.id || "12345678";
-    const referralLink = `https://t.me/${BOT_USERNAME}?start=ref_${userId}`;
+        let lastRechargeTime = parseInt(localStorage.getItem('last_recharge_time')) || Date.now();
 
-    function inviteFriend() {
-      const shareText = "Unisciti a me su Satoshi Tap e inizia a guadagnare token! 🚀";
-      const shareUrl = `https://t.me/share/url?url=${encodeURIComponent(referralLink)}&text=${encodeURIComponent(shareText)}`;
+        const scoreEl = document.getElementById('score');
+        const tapBtn = document.getElementById('tapBtn');
+        const tapPowerDisplay = document.getElementById('tapPowerDisplay');
+        const energyDisplay = document.getElementById('energyDisplay');
+        const timerDisplay = document.getElementById('timerDisplay');
 
-      if (tg) {
-        tg.openTelegramLink(shareUrl);
-      } else {
-        window.open(shareUrl, '_blank');
-      }
-    }
+        function updateUI() {
+            if (scoreEl) scoreEl.innerText = score.toLocaleString();
+            if (tapPowerDisplay) tapPowerDisplay.innerText = `+${tapPower}`;
+            if (energyDisplay) energyDisplay.innerText = `${energy} / ${maxEnergy}`;
+        }
 
-    function copyReferralLink() {
-      if (navigator.clipboard && navigator.clipboard.writeText) {
-        navigator.clipboard.writeText(referralLink).then(() => {
-          showAlert("Link copiato negli appunti!");
-        }).catch(() => {
-          fallbackCopy();
+        // Calcolo ricarica in background basato sul tempo trascorso
+        function syncEnergyWithTime() {
+            if (energy >= maxEnergy) {
+                lastRechargeTime = Date.now();
+                localStorage.setItem('last_recharge_time', lastRechargeTime);
+                if (timerDisplay) timerDisplay.innerText = "Energia Max";
+                return;
+            }
+
+            const now = Date.now();
+            const elapsedSeconds = Math.floor((now - lastRechargeTime) / 1000);
+            const energyToAdd = Math.floor(elapsedSeconds / RECHARGE_TIME_SECONDS);
+
+            if (energyToAdd > 0) {
+                energy = Math.min(maxEnergy, energy + energyToAdd);
+                lastRechargeTime += energyToAdd * RECHARGE_TIME_SECONDS * 1000;
+                localStorage.setItem('satoshi_energy', energy);
+                localStorage.setItem('last_recharge_time', lastRechargeTime);
+                updateUI();
+            }
+
+            // Calcola il countdown per il prossimo 1 Satoshi di energia
+            if (energy < maxEnergy) {
+                const remainingSeconds = RECHARGE_TIME_SECONDS - Math.floor((now - lastRechargeTime) / 1000);
+                const minutes = Math.floor(remainingSeconds / 60);
+                const seconds = remainingSeconds % 60;
+                if (timerDisplay) {
+                    timerDisplay.innerText = `Prossimo: ${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+                }
+            } else {
+                if (timerDisplay) timerDisplay.innerText = "Energia Max";
+            }
+        }
+
+        updateUI();
+        syncEnergyWithTime();
+
+        // Aggiorna il timer ogni secondo
+        setInterval(syncEnergyWithTime, 1000);
+
+        tapBtn.addEventListener('click', () => {
+            if (energy >= tapPower) {
+                score += tapPower;
+                energy -= tapPower;
+                
+                if (energy < maxEnergy && localStorage.getItem('last_recharge_time') === null) {
+                    lastRechargeTime = Date.now();
+                    localStorage.setItem('last_recharge_time', lastRechargeTime);
+                }
+
+                localStorage.setItem('satoshi_score', score);
+                localStorage.setItem('satoshi_energy', energy);
+                updateUI();
+
+                if (tg.HapticFeedback) tg.HapticFeedback.impactOccurred('light');
+            } else {
+                if (tg.showAlert) tg.showAlert("Energia esaurita! Attendi il timer di ricarica.");
+            }
         });
-      } else {
-        fallbackCopy();
-      }
-    }
 
-    function fallbackCopy() {
-      prompt("Copia il tuo link di invito:", referralLink);
-    }
+        // Modale Pagamento Crypto
+        let currentSelectedPack = '';
 
-    function showAlert(message) {
-      if (tg && tg.showAlert) {
-        tg.showAlert(message);
-      } else {
-        alert(message);
-      }
-    }
+        function openCryptoPay(packName, amount, iconClass, colorScheme) {
+            currentSelectedPack = packName;
+            document.getElementById('modalTitle').innerText = packName;
+            document.getElementById('modalAmount').innerText = `Importo: ${amount}`;
+            
+            const iconEl = document.getElementById('modalIcon');
+            const containerEl = document.getElementById('modalIconContainer');
+            
+            iconEl.className = `fa-solid ${iconClass}`;
+            
+            if (colorScheme === 'amber') {
+                containerEl.className = "w-16 h-16 mx-auto rounded-2xl flex items-center justify-center text-3xl shadow-lg bg-gradient-to-tr from-amber-500 to-yellow-400 text-slate-900";
+            } else {
+                containerEl.className = "w-16 h-16 mx-auto rounded-2xl flex items-center justify-center text-3xl shadow-lg bg-gradient-to-tr from-blue-500 to-indigo-500 text-white";
+            }
 
-    function updateFriendsUI(data) {
-      document.getElementById('friends-count').innerText = data.totalFriends;
-      document.getElementById('friends-earnings').innerText = `${data.totalEarnings.toLocaleString()} 🪙`;
+            document.getElementById('cryptoModal').classList.remove('hidden');
+            document.getElementById('cryptoModal').classList.add('flex');
+        }
 
-      const listContainer = document.getElementById('friends-list');
-      listContainer.innerHTML = '';
+        function closeCryptoPay() {
+            document.getElementById('cryptoModal').classList.add('hidden');
+            document.getElementById('cryptoModal').classList.remove('flex');
+        }
 
-      if (!data.friends || data.friends.length === 0) {
-        listContainer.innerHTML = '<p class="empty-state">Non hai ancora invitato nessun amico.</p>';
-        return;
-      }
+        function submitCryptoPay() {
+            const txHash = document.getElementById('txHashInput').value.trim();
+            if (!txHash) {
+                if (tg.showAlert) tg.showAlert("Inserisci l'ID o Hash della transazione di pagamento!");
+                return;
+            }
 
-      data.friends.forEach(friend => {
-        const initial = friend.username ? friend.username.charAt(0).toUpperCase() : '?';
-        const item = document.createElement('div');
-        item.className = 'friend-item';
-        item.innerHTML = `
-          <div class="friend-info">
-            <div class="friend-avatar">${initial}</div>
-            <span class="friend-name">${friend.username || 'Amico Anonimo'}</span>
-          </div>
-          <span class="friend-reward">+${friend.earnedForYou.toLocaleString()} 🪙</span>
-        `;
-        listContainer.appendChild(item);
-      });
-    }
+            if (tg.showAlert) {
+                tg.showAlert(`Pagamento inviato per la verifica!\n\nPacchetto: ${currentSelectedPack}\nTx Hash: ${txHash}\n\nL'attivazione avverrà dopo la conferma della blockchain.`);
+            } else {
+                alert("Pagamento inviato per la verifica!");
+            }
+            closeCryptoPay();
+        }
 
-    // Recupera i dati reali dal Server Backend
-    document.addEventListener('DOMContentLoaded', () => {
-      fetch(`/api/friends?userId=${userId}`)
-        .then(res => res.json())
-        .then(data => updateFriendsUI(data))
-        .catch(err => console.error("Errore nel caricamento amici:", err));
-    });
-  </script>
+        // Adsgram Config
+        const AdController = window.Adsgram.init({ blockId: "55502" });
+
+        function watchAdForReward() {
+            AdController.show().then((result) => {
+                score += 100;
+                scoreEl.innerText = score.toLocaleString();
+                localStorage.setItem('satoshi_score', score);
+                if (tg.showAlert) tg.showAlert("Complimenti! Hai ricevuto +100 Satoshi!");
+            }).catch((error) => console.log("Errore Ads:", error));
+        }
+
+        // Wallet Direct Input
+        const savedAddress = localStorage.getItem('user_wallet_address') || '';
+        if (savedAddress) document.getElementById('walletAddressInput').value = savedAddress;
+
+        function processWithdraw() {
+            const walletInput = document.getElementById('walletAddressInput').value.trim();
+            if (!walletInput) {
+                if (tg.showAlert) tg.showAlert("Inserisci un indirizzo Wallet valido prima di proseguire!");
+                return;
+            }
+            localStorage.setItem('user_wallet_address', walletInput);
+
+            if (score < 1000) {
+                const msg = `Indirizzo salvato:\n${walletInput}\n\nSoglia minima di ritiro: 1.000 Satoshi.\nIl tuo bilancio attuale: ${score} Satoshi.`;
+                if (tg.showAlert) tg.showAlert(msg); else alert(msg);
+            } else {
+                const msg = `Richiesta di prelievo inviata con successo!\n\nIndirizzo: ${walletInput}\nImporto: ${score} Satoshi.`;
+                if (tg.showAlert) tg.showAlert(msg); else alert(msg);
+            }
+        }
+
+        // Navigazione schede
+        function switchTab(tabName) {
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+            document.querySelectorAll('nav button').forEach(el => {
+                el.classList.remove('text-amber-400', 'font-semibold');
+                el.classList.add('text-slate-400');
+            });
+
+            const activeNav = document.getElementById('nav-' + tabName);
+            if (activeNav) {
+                activeNav.classList.remove('text-slate-400');
+                activeNav.classList.add('text-amber-400', 'font-semibold');
+            }
+
+            if (tabName === 'mine') {
+                document.getElementById('tab-mine').classList.remove('hidden');
+            } else if (tabName === 'wallet') {
+                document.getElementById('tab-wallet').classList.remove('hidden');
+                document.getElementById('tab-wallet').classList.add('flex');
+            } else {
+                document.getElementById('generic-title').innerText = tabName.toUpperCase();
+                document.getElementById('tab-generic').classList.remove('hidden');
+                document.getElementById('tab-generic').classList.add('flex');
+            }
+        }
+    </script>
 </body>
 </html>
