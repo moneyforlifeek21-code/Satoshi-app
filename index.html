@@ -4,11 +4,12 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>Satoshi Tap - Friends</title>
-  
+
   <!-- SDK Telegram Mini App -->
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
 
   <style>
+    /* RESET E STILI DI BASE */
     * {
       box-sizing: border-box;
       margin: 0;
@@ -27,6 +28,7 @@
       padding: 16px;
     }
 
+    /* CONTENITORE SCHERMATA FRIENDS */
     .screen {
       flex: 1;
       display: flex;
@@ -36,6 +38,7 @@
       width: 100%;
     }
 
+    /* HEADER */
     .friends-header {
       text-align: center;
       padding: 24px 10px 16px;
@@ -64,6 +67,7 @@
       color: #f7931a;
     }
 
+    /* STATISTICHE */
     .stats-container {
       display: flex;
       gap: 12px;
@@ -94,6 +98,7 @@
       color: #f7931a;
     }
 
+    /* PULSANTI D'AZIONE */
     .action-buttons {
       display: flex;
       gap: 10px;
@@ -136,6 +141,7 @@
       background: #30363d;
     }
 
+    /* LISTA AMICI */
     .friends-list-container {
       flex: 1;
       display: flex;
@@ -209,12 +215,14 @@
 <body>
 
   <main class="screen">
+    <!-- Header -->
     <div class="friends-header">
       <div class="icon-box">🤝</div>
       <h2>Invita Amici!</h2>
       <p>Ricevi il <strong>10%</strong> di tutti i token guadagnati dai tuoi amici.</p>
     </div>
 
+    <!-- Statistiche -->
     <div class="stats-container">
       <div class="stat-card">
         <span class="stat-title">Amici Invitati</span>
@@ -226,6 +234,7 @@
       </div>
     </div>
 
+    <!-- Pulsanti -->
     <div class="action-buttons">
       <button class="btn-primary" onclick="inviteFriend()">
         🚀 Invita un Amico
@@ -235,6 +244,7 @@
       </button>
     </div>
 
+    <!-- Lista Amici -->
     <div class="friends-list-container">
       <h3>I tuoi Amici</h3>
       <div id="friends-list" class="friends-list">
@@ -244,6 +254,7 @@
   </main>
 
   <script>
+    // 1. INIZIALIZZAZIONE TELEGRAM WEBAPP
     const tg = window.Telegram ? window.Telegram.WebApp : null;
 
     if (tg) {
@@ -251,12 +262,15 @@
       tg.ready();
     }
 
-    // SOSTITUISCI CON IL NOME UTENTE DEL TUO BOT TELEGRAM (SENZA @)
+    // 2. CONFIGURAZIONE DEL BOT
+    // MODIFICA QUESTA RIGA: Inserisci il nome del tuo bot senza il simbolo @
     const BOT_USERNAME = "SatoshiTapBot";
 
+    // Recupera l'ID dell'utente Telegram
     const userId = tg?.initDataUnsafe?.user?.id || "12345678";
     const referralLink = `https://t.me/${BOT_USERNAME}?start=ref_${userId}`;
 
+    // 3. FUNZIONE PER CONDIVIDERE IL LINK IN CHAT
     function inviteFriend() {
       const shareText = "Unisciti a me su Satoshi Tap e inizia a guadagnare token! 🚀";
       const shareUrl = `https://t.me/share/url?url=${encodeURIComponent(referralLink)}&text=${encodeURIComponent(shareText)}`;
@@ -268,6 +282,7 @@
       }
     }
 
+    // 4. FUNZIONE PER COPIARE IL LINK NEGLI APPUNTI
     function copyReferralLink() {
       if (navigator.clipboard && navigator.clipboard.writeText) {
         navigator.clipboard.writeText(referralLink).then(() => {
@@ -292,6 +307,7 @@
       }
     }
 
+    // 5. FUNZIONE PER POPOLARE LA SCHERMATA CON I DATI
     function updateFriendsUI(data) {
       document.getElementById('friends-count').innerText = data.totalFriends;
       document.getElementById('friends-earnings').innerText = `${data.totalEarnings.toLocaleString()} 🪙`;
@@ -319,12 +335,16 @@
       });
     }
 
-    // Recupera i dati reali dal Server Backend
+    // 6. CARICAMENTO DATI ALL'AVVIO
     document.addEventListener('DOMContentLoaded', () => {
-      fetch(`/api/friends?userId=${userId}`)
-        .then(res => res.json())
-        .then(data => updateFriendsUI(data))
-        .catch(err => console.error("Errore nel caricamento amici:", err));
+      // Modello di test locale: sostituire con la chiamata al proprio server/database se presente
+      const initialData = {
+        totalFriends: 0,
+        totalEarnings: 0,
+        friends: []
+      };
+
+      updateFriendsUI(initialData);
     });
   </script>
 </body>
