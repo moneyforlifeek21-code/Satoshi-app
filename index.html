@@ -38,7 +38,7 @@
             <span class="font-bold text-lg tracking-wide">Satoshi Tap</span>
         </div>
         <div class="bg-amber-500/10 text-amber-400 font-semibold px-3 py-1 rounded-full border border-amber-500/30 text-sm">
-            v1.3
+            v1.4
         </div>
     </header>
 
@@ -70,6 +70,7 @@
             <div>
                 <p class="text-xs text-slate-400">Energia</p>
                 <p id="energyDisplay" class="font-bold text-slate-200">1000 / 1000</p>
+                <p id="timerDisplay" class="text-[10px] text-amber-400 font-mono mt-0.5">Prossimo: 20:00</p>
             </div>
             <div class="border-r border-slate-700"></div>
             <div>
@@ -116,14 +117,12 @@
         </div>
     </main>
 
-    <!-- Modal Pagamento Crypto con Icona Stilizzata -->
+    <!-- Modal Pagamento Crypto -->
     <div id="cryptoModal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden flex-col items-center justify-center p-4">
         <div class="bg-slate-800 border border-slate-700 rounded-2xl p-5 w-full max-w-xs text-center space-y-3">
-            
             <div id="modalIconContainer" class="w-16 h-16 mx-auto rounded-2xl flex items-center justify-center text-3xl shadow-lg border border-white/10">
                 <i id="modalIcon" class="fa-solid fa-bolt"></i>
             </div>
-
             <h3 id="modalTitle" class="text-xl font-bold text-amber-400">Acquista Potenziamento</h3>
             <p id="modalDesc" class="text-xs text-slate-300">Invia il pagamento al seguente indirizzo per attivare il pacchetto:</p>
             
@@ -203,39 +202,83 @@
 
         let score = parseInt(localStorage.getItem('satoshi_score')) || 115;
         let tapPower = parseInt(localStorage.getItem('satoshi_tap_power')) || 1;
-        let energy = 1000;
+        let energy = parseInt(localStorage.getItem('satoshi_energy')) || 1000;
         const maxEnergy = 1000;
+        const RECHARGE_TIME_SECONDS = 1200; // 20 Minuti in secondi (20 * 60)
+
+        let lastRechargeTime = parseInt(localStorage.getItem('last_recharge_time')) || Date.now();
 
         const scoreEl = document.getElementById('score');
         const tapBtn = document.getElementById('tapBtn');
         const tapPowerDisplay = document.getElementById('tapPowerDisplay');
+        const energyDisplay = document.getElementById('energyDisplay');
+        const timerDisplay = document.getElementById('timerDisplay');
 
         function updateUI() {
             if (scoreEl) scoreEl.innerText = score.toLocaleString();
             if (tapPowerDisplay) tapPowerDisplay.innerText = `+${tapPower}`;
+            if (energyDisplay) energyDisplay.innerText = `${energy} / ${maxEnergy}`;
+        }
+
+        // Calcolo ricarica in background basato sul tempo trascorso
+        function syncEnergyWithTime() {
+            if (energy >= maxEnergy) {
+                lastRechargeTime = Date.now();
+                localStorage.setItem('last_recharge_time', lastRechargeTime);
+                if (timerDisplay) timerDisplay.innerText = "Energia Max";
+                return;
+            }
+
+            const now = Date.now();
+            const elapsedSeconds = Math.floor((now - lastRechargeTime) / 1000);
+            const energyToAdd = Math.floor(elapsedSeconds / RECHARGE_TIME_SECONDS);
+
+            if (energyToAdd > 0) {
+                energy = Math.min(maxEnergy, energy + energyToAdd);
+                lastRechargeTime += energyToAdd * RECHARGE_TIME_SECONDS * 1000;
+                localStorage.setItem('satoshi_energy', energy);
+                localStorage.setItem('last_recharge_time', lastRechargeTime);
+                updateUI();
+            }
+
+            // Calcola il countdown per il prossimo 1 Satoshi di energia
+            if (energy < maxEnergy) {
+                const remainingSeconds = RECHARGE_TIME_SECONDS - Math.floor((now - lastRechargeTime) / 1000);
+                const minutes = Math.floor(remainingSeconds / 60);
+                const seconds = remainingSeconds % 60;
+                if (timerDisplay) {
+                    timerDisplay.innerText = `Prossimo: ${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+                }
+            } else {
+                if (timerDisplay) timerDisplay.innerText = "Energia Max";
+            }
         }
 
         updateUI();
+        syncEnergyWithTime();
+
+        // Aggiorna il timer ogni secondo
+        setInterval(syncEnergyWithTime, 1000);
 
         tapBtn.addEventListener('click', () => {
             if (energy >= tapPower) {
                 score += tapPower;
                 energy -= tapPower;
-                document.getElementById('energyDisplay').innerText = `${energy} / ${maxEnergy}`;
-                scoreEl.innerText = score.toLocaleString();
+                
+                if (energy < maxEnergy && localStorage.getItem('last_recharge_time') === null) {
+                    lastRechargeTime = Date.now();
+                    localStorage.setItem('last_recharge_time', lastRechargeTime);
+                }
+
                 localStorage.setItem('satoshi_score', score);
+                localStorage.setItem('satoshi_energy', energy);
+                updateUI();
+
                 if (tg.HapticFeedback) tg.HapticFeedback.impactOccurred('light');
             } else {
-                if (tg.showAlert) tg.showAlert("Energia esaurita! Attendi la ricarica.");
+                if (tg.showAlert) tg.showAlert("Energia esaurita! Attendi il timer di ricarica.");
             }
         });
-
-        setInterval(() => {
-            if (energy < maxEnergy) {
-                energy = Math.min(maxEnergy, energy + 1);
-                document.getElementById('energyDisplay').innerText = `${energy} / ${maxEnergy}`;
-            }
-        }, 1000);
 
         // Modale Pagamento Crypto
         let currentSelectedPack = '';
