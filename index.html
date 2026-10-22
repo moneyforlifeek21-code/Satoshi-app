@@ -38,7 +38,7 @@
             <span class="font-bold text-lg tracking-wide">Satoshi Tap</span>
         </div>
         <div class="bg-amber-500/10 text-amber-400 font-semibold px-3 py-1 rounded-full border border-amber-500/30 text-sm">
-            v1.8
+            v1.9
         </div>
     </header>
 
@@ -371,7 +371,22 @@
             });
         }
 
-        // Funzione Adsgram con Diagnostica Errore Visibile
+        // Caricamento Elastico e Fallback per Adsgram
+        function ensureAdsgramLoaded(callback) {
+            if (window.Adsgram) {
+                callback();
+            } else {
+                const script = document.createElement('script');
+                script.src = "https://adsgram.ai/js/adv_engine.js";
+                script.onload = () => callback();
+                script.onerror = () => {
+                    const msg = "Impossibile caricare Adsgram. Disattiva AdBlocker/DNS Filter o verifica la connessione.";
+                    if (tg && tg.showAlert) tg.showAlert(msg); else alert(msg);
+                };
+                document.head.appendChild(script);
+            }
+        }
+
         function watchAdForReward() {
             if (videoTaskCount >= 5) {
                 const msg = "Hai già raggiunto il limite massimo di 5 video per oggi!";
@@ -379,39 +394,34 @@
                 return;
             }
 
-            if (!window.Adsgram) {
-                const msg = "Errore: SDK Adsgram non caricato! Verifica la tua connessione.";
-                if (tg && tg.showAlert) tg.showAlert(msg); else alert(msg);
-                return;
-            }
+            ensureAdsgramLoaded(() => {
+                try {
+                    const AdController = window.Adsgram.init({ blockId: "55502" });
+                    
+                    AdController.show().then((result) => {
+                        videoTaskCount += 1;
+                        score += 100;
+                        localStorage.setItem('video_task_count', videoTaskCount);
+                        localStorage.setItem('last_video_date', todayStr);
+                        localStorage.setItem('satoshi_score', score);
+                        updateUI();
 
-            try {
-                const AdController = window.Adsgram.init({ blockId: "55502" });
-                
-                AdController.show().then((result) => {
-                    videoTaskCount += 1;
-                    score += 100;
-                    localStorage.setItem('video_task_count', videoTaskCount);
-                    localStorage.setItem('last_video_date', todayStr);
-                    localStorage.setItem('satoshi_score', score);
-                    updateUI();
-
-                    if (videoTaskCount < 5) {
-                        const msg = `Complimenti! (+100 Satoshi)\nVideo visti oggi: ${videoTaskCount}/5`;
+                        if (videoTaskCount < 5) {
+                            const msg = `Complimenti! (+100 Satoshi)\nVideo visti oggi: ${videoTaskCount}/5`;
+                            if (tg && tg.showAlert) tg.showAlert(msg); else alert(msg);
+                        } else {
+                            const msg = "Hai completato i 5 video giornalieri!\nVai nella scheda Tasks per riscattare +300 Satoshi!";
+                            if (tg && tg.showAlert) tg.showAlert(msg); else alert(msg);
+                        }
+                    }).catch((error) => {
+                        const errDetail = typeof error === 'object' ? JSON.stringify(error) : error;
+                        const msg = `Stato Adsgram: ${errDetail}\n\n(Nessuno sponsor disponibile al momento per il tuo profilo o blocco non ancora attivo su Adsgram.ai).`;
                         if (tg && tg.showAlert) tg.showAlert(msg); else alert(msg);
-                    } else {
-                        const msg = "Hai completato i 5 video giornalieri!\nVai nella scheda Tasks per riscattare +300 Satoshi!";
-                        if (tg && tg.showAlert) tg.showAlert(msg); else alert(msg);
-                    }
-                }).catch((error) => {
-                    // Visualizza la causa esatta dell'errore restituito da Adsgram
-                    const errDetail = typeof error === 'object' ? JSON.stringify(error) : error;
-                    const msg = `Stato Adsgram: ${errDetail}\n\n(Se indica "banner_not_loaded" o "no fill", Adsgram sta approvando il blocco 55502 o non ha sponsor al momento per il tuo profilo).`;
-                    if (tg && tg.showAlert) tg.showAlert(msg); else alert(msg);
-                });
-            } catch (e) {
-                alert("Errore del codice: " + e.message);
-            }
+                    });
+                } catch (e) {
+                    alert("Errore del codice: " + e.message);
+                }
+            });
         }
 
         function watchTaskVideo() {
@@ -533,4 +543,4 @@
         }
     </script>
 </body>
-            </html>
+</html>
