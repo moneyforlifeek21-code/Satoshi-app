@@ -90,10 +90,10 @@
                     </div>
                     <div>
                         <p class="font-bold text-xs">Mega Tap (+5 Power)</p>
-                        <p class="text-[10px] text-amber-400 font-semibold">Prezzo: 0.5 TON</p>
+                        <p class="text-[10px] text-amber-400 font-semibold">Prezzo: 0.5 TON / Crypto</p>
                     </div>
                 </div>
-                <button onclick="openCryptoPay('Mega Tap (+5)', '0.5 TON')" class="bg-gradient-to-r from-amber-500 to-yellow-500 text-slate-900 font-bold px-3 py-1.5 rounded-lg text-xs active:scale-95 transition">
+                <button onclick="openCryptoPay('Mega Tap (+5)', '0.5 TON / Crypto')" class="bg-gradient-to-r from-amber-500 to-yellow-500 text-slate-900 font-bold px-3 py-1.5 rounded-lg text-xs active:scale-95 transition">
                     Acquista
                 </button>
             </div>
@@ -106,28 +106,28 @@
                     </div>
                     <div>
                         <p class="font-bold text-xs">Auto-Miner Pro (+10/s)</p>
-                        <p class="text-[10px] text-blue-400 font-semibold">Prezzo: 1.5 TON</p>
+                        <p class="text-[10px] text-blue-400 font-semibold">Prezzo: 1.5 TON / Crypto</p>
                     </div>
                 </div>
-                <button onclick="openCryptoPay('Auto-Miner Pro', '1.5 TON')" class="bg-gradient-to-r from-blue-500 to-indigo-500 text-white font-bold px-3 py-1.5 rounded-lg text-xs active:scale-95 transition">
+                <button onclick="openCryptoPay('Auto-Miner Pro', '1.5 TON / Crypto')" class="bg-gradient-to-r from-blue-500 to-indigo-500 text-white font-bold px-3 py-1.5 rounded-lg text-xs active:scale-95 transition">
                     Acquista
                 </button>
             </div>
         </div>
     </main>
 
-    <!-- Modal Pagamento Crypto (Nascosto) -->
+    <!-- Modal Pagamento Crypto -->
     <div id="cryptoModal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden flex-col items-center justify-center p-4">
         <div class="bg-slate-800 border border-slate-700 rounded-2xl p-5 w-full max-w-xs text-center space-y-4">
             <h3 id="modalTitle" class="text-xl font-bold text-amber-400">Acquista Potenziamento</h3>
-            <p id="modalDesc" class="text-xs text-slate-300">Invia il pagamento per attivare il pacchetto.</p>
+            <p id="modalDesc" class="text-xs text-slate-300">Invia il pagamento al seguente indirizzo per attivare il pacchetto:</p>
             
             <div class="bg-slate-900 p-3 rounded-xl border border-slate-700 text-left">
-                <p class="text-[10px] text-slate-400 uppercase">Indirizzo di pagamento (TON):</p>
+                <p class="text-[10px] text-slate-400 uppercase">Indirizzo di pagamento Admin:</p>
                 <p id="adminWallet" class="text-xs font-mono text-amber-300 break-all select-all font-bold my-1">
-                    INSERISCI_QUI_IL_TUO_WALLET_TON
+                    1M2xeN5edX8xjQnXar74dseBdivuLLoSzt
                 </p>
-                <p id="modalAmount" class="text-xs text-slate-300 font-bold mt-1">Importo: 0.5 TON</p>
+                <p id="modalAmount" class="text-xs text-slate-300 font-bold mt-1">Importo: 0.5 TON / Crypto</p>
             </div>
 
             <div class="space-y-2">
@@ -154,150 +154,4 @@
             <input type="text" id="walletAddressInput" placeholder="Inserisci il tuo indirizzo Wallet (TON / BTC)" class="w-full bg-slate-800 border border-slate-700 text-white placeholder-slate-500 text-sm rounded-xl p-3 focus:outline-none focus:border-amber-500 text-center">
         </div>
 
-        <button id="withdrawBtn" onclick="processWithdraw()" class="w-full max-w-xs bg-amber-500 hover:bg-amber-600 text-slate-900 font-bold py-3 px-6 rounded-2xl shadow-lg active:scale-95 transition flex items-center justify-center gap-2">
-            <i class="fa-solid fa-arrow-up-right-from-square"></i>
-            <span>Richiedi Prelievo</span>
-        </button>
-    </main>
-
-    <!-- Generic View -->
-    <main id="tab-generic" class="tab-content hidden flex-col items-center justify-center my-auto gap-4 text-center p-4">
-        <i class="fa-solid fa-screwdriver-wrench text-amber-400 text-4xl"></i>
-        <h2 id="generic-title" class="text-2xl font-bold">Sezione in arrivo</h2>
-        <p class="text-slate-400 text-sm">Stiamo aggiornando questa sezione. Torna a trovarci presto!</p>
-    </main>
-
-    <!-- Navigation Bar -->
-    <nav class="fixed bottom-0 left-0 right-0 bg-slate-800/95 backdrop-blur border-t border-slate-700/80 px-2 py-2 flex justify-around items-center text-xs text-slate-400 z-50">
-        <button onclick="switchTab('mine')" id="nav-mine" class="flex flex-col items-center gap-1 text-amber-400 font-semibold transition">
-            <i class="fa-solid fa-hammer text-lg"></i>
-            <span>Mine</span>
-        </button>
-        <button onclick="switchTab('tasks')" id="nav-tasks" class="flex flex-col items-center gap-1 hover:text-white transition">
-            <i class="fa-solid fa-list-check text-lg"></i>
-            <span>Tasks</span>
-        </button>
-        <button onclick="switchTab('daily')" id="nav-daily" class="flex flex-col items-center gap-1 hover:text-white transition">
-            <i class="fa-solid fa-fire text-lg"></i>
-            <span>Daily</span>
-        </button>
-        <button onclick="switchTab('friends')" id="nav-friends" class="flex flex-col items-center gap-1 hover:text-white transition">
-            <i class="fa-solid fa-users text-lg"></i>
-            <span>Friends</span>
-        </button>
-        <button onclick="switchTab('wallet')" id="nav-wallet" class="flex flex-col items-center gap-1 hover:text-white transition">
-            <i class="fa-solid fa-wallet text-lg"></i>
-            <span>Wallet</span>
-        </button>
-    </nav>
-
-    <!-- JavaScript Logica -->
-    <script>
-        const tg = window.Telegram.WebApp;
-        tg.expand();
-
-        let score = parseInt(localStorage.getItem('satoshi_score')) || 115;
-        let tapPower = parseInt(localStorage.getItem('satoshi_tap_power')) || 1;
-        let energy = 1000;
-        const maxEnergy = 1000;
-
-        const scoreEl = document.getElementById('score');
-        const tapBtn = document.getElementById('tapBtn');
-        const tapPowerDisplay = document.getElementById('tapPowerDisplay');
-
-        function updateUI() {
-            if (scoreEl) scoreEl.innerText = score.toLocaleString();
-            if (tapPowerDisplay) tapPowerDisplay.innerText = `+${tapPower}`;
-        }
-
-        updateUI();
-
-        tapBtn.addEventListener('click', () => {
-            if (energy >= tapPower) {
-                score += tapPower;
-                energy -= tapPower;
-                document.getElementById('energyDisplay').innerText = `${energy} / ${maxEnergy}`;
-                scoreEl.innerText = score.toLocaleString();
-                localStorage.setItem('satoshi_score', score);
-                if (tg.HapticFeedback) tg.HapticFeedback.impactOccurred('light');
-            } else {
-                if (tg.showAlert) tg.showAlert("Energia esaurita! Attendi la ricarica.");
-            }
-        });
-
-        setInterval(() => {
-            if (energy < maxEnergy) {
-                energy = Math.min(maxEnergy, energy + 1);
-                document.getElementById('energyDisplay').innerText = `${energy} / ${maxEnergy}`;
-            }
-        }, 1000);
-
-        // Modale Pagamento Crypto
-        let currentSelectedPack = '';
-
-        function openCryptoPay(packName, amount) {
-            currentSelectedPack = packName;
-            document.getElementById('modalTitle').innerText = packName;
-            document.getElementById('modalAmount').innerText = `Importo: ${amount}`;
-            document.getElementById('cryptoModal').classList.remove('hidden');
-            document.getElementById('cryptoModal').classList.add('flex');
-        }
-
-        function closeCryptoPay() {
-            document.getElementById('cryptoModal').classList.add('hidden');
-            document.getElementById('cryptoModal').classList.remove('flex');
-        }
-
-        function submitCryptoPay() {
-            const txHash = document.getElementById('txHashInput').value.trim();
-            if (!txHash) {
-                if (tg.showAlert) tg.showAlert("Inserisci l'ID o Hash della transazione di pagamento!");
-                return;
-            }
-
-            if (tg.showAlert) {
-                tg.showAlert(`Pagamento inviato per la verifica!\n\nPacchetto: ${currentSelectedPack}\nTx Hash: ${txHash}\n\nL'attivazione avverrà dopo la conferma della blockchain.`);
-            } else {
-                alert("Pagamento inviato per la verifica!");
-            }
-            closeCryptoPay();
-        }
-
-        // Adsgram Config
-        const AdController = window.Adsgram.init({ blockId: "55502" });
-
-        function watchAdForReward() {
-            AdController.show().then((result) => {
-                score += 100;
-                scoreEl.innerText = score.toLocaleString();
-                localStorage.setItem('satoshi_score', score);
-                if (tg.showAlert) tg.showAlert("Complimenti! Hai ricevuto +100 Satoshi!");
-            }).catch((error) => console.log("Errore Ads:", error));
-        }
-
-        // Wallet Direct Input
-        const savedAddress = localStorage.getItem('user_wallet_address') || '';
-        if (savedAddress) document.getElementById('walletAddressInput').value = savedAddress;
-
-        function processWithdraw() {
-            const walletInput = document.getElementById('walletAddressInput').value.trim();
-            if (!walletInput) {
-                if (tg.showAlert) tg.showAlert("Inserisci un indirizzo Wallet valido prima di proseguire!");
-                return;
-            }
-            localStorage.setItem('user_wallet_address', walletInput);
-
-            if (score < 1000) {
-                const msg = `Indirizzo salvato:\n${walletInput}\n\nSoglia minima di ritiro: 1.000 Satoshi.\nIl tuo bilancio attuale: ${score} Satoshi.`;
-                if (tg.showAlert) tg.showAlert(msg); else alert(msg);
-            } else {
-                const msg = `Richiesta di prelievo inviata con successo!\n\nIndirizzo: ${walletInput}\nImporto: ${score} Satoshi.`;
-                if (tg.showAlert) tg.showAlert(msg); else alert(msg);
-            }
-        }
-
-        // Navigazione schede
-        function switchTab(tabName) {
-            document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
-            document.querySelectorAll('nav button').forEach(el => {
-                el.classList.remove('text-amber-400', 'font-
+        <button id="withdrawBtn" onclick="processWithdraw()" class="w-full max-w-xs bg-amber-500 hover:bg-amber-600 text
