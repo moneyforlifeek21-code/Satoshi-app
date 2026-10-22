@@ -38,11 +38,11 @@
             <span class="font-bold text-lg tracking-wide">Satoshi Tap</span>
         </div>
         <div class="bg-amber-500/10 text-amber-400 font-semibold px-3 py-1 rounded-full border border-amber-500/30 text-sm">
-            v1.4
+            v1.6
         </div>
     </header>
 
-    <!-- Main Game Section -->
+    <!-- Main Game Section (Mine) -->
     <main id="tab-mine" class="tab-content flex flex-col items-center justify-center my-auto gap-4">
         <div class="text-center">
             <p class="text-slate-400 text-sm font-medium tracking-wider uppercase mb-1">I tuoi Satoshi</p>
@@ -83,7 +83,6 @@
         <div class="w-full max-w-xs flex flex-col gap-2 mt-1">
             <p class="text-xs text-slate-400 font-bold tracking-wider uppercase text-left">Pacchetti Crypto VIP</p>
             
-            <!-- Pack 1 -->
             <div class="bg-slate-800 border border-amber-500/30 p-2.5 rounded-xl flex justify-between items-center">
                 <div class="flex items-center gap-3 text-left">
                     <div class="w-10 h-10 bg-gradient-to-tr from-amber-500 to-yellow-400 rounded-xl flex items-center justify-center text-slate-900 shadow-md">
@@ -99,7 +98,6 @@
                 </button>
             </div>
 
-            <!-- Pack 2 -->
             <div class="bg-slate-800 border border-blue-500/30 p-2.5 rounded-xl flex justify-between items-center">
                 <div class="flex items-center gap-3 text-left">
                     <div class="w-10 h-10 bg-gradient-to-tr from-blue-500 to-indigo-500 rounded-xl flex items-center justify-center text-white shadow-md">
@@ -114,6 +112,58 @@
                     Acquista
                 </button>
             </div>
+        </div>
+    </main>
+
+    <!-- Tasks View (Missioni) -->
+    <main id="tab-tasks" class="tab-content hidden flex-col items-center justify-start my-auto gap-4 w-full max-w-xs mx-auto p-2">
+        <div class="text-center mb-1">
+            <h2 class="text-2xl font-bold text-amber-400 flex items-center justify-center gap-2">
+                <i class="fa-solid fa-list-check"></i>
+                <span>Missioni Extra</span>
+            </h2>
+            <p class="text-slate-400 text-xs">Completa le missioni per guadagnare Satoshi velocemente!</p>
+        </div>
+
+        <!-- Task 1: 5 Video Ads Giornalieri -->
+        <div class="w-full bg-slate-800 border border-purple-500/40 p-3 rounded-2xl flex flex-col gap-2">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center gap-3 text-left">
+                    <div class="w-10 h-10 bg-purple-500/20 rounded-xl flex items-center justify-center text-purple-400 text-xl">
+                        <i class="fa-solid fa-film"></i>
+                    </div>
+                    <div>
+                        <p class="font-bold text-xs">Video Giornalieri (Max 5/die)</p>
+                        <p class="text-[11px] text-amber-400 font-semibold">+300 Satoshi Bonus</p>
+                    </div>
+                </div>
+                <button id="videoTaskBtn" onclick="watchTaskVideo()" class="bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white font-bold px-3 py-2 rounded-xl text-xs active:scale-95 transition flex items-center gap-1.5">
+                    <i class="fa-solid fa-play text-yellow-300"></i>
+                    <span>Guarda</span>
+                </button>
+            </div>
+            
+            <!-- Barra di progresso video -->
+            <div class="w-full bg-slate-900 rounded-full h-2 overflow-hidden border border-slate-700">
+                <div id="videoProgressBar" class="bg-gradient-to-r from-indigo-500 to-purple-500 h-full w-0 transition-all duration-300"></div>
+            </div>
+            <p id="videoProgressText" class="text-[10px] text-slate-400 text-right">Progresso oggi: 0 / 5 video</p>
+        </div>
+
+        <!-- Task 2: Canale Telegram -->
+        <div class="w-full bg-slate-800 border border-slate-700 p-3 rounded-2xl flex items-center justify-between">
+            <div class="flex items-center gap-3 text-left">
+                <div class="w-10 h-10 bg-blue-500/20 rounded-xl flex items-center justify-center text-blue-400 text-xl">
+                    <i class="fa-brands fa-telegram"></i>
+                </div>
+                <div>
+                    <p class="font-bold text-xs">Unisciti al Canale</p>
+                    <p class="text-[11px] text-amber-400 font-semibold">+150 Satoshi</p>
+                </div>
+            </div>
+            <button id="tgTaskBtn" onclick="claimTgTask()" class="bg-blue-500 hover:bg-blue-600 text-white font-bold px-3 py-2 rounded-xl text-xs active:scale-95 transition">
+                Iscriviti
+            </button>
         </div>
     </main>
 
@@ -204,9 +254,25 @@
         let tapPower = parseInt(localStorage.getItem('satoshi_tap_power')) || 1;
         let energy = parseInt(localStorage.getItem('satoshi_energy')) || 1000;
         const maxEnergy = 1000;
-        const RECHARGE_TIME_SECONDS = 1200; // 20 Minuti in secondi (20 * 60)
+        const RECHARGE_TIME_SECONDS = 1200;
 
         let lastRechargeTime = parseInt(localStorage.getItem('last_recharge_time')) || Date.now();
+
+        // Controllo e reset giornaliero dei video
+        const todayStr = new Date().toISOString().split('T')[0];
+        const lastVideoDate = localStorage.getItem('last_video_date') || '';
+
+        let videoTaskCount = parseInt(localStorage.getItem('video_task_count')) || 0;
+        let isVideoTaskClaimed = localStorage.getItem('video_task_claimed') === 'true';
+
+        // Se è un nuovo giorno, resetta il contatore video
+        if (lastVideoDate !== todayStr) {
+            videoTaskCount = 0;
+            isVideoTaskClaimed = false;
+            localStorage.setItem('video_task_count', 0);
+            localStorage.setItem('video_task_claimed', 'false');
+            localStorage.setItem('last_video_date', todayStr);
+        }
 
         const scoreEl = document.getElementById('score');
         const tapBtn = document.getElementById('tapBtn');
@@ -218,9 +284,36 @@
             if (scoreEl) scoreEl.innerText = score.toLocaleString();
             if (tapPowerDisplay) tapPowerDisplay.innerText = `+${tapPower}`;
             if (energyDisplay) energyDisplay.innerText = `${energy} / ${maxEnergy}`;
+
+            // Aggiorna interfaccia Task Video
+            const bar = document.getElementById('videoProgressBar');
+            const txt = document.getElementById('videoProgressText');
+            const btn = document.getElementById('videoTaskBtn');
+
+            if (bar) bar.style.width = `${(videoTaskCount / 5) * 100}%`;
+            if (txt) txt.innerText = `Progresso oggi: ${videoTaskCount} / 5 video`;
+
+            if (videoTaskCount >= 5 && isVideoTaskClaimed) {
+                if (btn) {
+                    btn.innerText = "Completato per Oggi";
+                    btn.className = "bg-slate-700 text-slate-400 font-bold px-3 py-2 rounded-xl text-xs cursor-not-allowed";
+                    btn.onclick = null;
+                }
+            } else if (videoTaskCount >= 5 && !isVideoTaskClaimed) {
+                if (btn) {
+                    btn.innerText = "Riscatta +300";
+                    btn.className = "bg-gradient-to-r from-amber-500 to-yellow-400 text-slate-900 font-bold px-3 py-2 rounded-xl text-xs active:scale-95 transition animate-pulse";
+                    btn.onclick = watchTaskVideo;
+                }
+            } else {
+                if (btn) {
+                    btn.innerText = "Guarda";
+                    btn.className = "bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white font-bold px-3 py-2 rounded-xl text-xs active:scale-95 transition flex items-center gap-1.5";
+                    btn.onclick = watchTaskVideo;
+                }
+            }
         }
 
-        // Calcolo ricarica in background basato sul tempo trascorso
         function syncEnergyWithTime() {
             if (energy >= maxEnergy) {
                 lastRechargeTime = Date.now();
@@ -241,7 +334,6 @@
                 updateUI();
             }
 
-            // Calcola il countdown per il prossimo 1 Satoshi di energia
             if (energy < maxEnergy) {
                 const remainingSeconds = RECHARGE_TIME_SECONDS - Math.floor((now - lastRechargeTime) / 1000);
                 const minutes = Math.floor(remainingSeconds / 60);
@@ -256,8 +348,6 @@
 
         updateUI();
         syncEnergyWithTime();
-
-        // Aggiorna il timer ogni secondo
         setInterval(syncEnergyWithTime, 1000);
 
         tapBtn.addEventListener('click', () => {
@@ -279,6 +369,56 @@
                 if (tg.showAlert) tg.showAlert("Energia esaurita! Attendi il timer di ricarica.");
             }
         });
+
+        // Adsgram Config
+        const AdController = window.Adsgram.init({ blockId: "55502" });
+
+        function watchAdForReward() {
+            if (videoTaskCount >= 5) {
+                if (tg.showAlert) tg.showAlert("Hai già raggiunto il limite massimo di 5 video per oggi! Torna domani.");
+                return;
+            }
+
+            AdController.show().then((result) => {
+                videoTaskCount += 1;
+                score += 100;
+                localStorage.setItem('video_task_count', videoTaskCount);
+                localStorage.setItem('last_video_date', todayStr);
+                localStorage.setItem('satoshi_score', score);
+                updateUI();
+
+                if (videoTaskCount < 5) {
+                    if (tg.showAlert) tg.showAlert(`Complimenti! (+100 Satoshi)\nVideo visti oggi: ${videoTaskCount}/5`);
+                } else {
+                    if (tg.showAlert) tg.showAlert("Hai completato i 5 video giornalieri!\nVai nella scheda Tasks per riscattare i +300 Satoshi bonus!");
+                }
+            }).catch((error) => console.log("Errore Ads:", error));
+        }
+
+        // Gestione Task Video (5 Video = 300 Satoshi Bonus)
+        function watchTaskVideo() {
+            if (videoTaskCount >= 5 && !isVideoTaskClaimed) {
+                score += 300;
+                isVideoTaskClaimed = true;
+                localStorage.setItem('satoshi_score', score);
+                localStorage.setItem('video_task_claimed', 'true');
+                updateUI();
+                if (tg.showAlert) tg.showAlert("Super Bonus di +300 Satoshi riscattato con successo!");
+                return;
+            }
+
+            watchAdForReward();
+        }
+
+        function claimTgTask() {
+            window.open('https://t.me/Satoshiap_bot', '_blank');
+            setTimeout(() => {
+                score += 150;
+                localStorage.setItem('satoshi_score', score);
+                updateUI();
+                if (tg.showAlert) tg.showAlert("Grazie per essere dei nostri! +150 Satoshi aggiunti!");
+            }, 2000);
+        }
 
         // Modale Pagamento Crypto
         let currentSelectedPack = '';
@@ -323,18 +463,6 @@
             closeCryptoPay();
         }
 
-        // Adsgram Config
-        const AdController = window.Adsgram.init({ blockId: "55502" });
-
-        function watchAdForReward() {
-            AdController.show().then((result) => {
-                score += 100;
-                scoreEl.innerText = score.toLocaleString();
-                localStorage.setItem('satoshi_score', score);
-                if (tg.showAlert) tg.showAlert("Complimenti! Hai ricevuto +100 Satoshi!");
-            }).catch((error) => console.log("Errore Ads:", error));
-        }
-
         // Wallet Direct Input
         const savedAddress = localStorage.getItem('user_wallet_address') || '';
         if (savedAddress) document.getElementById('walletAddressInput').value = savedAddress;
@@ -367,20 +495,3 @@
             const activeNav = document.getElementById('nav-' + tabName);
             if (activeNav) {
                 activeNav.classList.remove('text-slate-400');
-                activeNav.classList.add('text-amber-400', 'font-semibold');
-            }
-
-            if (tabName === 'mine') {
-                document.getElementById('tab-mine').classList.remove('hidden');
-            } else if (tabName === 'wallet') {
-                document.getElementById('tab-wallet').classList.remove('hidden');
-                document.getElementById('tab-wallet').classList.add('flex');
-            } else {
-                document.getElementById('generic-title').innerText = tabName.toUpperCase();
-                document.getElementById('tab-generic').classList.remove('hidden');
-                document.getElementById('tab-generic').classList.add('flex');
-            }
-        }
-    </script>
-</body>
-</html>
