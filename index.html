@@ -70,7 +70,7 @@
             <div>
                 <p class="text-xs text-slate-400">Energia</p>
                 <p id="energyDisplay" class="font-bold text-slate-200">1000 / 1000</p>
-                <p id="timerDisplay" class="text-[10px] text-amber-400 font-mono mt-0.5">Prossimo: 20:00</p>
+                <p id="timerDisplay" class="text-[10px] text-amber-400 font-mono mt-0.5">Energia Max</p>
             </div>
             <div class="border-r border-slate-700"></div>
             <div>
@@ -252,7 +252,9 @@
 
         let score = parseInt(localStorage.getItem('satoshi_score')) || 115;
         let tapPower = parseInt(localStorage.getItem('satoshi_tap_power')) || 1;
-        let energy = parseInt(localStorage.getItem('satoshi_energy')) || 1000;
+        let energy = parseInt(localStorage.getItem('satoshi_energy'));
+        if (isNaN(energy)) energy = 1000;
+        
         const maxEnergy = 1000;
         const RECHARGE_TIME_SECONDS = 1200;
 
@@ -265,11 +267,10 @@
         let videoTaskCount = parseInt(localStorage.getItem('video_task_count')) || 0;
         let isVideoTaskClaimed = localStorage.getItem('video_task_claimed') === 'true';
 
-        // Se è un nuovo giorno, resetta il contatore video
         if (lastVideoDate !== todayStr) {
             videoTaskCount = 0;
             isVideoTaskClaimed = false;
-            localStorage.setItem('video_task_count', 0);
+            localStorage.setItem('video_task_count', '0');
             localStorage.setItem('video_task_claimed', 'false');
             localStorage.setItem('last_video_date', todayStr);
         }
@@ -285,7 +286,6 @@
             if (tapPowerDisplay) tapPowerDisplay.innerText = `+${tapPower}`;
             if (energyDisplay) energyDisplay.innerText = `${energy} / ${maxEnergy}`;
 
-            // Aggiorna interfaccia Task Video
             const bar = document.getElementById('videoProgressBar');
             const txt = document.getElementById('videoProgressText');
             const btn = document.getElementById('videoTaskBtn');
@@ -295,7 +295,7 @@
 
             if (videoTaskCount >= 5 && isVideoTaskClaimed) {
                 if (btn) {
-                    btn.innerText = "Completato per Oggi";
+                    btn.innerText = "Completato";
                     btn.className = "bg-slate-700 text-slate-400 font-bold px-3 py-2 rounded-xl text-xs cursor-not-allowed";
                     btn.onclick = null;
                 }
@@ -303,7 +303,7 @@
                 if (btn) {
                     btn.innerText = "Riscatta +300";
                     btn.className = "bg-gradient-to-r from-amber-500 to-yellow-400 text-slate-900 font-bold px-3 py-2 rounded-xl text-xs active:scale-95 transition animate-pulse";
-                    btn.onclick = watchTaskVideo;
+                    btn.onclick = claimVideoBonus;
                 }
             } else {
                 if (btn) {
@@ -355,7 +355,7 @@
                 score += tapPower;
                 energy -= tapPower;
                 
-                if (energy < maxEnergy && localStorage.getItem('last_recharge_time') === null) {
+                if (energy < maxEnergy && !localStorage.getItem('last_recharge_time')) {
                     lastRechargeTime = Date.now();
                     localStorage.setItem('last_recharge_time', lastRechargeTime);
                 }
@@ -371,11 +371,19 @@
         });
 
         // Adsgram Config
-        const AdController = window.Adsgram.init({ blockId: "55502" });
+        let AdController = null;
+        if (window.Adsgram) {
+            AdController = window.Adsgram.init({ blockId: "55502" });
+        }
 
         function watchAdForReward() {
             if (videoTaskCount >= 5) {
-                if (tg.showAlert) tg.showAlert("Hai già raggiunto il limite massimo di 5 video per oggi! Torna domani.");
+                if (tg.showAlert) tg.showAlert("Hai già raggiunto il limite massimo di 5 video per oggi!");
+                return;
+            }
+
+            if (!AdController) {
+                if (tg.showAlert) tg.showAlert("Annunci in caricamento, riprova tra poco!");
                 return;
             }
 
@@ -390,13 +398,16 @@
                 if (videoTaskCount < 5) {
                     if (tg.showAlert) tg.showAlert(`Complimenti! (+100 Satoshi)\nVideo visti oggi: ${videoTaskCount}/5`);
                 } else {
-                    if (tg.showAlert) tg.showAlert("Hai completato i 5 video giornalieri!\nVai nella scheda Tasks per riscattare i +300 Satoshi bonus!");
+                    if (tg.showAlert) tg.showAlert("Hai completato i 5 video giornalieri!\nVai nella scheda Tasks per riscattare +300 Satoshi!");
                 }
             }).catch((error) => console.log("Errore Ads:", error));
         }
 
-        // Gestione Task Video (5 Video = 300 Satoshi Bonus)
         function watchTaskVideo() {
+            watchAdForReward();
+        }
+
+        function claimVideoBonus() {
             if (videoTaskCount >= 5 && !isVideoTaskClaimed) {
                 score += 300;
                 isVideoTaskClaimed = true;
@@ -404,10 +415,7 @@
                 localStorage.setItem('video_task_claimed', 'true');
                 updateUI();
                 if (tg.showAlert) tg.showAlert("Super Bonus di +300 Satoshi riscattato con successo!");
-                return;
             }
-
-            watchAdForReward();
         }
 
         function claimTgTask() {
@@ -495,3 +503,23 @@
             const activeNav = document.getElementById('nav-' + tabName);
             if (activeNav) {
                 activeNav.classList.remove('text-slate-400');
+                activeNav.classList.add('text-amber-400', 'font-semibold');
+            }
+
+            if (tabName === 'mine') {
+                document.getElementById('tab-mine').classList.remove('hidden');
+            } else if (tabName === 'tasks') {
+                document.getElementById('tab-tasks').classList.remove('hidden');
+                document.getElementById('tab-tasks').classList.add('flex');
+            } else if (tabName === 'wallet') {
+                document.getElementById('tab-wallet').classList.remove('hidden');
+                document.getElementById('tab-wallet').classList.add('flex');
+            } else {
+                document.getElementById('generic-title').innerText = tabName.toUpperCase();
+                document.getElementById('tab-generic').classList.remove('hidden');
+                document.getElementById('tab-generic').classList.add('flex');
+            }
+        }
+    </script>
+</body>
+</html>
