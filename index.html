@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Satoshi Tap - 1 Satoshi Limit</title>
+  <title>Satoshi Tap - Cloud Hashrate Edition</title>
 
   <!-- SDK Telegram Mini App -->
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
@@ -208,6 +208,7 @@
       border-radius: 12px;
       font-size: 11px;
       font-weight: bold;
+      margin-top: 6px;
     }
 
     .timer-alert {
@@ -360,7 +361,7 @@
   <!-- HEADER SUPERIORE -->
   <header class="app-header">
     <div class="brand-title">
-      ⚡ SATOSHI<br><span style="font-size: 12px; color: #94a3b8;">MANUAL MINING</span>
+      ⚡ SATOSHI<br><span style="font-size: 12px; color: #94a3b8;">CLOUD MINING</span>
     </div>
     <div class="header-btns">
       <button class="pill-btn" onclick="alert('Sezione Guida')">❓ Guida</button>
@@ -375,7 +376,7 @@
       <div class="sub-tab" id="subtab-withdraw" onclick="switchSubTab('withdraw')">Prelievi</div>
     </div>
 
-    <!-- VISTA 1: MINING MANUALE 12H PROGRESSIVO -->
+    <!-- VISTA 1: MINING MANUALE 12H CON HASHRATE -->
     <div id="view-active-mining" style="display: flex; flex-direction: column; gap: 12px;">
       <div class="mining-card">
         <div class="lightning-icon-box">
@@ -393,7 +394,10 @@
         <div class="btc-live-info" id="btc-live-price">Prezzo BTC Live: ~$81,651 USD</div>
         
         <div class="usdt-purchases-badge">
-          Saldo Depositi: <span id="usdt-dep">0.00</span> USDT
+          Potenza Attiva: <span id="user-hashrate">0 GH/s</span>
+        </div>
+        <div style="margin-top: 6px;">
+          <span class="usdt-purchases-badge">Saldo Depositi: <span id="usdt-dep">0.00</span> USDT</span>
         </div>
       </div>
     </div>
@@ -415,66 +419,66 @@
     </div>
   </main>
 
-  <!-- 2. SCHERMATA SHOP -->
+  <!-- 2. SCHERMATA SHOP (SOLO POTENZA DI HASHRATE) -->
   <main id="screen-shop" class="screen">
     <div class="action-card">
       <div class="card-title" style="margin-bottom: 6px;">🛒 Pacchetti Hashrate Cloud</div>
-      <div class="card-subtitle">Acquista potenza di calcolo aggiuntiva per potenziare il tuo rendimento di mining.</div>
+      <div class="card-subtitle">Acquista potenza di calcolo per velocizzare la generazione di Satoshi in 12 ore.</div>
       
       <div class="shop-item">
         <div class="shop-info">
           <strong>Rig Micro (500 GH/s)</strong>
-          <span>+0.10000000 Satoshi target</span>
+          <span>+500 GH/s potenza cloud</span>
         </div>
-        <button class="btn-buy-shop" onclick="buyHashratePackage('500 GH/s', 0.10000000, 2.50)">2.50 USDT</button>
+        <button class="btn-buy-shop" onclick="buyHashratePackage(500, '500 GH/s', 2.50)">2.50 USDT</button>
       </div>
 
       <div class="shop-item">
         <div class="shop-info">
           <strong>Rig Mini (2 TH/s)</strong>
-          <span>+0.30000000 Satoshi target</span>
+          <span>+2,000 GH/s (2 TH/s)</span>
         </div>
-        <button class="btn-buy-shop" onclick="buyHashratePackage('2 TH/s', 0.30000000, 5.00)">5.00 USDT</button>
+        <button class="btn-buy-shop" onclick="buyHashratePackage(2000, '2 TH/s', 5.00)">5.00 USDT</button>
       </div>
 
       <div class="shop-item">
         <div class="shop-info">
           <strong>Rig Standard (5 TH/s)</strong>
-          <span>+0.80000000 Satoshi target</span>
+          <span>+5,000 GH/s (5 TH/s)</span>
         </div>
-        <button class="btn-buy-shop" onclick="buyHashratePackage('5 TH/s', 0.80000000, 10.00)">10.00 USDT</button>
+        <button class="btn-buy-shop" onclick="buyHashratePackage(5000, '5 TH/s', 10.00)">10.00 USDT</button>
       </div>
 
       <div class="shop-item">
         <div class="shop-info">
           <strong>Rig Pro (10 TH/s)</strong>
-          <span>+1.80000000 Satoshi target</span>
+          <span>+10,000 GH/s (10 TH/s)</span>
         </div>
-        <button class="btn-buy-shop" onclick="buyHashratePackage('10 TH/s', 1.80000000, 20.00)">20.00 USDT</button>
+        <button class="btn-buy-shop" onclick="buyHashratePackage(10000, '10 TH/s', 20.00)">20.00 USDT</button>
       </div>
 
       <div class="shop-item">
         <div class="shop-info">
           <strong>Rig Advanced (25 TH/s)</strong>
-          <span>+4.50000000 Satoshi target</span>
+          <span>+25,000 GH/s (25 TH/s)</span>
         </div>
-        <button class="btn-buy-shop" onclick="buyHashratePackage('25 TH/s', 4.50000000, 150.00)">150.00 USDT</button>
+        <button class="btn-buy-shop" onclick="buyHashratePackage(25000, '25 TH/s', 150.00)">150.00 USDT</button>
       </div>
 
       <div class="shop-item">
         <div class="shop-info">
           <strong>Rig Master (50 TH/s)</strong>
-          <span>+9.50000000 Satoshi target</span>
+          <span>+50,000 GH/s (50 TH/s)</span>
         </div>
-        <button class="btn-buy-shop" onclick="buyHashratePackage('50 TH/s', 9.50000000, 280.00)">280.00 USDT</button>
+        <button class="btn-buy-shop" onclick="buyHashratePackage(50000, '50 TH/s', 280.00)">280.00 USDT</button>
       </div>
 
       <div class="shop-item">
         <div class="shop-info">
           <strong>Rig Farm Enterprise (100 TH/s)</strong>
-          <span>+20.00000000 Satoshi target</span>
+          <span>+100,000 GH/s (100 TH/s)</span>
         </div>
-        <button class="btn-buy-shop" onclick="buyHashratePackage('100 TH/s', 20.00000000, 500.00)">500.00 USDT</button>
+        <button class="btn-buy-shop" onclick="buyHashratePackage(100000, '100 TH/s', 500.00)">500.00 USDT</button>
       </div>
     </div>
   </main>
@@ -546,20 +550,21 @@
     const tg = window.Telegram ? window.Telegram.WebApp : null;
     if (tg) { try { tg.expand(); tg.ready(); } catch(e) {} }
 
-    let appData = JSON.parse(localStorage.getItem('satoshi_1_limit_app')) || {
+    let appData = JSON.parse(localStorage.getItem('satoshi_hashrate_power_app')) || {
       score: 0.00000000,
       deposit: 0.00,
+      hashrate: 0, // Potenza base in GH/s
       miningStartTime: 0,
       miningEndTime: 0,
       targetScore: 0.00000000
     };
 
     let currentBtcPrice = 81651;
-    const MIN_WITHDRAW = 1.00000000; // Soglia minima esatta di 1 Satoshi intero
-    const TWELVE_HOURS = 12 * 60 * 60 * 1000;
+    const MIN_WITHDRAW = 1.00000000;
+    const TWELVE_HOURS = 12 * 60 * 60 * 1000; // 12 ore
 
     function saveData() {
-      localStorage.setItem('satoshi_1_limit_app', JSON.stringify(appData));
+      localStorage.setItem('satoshi_hashrate_power_app', JSON.stringify(appData));
     }
 
     async function fetchBtcPrice() {
@@ -580,6 +585,10 @@
       document.getElementById('btc-live-price').innerText = `Prezzo BTC Live: ~$${currentBtcPrice.toLocaleString()} USD`;
       document.getElementById('usdt-dep').innerText = Number(appData.deposit).toFixed(2);
       document.getElementById('wallet-dep').innerText = `${Number(appData.deposit).toFixed(2)} USDT`;
+      
+      // Mostra la potenza di hashrate totale attiva
+      let displayPower = appData.hashrate >= 1000 ? (appData.hashrate / 1000).toFixed(1) + ' TH/s' : appData.hashrate + ' GH/s';
+      document.getElementById('user-hashrate').innerText = displayPower;
 
       const statusLbl = document.getElementById('withdraw-status-label');
       if (appData.deposit >= 3.00) {
@@ -630,18 +639,26 @@
 
       appData.miningStartTime = now;
       appData.miningEndTime = now + TWELVE_HOURS;
-      appData.targetScore = Number((appData.score + 0.50000000).toFixed(8));
+
+      // Il rendimento in 12 ore dipende dalla potenza di hashrate attiva (più hashrate = più Satoshi minati nella sessione)
+      // Base di partenza minima + un incremento proporzionale all'hashrate acquistato
+      let baseReward = 0.05000000; 
+      let powerBonus = (appData.hashrate / 500) * 0.05000000; // Esempio di calcolo scalare basato sulla potenza
+      let totalSessionReward = baseReward + powerBonus;
+
+      appData.targetScore = Number((appData.score + totalSessionReward).toFixed(8));
       saveData();
       updateUI();
-      alert("Sessione di mining avviata! Il saldo inizierà a salire progressivamente.");
+      alert("Sessione di mining avviata! La potenza di calcolo sta generando Satoshi.");
     }
 
-    function buyHashratePackage(powerName, bonusScore, usdtPrice) {
+    // Acquisto pacchetto hashrate: aggiunge solo potenza di calcolo (GH/s)
+    function buyHashratePackage(ghPower, powerName, usdtPrice) {
       appData.deposit = Number((appData.deposit + usdtPrice).toFixed(2));
-      appData.targetScore = Number((appData.targetScore + bonusScore).toFixed(8));
+      appData.hashrate += ghPower; // Aggiunge potenza pura
       saveData();
       updateUI();
-      alert(`Rig (${powerName}) acquistato con successo! +${bonusScore} Satoshi aggiunti al target.`);
+      alert(`Rig (${powerName}) acquistato con successo! Potenza aggiunta al cloud rig.`);
     }
 
     function submitDeposit() {
@@ -663,7 +680,6 @@
         return; 
       }
 
-      // Controllo limite minimo a 1 Satoshi intero (1.00000000)
       if (amt < MIN_WITHDRAW) {
         alert(`Il prelievo minimo è di 1.00000000 Satoshi.`);
         return;
