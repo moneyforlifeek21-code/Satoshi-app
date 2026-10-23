@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Satoshi Tap - Pro Edition</title>
+  <title>Satoshi Tap - Hashrate Edition</title>
 
   <!-- SDK Telegram Mini App -->
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
@@ -161,6 +161,13 @@
       transform: scale(0.98);
     }
 
+    .btn-starter:disabled {
+      background: #334155;
+      color: #94a3b8;
+      cursor: not-allowed;
+      box-shadow: none;
+    }
+
     .balance-label {
       font-size: 11px;
       color: #94a3b8;
@@ -215,7 +222,7 @@
       display: none;
     }
 
-    /* CARD AZIONI & PROMO */
+    /* CARD AZIONI & SHOP */
     .action-card {
       background: rgba(30, 41, 59, 0.65);
       border: 1px solid rgba(255, 255, 255, 0.08);
@@ -238,7 +245,7 @@
       line-height: 1.3;
     }
 
-    .promo-item {
+    .shop-item {
       display: flex;
       justify-content: space-between;
       align-items: center;
@@ -249,20 +256,20 @@
       margin-bottom: 10px;
     }
 
-    .promo-info strong {
+    .shop-info strong {
       display: block;
       font-size: 14px;
       color: #fff;
       margin-bottom: 2px;
     }
 
-    .promo-info span {
+    .shop-info span {
       font-size: 11px;
       color: #34d399;
       font-weight: bold;
     }
 
-    .btn-buy-promo {
+    .btn-buy-shop {
       background: linear-gradient(135deg, #10b981, #059669);
       color: #fff;
       border: none;
@@ -353,7 +360,7 @@
   <!-- HEADER SUPERIORE -->
   <header class="app-header">
     <div class="brand-title">
-      ⚡ SATOSHI<br><span style="font-size: 12px; color: #94a3b8;">MINING</span>
+      ⚡ SATOSHI<br><span style="font-size: 12px; color: #94a3b8;">MANUAL MINING</span>
     </div>
     <div class="header-btns">
       <button class="pill-btn" onclick="alert('Sezione Guida')">❓ Guida</button>
@@ -368,17 +375,17 @@
       <div class="sub-tab" id="subtab-withdraw" onclick="switchSubTab('withdraw')">Prelievi</div>
     </div>
 
-    <!-- VISTA 1: MINING ATTIVO -->
+    <!-- VISTA 1: MINING MANUALE 12H -->
     <div id="view-active-mining" style="display: flex; flex-direction: column; gap: 12px;">
       <div class="mining-card">
         <div class="lightning-icon-box">
-          ⚡
+          ⛏️
           <div class="lightning-dot"></div>
         </div>
         
         <div id="timer-alert-box" class="timer-alert"></div>
 
-        <button class="btn-starter" onclick="activateStarter()">🚀 Attiva Mining Gratuito</button>
+        <button class="btn-starter" id="btn-mining-action" onclick="startMiningSession()">🚀 Avvia Sessione Mining (12h)</button>
         
         <div class="balance-label">Saldo Mining Disponibile</div>
         <div class="balance-amount">₿ <span id="user-score">0.00000</span></div>
@@ -408,43 +415,45 @@
     </div>
   </main>
 
-  <!-- 2. SCHERMATA SHOP -->
+  <!-- 2. SCHERMATA SHOP (PACCHETTI HASHRATE) -->
   <main id="screen-shop" class="screen">
     <div class="action-card">
-      <div class="card-title" style="margin-bottom: 8px;">🛒 Shop Potenziamenti</div>
-      <div class="card-subtitle">Acquista pacchetti di velocità virtuale per il tuo minatore.</div>
-      <button class="btn-action-primary" onclick="alert('Pacchetto acquistato!')">Acquista Rig ASIC (25 USDT)</button>
+      <div class="card-title" style="margin-bottom: 6px;">🛒 Pacchetti Hashrate Cloud</div>
+      <div class="card-subtitle">Acquista potenza di calcolo aggiuntiva per potenziare il tuo rendimento di mining.</div>
+      
+      <div class="shop-item">
+        <div class="shop-info">
+          <strong>Rig Starter (10 TH/s)</strong>
+          <span>+0.10000 Satoshi bonus</span>
+        </div>
+        <button class="btn-buy-shop" onclick="buyHashratePackage(10, 0.10000, 10.00)">10.00 USDT</button>
+      </div>
+
+      <div class="shop-item">
+        <div class="shop-info">
+          <strong>Rig Pro (50 TH/s)</strong>
+          <span>+0.60000 Satoshi bonus</span>
+        </div>
+        <button class="btn-buy-shop" onclick="buyHashratePackage(50, 0.60000, 45.00)">45.00 USDT</button>
+      </div>
+
+      <div class="shop-item">
+        <div class="shop-info">
+          <strong>Rig Elite (150 TH/s)</strong>
+          <span>+2.00000 Satoshi bonus</span>
+        </div>
+        <button class="btn-buy-shop" onclick="buyHashratePackage(150, 2.00000, 120.00)">120.00 USDT</button>
+      </div>
     </div>
   </main>
 
-  <!-- 3. SCHERMATA TASKS (PACCHETTI PROMOZIONALI TAP) -->
+  <!-- 3. SCHERMATA TASKS -->
   <main id="screen-tasks" class="screen">
     <div class="action-card">
-      <div class="card-title" style="margin-bottom: 6px;">⚡ Pacchetti Promo Tap</div>
-      <div class="card-subtitle">Acquista tap extra utilizzabili e prelevabili liberamente.</div>
-      
-      <div class="promo-item">
-        <div class="promo-info">
-          <strong>100 Tap</strong>
-          <span>+100 Satoshi accreditati</span>
-        </div>
-        <button class="btn-buy-promo" onclick="buyPromoPackage(100, 1.99)">1.99 USDT</button>
-      </div>
-
-      <div class="promo-item">
-        <div class="promo-info">
-          <strong>500 Tap</strong>
-          <span>+500 Satoshi accreditati</span>
-        </div>
-        <button class="btn-buy-promo" onclick="buyPromoPackage(500, 4.99)">4.99 USDT</button>
-      </div>
-
-      <div class="promo-item">
-        <div class="promo-info">
-          <strong>1000 Tap</strong>
-          <span>+1000 Satoshi accreditati</span>
-        </div>
-        <button class="btn-buy-promo" onclick="buyPromoPackage(1000, 9.99)">9.99 USDT</button>
+      <div class="card-title" style="margin-bottom: 6px;">📋 Task & Missioni</div>
+      <div class="card-subtitle">Completa le attività sponsorizzate per ottenere vantaggi esclusivi.</div>
+      <div style="background: rgba(15, 23, 42, 0.8); padding: 14px; border-radius: 12px; font-size: 13px; color: #94a3b8; text-align: center;">
+        Nessuna missione attiva al momento. Torna presto!
       </div>
     </div>
   </main>
@@ -505,18 +514,18 @@
     const tg = window.Telegram ? window.Telegram.WebApp : null;
     if (tg) { try { tg.expand(); tg.ready(); } catch(e) {} }
 
-    // Unificazione e pulizia dello storage locale
-    let appData = JSON.parse(localStorage.getItem('satoshi_app_data')) || {
+    let appData = JSON.parse(localStorage.getItem('satoshi_hashrate_app')) || {
       score: 0.00000,
       deposit: 0.00,
-      nextRefillTime: 0
+      miningEndTime: 0
     };
 
     let currentBtcPrice = 81651;
     const MIN_WITHDRAW = 1.000000;
+    const TWELVE_HOURS = 12 * 60 * 60 * 1000;
 
     function saveData() {
-      localStorage.setItem('satoshi_app_data', JSON.stringify(appData));
+      localStorage.setItem('satoshi_hashrate_app', JSON.stringify(appData));
     }
 
     async function fetchBtcPrice() {
@@ -531,7 +540,6 @@
     }
 
     function updateUI() {
-      // Arrotondamento sicuro a 5 decimali per evitare errori in virgola mobile
       document.getElementById('user-score').innerText = Number(appData.score).toFixed(5);
       let usdVal = (appData.score / 100000000) * currentBtcPrice;
       document.getElementById('fiat-val').innerText = `Valore stimato: ~$${usdVal.toFixed(6)} USD`;
@@ -548,44 +556,46 @@
         statusLbl.style.color = "#ef4444";
       }
 
-      checkRefillTimer();
+      checkMiningSession();
     }
 
-    function checkRefillTimer() {
+    function checkMiningSession() {
       const now = Date.now();
+      const btn = document.getElementById('btn-mining-action');
       const alertBox = document.getElementById('timer-alert-box');
 
-      if (appData.nextRefillTime > now) {
+      if (appData.miningEndTime > now) {
+        btn.disabled = true;
         alertBox.style.display = 'block';
-        const remaining = Math.ceil((appData.nextRefillTime - now) / 1000);
-        const mins = Math.floor(remaining / 60);
-        const secs = remaining % 60;
-        alertBox.innerText = `⏳ Ricarica di 1 Satoshi tra: ${mins}m ${secs}s`;
+        const remaining = Math.ceil((appData.miningEndTime - now) / 1000);
+        const h = Math.floor(remaining / 3600);
+        const m = Math.floor((remaining % 3600) / 60);
+        const s = remaining % 60;
+        alertBox.innerText = `⏳ Sessione 12h in corso. Riavvio tra: ${h}h ${m}m ${s}s`;
       } else {
+        btn.disabled = false;
         alertBox.style.display = 'none';
-        if (appData.nextRefillTime !== 0 && appData.score <= 0) {
-          appData.score = Number((appData.score + 1).toFixed(5));
-          appData.nextRefillTime = 0;
-          saveData();
-        }
       }
     }
 
-    function activateStarter() {
+    function startMiningSession() {
       const now = Date.now();
-      if (appData.nextRefillTime > now) return;
+      if (appData.miningEndTime > now) return;
 
-      appData.score = Number((appData.score + 0.00001).toFixed(5));
+      appData.score = Number((appData.score + 0.50000).toFixed(5));
+      appData.miningEndTime = now + TWELVE_HOURS;
       saveData();
       updateUI();
+      alert("Sessione di mining manuale avviata con successo per 12 ore!");
     }
 
-    function buyPromoPackage(tapAmount, usdtPrice) {
+    // Funzione acquisto pacchetti hashrate dallo Shop
+    function buyHashratePackage(thPower, bonusScore, usdtPrice) {
       appData.deposit = Number((appData.deposit + usdtPrice).toFixed(2));
-      appData.score = Number((appData.score + tapAmount).toFixed(5));
+      appData.score = Number((appData.score + bonusScore).toFixed(5));
       saveData();
       updateUI();
-      alert(`Hai acquistato con successo ${tapAmount} Satoshi per ${usdtPrice} USDT!`);
+      alert(`Rig da ${thPower} TH/s acquistato con successo! +${bonusScore} Satoshi accreditati.`);
     }
 
     function submitDeposit() {
@@ -602,7 +612,7 @@
       let amt = parseFloat(document.getElementById('withdraw-amount').value);
       let addr = document.getElementById('withdraw-address').value;
       
-      if (!addr ||isNaN(amt) || amt <= 0) { 
+      if (!addr || isNaN(amt) || amt <= 0) { 
         alert("Inserisci dati di prelievo validi."); 
         return; 
       }
@@ -624,18 +634,15 @@
       }
 
       appData.score = Number((appData.score - amt).toFixed(5));
-
-      if (appData.score <= 0) {
-        appData.nextRefillTime = Date.now() + (30 * 60 * 1000);
-      }
-
       saveData();
       updateUI();
       alert("Prelievo inviato con successo!");
       document.getElementById('withdraw-amount').value = '';
     }
 
-    setInterval(checkRefillTimer, 1000);
+    setInterval(() => {
+      checkMiningSession();
+    }, 1000);
 
     function switchTab(tabName, element) {
       document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
