@@ -3,13 +3,12 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Satoshi Tap - Final Edition</title>
+  <title>Satoshi Tap - Business Edition</title>
 
   <!-- SDK Telegram Mini App -->
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
 
   <style>
-    /* RESET E STILI DI BASE */
     * {
       box-sizing: border-box;
       margin: 0;
@@ -28,7 +27,6 @@
       padding: 16px 16px 80px 16px;
     }
 
-    /* GESTIONE SCHERMATE */
     .screen {
       display: none;
       flex: 1;
@@ -42,7 +40,7 @@
       display: flex;
     }
 
-    /* SCHERMATA TAP (MINE / GIOCO) */
+    /* SCHERMATA MINE */
     .tap-header {
       text-align: center;
       margin-top: 10px;
@@ -125,7 +123,7 @@
       width: 100%;
     }
 
-    /* SCHERMATE GENERALI */
+    /* SEZIONI GENERALI */
     .section-header {
       text-align: center;
       padding: 20px 10px 16px;
@@ -149,62 +147,6 @@
       line-height: 1.4;
     }
 
-    .stats-container {
-      display: flex;
-      gap: 12px;
-      margin: 16px 0;
-    }
-
-    .stat-card {
-      flex: 1;
-      background: #161b22;
-      border: 1px solid #30363d;
-      padding: 14px;
-      border-radius: 14px;
-      text-align: center;
-    }
-
-    .stat-title {
-      display: block;
-      font-size: 11px;
-      color: #8b949e;
-      margin-bottom: 6px;
-      text-transform: uppercase;
-    }
-
-    .stat-value {
-      font-size: 18px;
-      font-weight: 700;
-      color: #f7931a;
-    }
-
-    .action-buttons {
-      display: flex;
-      gap: 10px;
-      margin-bottom: 20px;
-    }
-
-    .friends-list-container h3 {
-      font-size: 15px;
-      margin-bottom: 10px;
-      color: #c9d1d9;
-    }
-
-    .friends-list {
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-      max-height: 200px;
-      overflow-y: auto;
-    }
-
-    .empty-state {
-      text-align: center;
-      color: #8b949e;
-      font-size: 13px;
-      padding: 20px 0;
-    }
-
     .card-box {
       background: #161b22;
       border: 1px solid #30363d;
@@ -213,55 +155,29 @@
       margin-bottom: 14px;
     }
 
-    .input-group {
-      margin-bottom: 12px;
-    }
-
-    .input-group label {
-      display: block;
-      font-size: 11px;
-      color: #8b949e;
-      margin-bottom: 5px;
-      text-transform: uppercase;
-      font-weight: bold;
-    }
-
-    .input-group input {
-      width: 100%;
+    .task-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
       background: #0d1117;
       border: 1px solid #30363d;
       padding: 12px;
-      border-radius: 10px;
-      color: #fff;
-      font-size: 14px;
-      outline: none;
+      border-radius: 12px;
+      margin-bottom: 10px;
     }
 
     .btn-primary {
-      flex: 2;
       background: #f7931a;
       color: #ffffff;
       border: none;
-      padding: 14px;
-      border-radius: 12px;
+      padding: 10px 16px;
+      border-radius: 10px;
       font-weight: 700;
-      font-size: 15px;
+      font-size: 13px;
       cursor: pointer;
     }
 
-    .btn-secondary {
-      flex: 1;
-      background: #21262d;
-      color: #c9d1d9;
-      border: 1px solid #30363d;
-      padding: 14px;
-      border-radius: 12px;
-      font-weight: 600;
-      font-size: 15px;
-      cursor: pointer;
-    }
-
-    .btn-primary:active, .btn-secondary:active {
+    .btn-primary:active {
       transform: scale(0.98);
     }
 
@@ -309,118 +225,99 @@
 </head>
 <body>
 
-  <!-- 1. SCHERMATA MINE (IL GIOCO) -->
+  <!-- 1. SCHERMATA MINE -->
   <main id="screen-mine" class="screen active">
     <div class="tap-header">
       <h2>Satoshi Tap</h2>
       <div class="btc-price-tag" id="btc-price-display">BTC: Caricamento...</div>
     </div>
     <div class="score-container">
-      <div>🪙 <span id="user-score">0.00</span></div>
-      <div class="fiat-preview" id="fiat-value">~$0.00 USD</div>
+      <div>🪙 <span id="user-score">0.00000</span></div>
+      <div class="fiat-preview" id="fiat-value">~$0.00000 USD</div>
     </div>
     <div class="tap-area">
       <div class="tap-button" id="mining-tap-btn" onclick="tapCoin()">
         🪙
       </div>
       <div id="timer-container" style="display: none; width: 100%;">
-        <div class="timer-banner" id="timer-text">Prossima sessione tra: 12h 00m 00s</div>
+        <div class="timer-banner" id="timer-text">Sessione completata. Ricarica tra: 12h 00m 00s</div>
       </div>
     </div>
   </main>
 
-  <!-- 2. SCHERMATA TASKS -->
+  <!-- 2. SCHERMATA TASKS (SPONSORIZZAZIONI) -->
   <main id="screen-tasks" class="screen">
     <div class="section-header">
       <div class="icon-box">📋</div>
-      <h2>Tasks & Ricarica</h2>
-      <p>Deposita almeno 3.00 USDT per sbloccare i prelievi.</p>
+      <h2>Partner & Sponsor</h2>
+      <p>Completa le missioni dei nostri inserzionisti per guadagnare bonus extra.</p>
     </div>
     <div class="card-box">
-      <div class="input-group">
-        <label>Indirizzo Deposito Ufficiale (USDT)</label>
-        <input type="text" value="UQC_TUO_WALLET_UFFICIALE_QUI" readonly style="color: #3fb950; font-weight: bold;">
+      <div class="task-item">
+        <div>
+          <strong style="font-size: 14px; display: block; margin-bottom: 2px;">Segui Canale Partner</strong>
+          <span style="font-size: 11px; color: #3fb950;">+0.00050 SAT</span>
+        </div>
+        <button class="btn-primary" onclick="completeTask(this, 0.00050)">Visita</button>
       </div>
-      <div class="input-group">
-        <label>Hash Transazione (TXID)</label>
-        <input type="text" id="txid-input" placeholder="Incolla TXID della transazione...">
+      <div class="task-item">
+        <div>
+          <strong style="font-size: 14px; display: block; margin-bottom: 2px;">Unisciti al Bot Sponsor</strong>
+          <span style="font-size: 11px; color: #3fb950;">+0.00100 SAT</span>
+        </div>
+        <button class="btn-primary" onclick="completeTask(this, 0.00100)">Segui</button>
       </div>
-      <button class="btn-primary" style="width: 100%;" onclick="submitDeposit()">Verifica e Accredita (10 USDT)</button>
     </div>
   </main>
 
-  <!-- 3. SCHERMATA DAILY (BONUS GIORNALIERO MINIMO) -->
+  <!-- 3. SCHERMATA SHOP (BENI DIGITALI) -->
+  <main id="screen-shop" class="screen">
+    <div class="section-header">
+      <div class="icon-box">🛒</div>
+      <h2>Shop Potenziamenti</h2>
+      <p>Acquista velocità extra per il tuo minatore (Beni digitali non rimborsabili).</p>
+    </div>
+    <div class="card-box">
+      <div class="task-item">
+        <div>
+          <strong style="font-size: 14px; display: block;">Rig ASIC Booster (+10% Boost)</strong>
+          <span style="font-size: 11px; color: #8b949e;">Valido per 30 giorni</span>
+        </div>
+        <button class="btn-primary" onclick="buyPackage(5.00)">5.00 USDT</button>
+      </div>
+    </div>
+  </main>
+
+  <!-- 4. SCHERMATA DAILY -->
   <main id="screen-daily" class="screen">
     <div class="section-header">
       <div class="icon-box">🔥</div>
       <h2>Daily Rewards</h2>
-      <p>Riscatta il tuo bonus giornaliero (+0.00005 Satoshi).</p>
+      <p>Riscatta il tuo bonus giornaliero gratuito.</p>
     </div>
     <div class="card-box" style="text-align: center;">
-      <div style="font-size: 14px; color: #8b949e; margin-bottom: 15px;">Ricompensa disponibile ogni 24 ore</div>
-      <button class="btn-primary" id="daily-btn" style="width: 100%;" onclick="claimDaily()">Riscatta Bonus (+0.00005 SAT)</button>
+      <div style="font-size: 13px; color: #8b949e; margin-bottom: 15px;">Disponibile ogni 24 ore</div>
+      <button class="btn-primary" id="daily-btn" style="width: 100%; padding: 14px;" onclick="claimDaily()">Riscatta (+0.00005 SAT)</button>
       <div id="daily-timer" style="margin-top: 12px; font-size: 12px; color: #f7931a; font-weight: bold;"></div>
     </div>
   </main>
 
-  <!-- 4. SCHERMATA FRIENDS (REFERRAL) -->
-  <main id="screen-friends" class="screen">
-    <div class="section-header" style="padding-bottom: 10px;">
-      <div class="icon-box">🤝</div>
-      <h2>Invita Amici!</h2>
-      <p>Ricevi il <strong>10%</strong> di tutti i token guadagnati dai tuoi amici.</p>
-    </div>
-
-    <div class="stats-container">
-      <div class="stat-card">
-        <span class="stat-title">Amici Invitati</span>
-        <span id="friends-count" class="stat-value">0</span>
-      </div>
-      <div class="stat-card">
-        <span class="stat-title">Guadagni Referral</span>
-        <span id="friends-earnings" class="stat-value">0 🪙</span>
-      </div>
-    </div>
-
-    <div class="action-buttons">
-      <button class="btn-primary" onclick="inviteFriend()">🚀 Invita</button>
-      <button class="btn-secondary" onclick="copyReferralLink()">📋 Copia Link</button>
-    </div>
-
-    <div class="friends-list-container">
-      <h3>I tuoi Amici</h3>
-      <div id="friends-list" class="friends-list">
-        <p class="empty-state">Non hai ancora invitato nessun amico.</p>
-      </div>
-    </div>
-  </main>
-
-  <!-- 5. SCHERMATA WALLET (PRELIEVI) -->
+  <!-- 5. SCHERMATA WALLET -->
   <main id="screen-wallet" class="screen">
     <div class="section-header">
       <div class="icon-box">👛</div>
-      <h2>Wallet & Prelievi</h2>
-      <p>Commissione di rete: 5% (Prelievo minimo: 3 USDT di deposito richiesti).</p>
+      <h2>Wallet</h2>
+      <p>Gestisci il tuo saldo e i tuoi acquisti digitali.</p>
     </div>
-
     <div class="card-box">
-      <div style="margin-bottom: 12px; font-size: 13px; color: #8b949e;">
-        Saldo Deposito: <strong id="deposit-balance" style="color: #fff;">0.00 USDT</strong><br>
-        Stato Prelievi: <strong id="withdraw-status" style="color: #f85149;">Bloccato (< 3 USDT)</strong>
+      <div style="font-size: 14px; color: #8b949e; margin-bottom: 10px;">
+        Saldo USDT (Acquisti): <strong id="usdt-balance" style="color: #fff;">0.00 USDT</strong>
       </div>
-      <div class="input-group">
-        <label>Indirizzo BTC / TON</label>
-        <input type="text" id="withdraw-address" placeholder="Inserisci indirizzo di destinazione...">
-      </div>
-      <div class="input-group">
-        <label>Importo Satoshi da prelevare</label>
-        <input type="number" id="withdraw-amount" placeholder="0.00">
-      </div>
-      <button class="btn-primary" style="width: 100%;" onclick="requestWithdrawal()">Conferma Prelievo</button>
+      <button class="btn-primary" style="width: 100%;" onclick="alert('Sezione ricarica USDT attiva.')">Deposita Fondi Shop</button>
     </div>
   </main>
 
-  <!-- BARRA DI NAVIGAZIONE IN BASSO -->
+  <!-- NAVBAR IN BASSO -->
   <nav class="navbar">
     <div class="nav-item active" onclick="switchTab('mine', this)">
       <span class="nav-icon">🔨</span>
@@ -430,13 +327,13 @@
       <span class="nav-icon">📋</span>
       <span>Tasks</span>
     </div>
+    <div class="nav-item" onclick="switchTab('shop', this)">
+      <span class="nav-icon">🛒</span>
+      <span>Shop</span>
+    </div>
     <div class="nav-item" onclick="switchTab('daily', this)">
       <span class="nav-icon">🔥</span>
       <span>Daily</span>
-    </div>
-    <div class="nav-item" onclick="switchTab('friends', this)">
-      <span class="nav-icon">👥</span>
-      <span>Friends</span>
     </div>
     <div class="nav-item" onclick="switchTab('wallet', this)">
       <span class="nav-icon">👛</span>
@@ -448,16 +345,11 @@
     const tg = window.Telegram ? window.Telegram.WebApp : null;
     if (tg) { tg.expand(); tg.ready(); }
 
-    // DATI PERSISTENTI
-    let score = parseFloat(localStorage.getItem('satoshi_score')) || 0.00000;
-    let userDeposit = parseFloat(localStorage.getItem('user_deposit')) || 0.00;
-    let miningEndTime = parseInt(localStorage.getItem('mining_end_time')) || 0;
-    let lastDailyClaim = parseInt(localStorage.getItem('last_daily_claim')) || 0;
+    let score = parseFloat(localStorage.getItem('biz_score')) || 0.00000;
+    let usdtBalance = parseFloat(localStorage.getItem('biz_usdt')) || 0.00;
+    let miningEndTime = parseInt(localStorage.getItem('biz_mining_end')) || 0;
+    let lastDailyClaim = parseInt(localStorage.getItem('biz_daily_claim')) || 0;
     let currentBtcPrice = 90000;
-
-    const BOT_USERNAME = "Satoshiap_bot";
-    const userId = tg?.initDataUnsafe?.user?.id || "12345678";
-    const referralLink = `https://t.me/${BOT_USERNAME}?start=ref_${userId}`;
 
     async function fetchBtcPrice() {
       try {
@@ -477,16 +369,7 @@
       document.getElementById('user-score').innerText = score.toFixed(5);
       let usdVal = (score / 100000000) * currentBtcPrice;
       document.getElementById('fiat-value').innerText = `~$${usdVal.toFixed(6)} USD`;
-      document.getElementById('deposit-balance').innerText = `${userDeposit.toFixed(2)} USDT`;
-
-      const statusEl = document.getElementById('withdraw-status');
-      if (userDeposit >= 3.00) {
-        statusEl.innerText = "Sbloccato ✅";
-        statusEl.style.color = "#3fb950";
-      } else {
-        statusEl.innerText = "Bloccato (< 3 USDT) ❌";
-        statusEl.style.color = "#f85149";
-      }
+      document.getElementById('usdt-balance').innerText = `${usdtBalance.toFixed(2)} USDT`;
 
       checkTimerStatus();
       checkDailyStatus();
@@ -503,7 +386,7 @@
 
       if (score >= 1000 && miningEndTime === 0) {
         miningEndTime = now + TWELVE_HOURS;
-        localStorage.setItem('mining_end_time', miningEndTime);
+        localStorage.setItem('biz_mining_end', miningEndTime);
       }
 
       if (miningEndTime > now) {
@@ -515,12 +398,12 @@
         const m = Math.floor((remaining % (1000 * 60 * 60)) / (1000 * 60));
         const s = Math.floor((remaining % (1000 * 60)) / 1000);
 
-        timerText.innerText = `Sessione completata (1000 SAT). Ricarica tra: ${h}h ${m}m ${s}s`;
+        timerText.innerText = `Sessione completata. Ricarica tra: ${h}h ${m}m ${s}s`;
       } else if (miningEndTime <= now && miningEndTime > 0) {
         score = 0;
         miningEndTime = 0;
-        localStorage.setItem('satoshi_score', score);
-        localStorage.setItem('mining_end_time', miningEndTime);
+        localStorage.setItem('biz_score', score);
+        localStorage.setItem('biz_mining_end', miningEndTime);
 
         tapBtn.classList.remove('disabled');
         timerContainer.style.display = 'none';
@@ -550,12 +433,28 @@
       const now = Date.now();
       if (now - lastDailyClaim < TWENTY_FOUR_HOURS) return;
 
-      score += 0.00005; // Bonus giornaliero minimo impostato a 0.00005 SAT
+      score += 0.00005;
       lastDailyClaim = now;
-      localStorage.setItem('satoshi_score', score);
-      localStorage.setItem('last_daily_claim', lastDailyClaim);
+      localStorage.setItem('biz_score', score);
+      localStorage.setItem('biz_daily_claim', lastDailyClaim);
       updateUI();
-      alert("Bonus giornaliero di +0.00005 Satoshi riscosso con successo!");
+      alert("Bonus giornaliero riscosso!");
+    }
+
+    function completeTask(button, reward) {
+      score += reward;
+      localStorage.setItem('biz_score', score);
+      updateUI();
+      button.innerText = "Completato ✅";
+      button.disabled = true;
+      alert(`Hai guadagnato +${reward} Satoshi completando la sponsorizzazione!`);
+    }
+
+    function buyPackage(price) {
+      usdtBalance += price; // Simulazione acquisto che genera ricavo per te
+      localStorage.setItem('biz_usdt', usdtBalance);
+      updateUI();
+      alert("Potenziamento acquistato con successo! Grazie per il supporto.");
     }
 
     function tapCoin() {
@@ -567,7 +466,7 @@
         score = 1000;
         checkTimerStatus();
       }
-      localStorage.setItem('satoshi_score', score);
+      localStorage.setItem('biz_score', score);
       updateUI();
     }
 
@@ -575,71 +474,6 @@
       checkTimerStatus();
       checkDailyStatus();
     }, 1000);
-
-    function submitDeposit() {
-      const txid = document.getElementById('txid-input').value;
-      if (!txid) {
-        alert("Inserisci l'hash della transazione (TXID).");
-        return;
-      }
-      userDeposit += 10.00;
-      localStorage.setItem('user_deposit', userDeposit);
-      updateUI();
-      alert("Ricarica verificata e accreditata con successo!");
-      document.getElementById('txid-input').value = '';
-    }
-
-    function requestWithdrawal() {
-      const amount = parseFloat(document.getElementById('withdraw-amount').value);
-      const address = document.getElementById('withdraw-address').value;
-
-      if (!address || isNaN(amount) || amount <= 0) {
-        alert("Inserisci un indirizzo valido e un importo corretto.");
-        return;
-      }
-      if (userDeposit < 3.00) {
-        alert("Prelievo bloccato! Devi effettuare un deposito minimo di 3.00 USDT nella sezione Tasks.");
-        switchTab('tasks', document.querySelectorAll('.nav-item')[1]);
-        return;
-      }
-      if (amount > score) {
-        alert("Saldo Satoshi insufficiente.");
-        return;
-      }
-
-      let fee = amount * 0.05;
-      let finalAmount = amount - fee;
-
-      score -= amount;
-      localStorage.setItem('satoshi_score', score);
-      updateUI();
-      alert(`Prelievo di ${finalAmount.toFixed(5)} Satoshi inviato con successo (Fee del 5% applicata).`);
-      document.getElementById('withdraw-amount').value = '';
-    }
-
-    async function inviteFriend() {
-      const shareText = "Unisciti a me su Satoshi Tap e inizia a guadagnare token! 🚀";
-      if (navigator.share) {
-        try { await navigator.share({ title: 'Satoshi Tap', text: shareText, url: referralLink }); } catch (err) {}
-      } else {
-        const shareUrl = `https://t.me/share/url?url=${encodeURIComponent(referralLink)}&text=${encodeURIComponent(shareText)}`;
-        if (tg) { tg.openTelegramLink(shareUrl); } else { window.open(shareUrl, '_blank'); }
-      }
-    }
-
-    function copyReferralLink() {
-      if (navigator.clipboard) {
-        navigator.clipboard.writeText(referralLink).then(() => {
-          showAlert("Link copiato negli appunti!");
-        }).catch(() => { prompt("Copia il tuo link:", referralLink); });
-      } else {
-        prompt("Copia il tuo link:", referralLink);
-      }
-    }
-
-    function showAlert(msg) {
-      if (tg && tg.showAlert) { tg.showAlert(msg); } else { alert(msg); }
-    }
 
     function switchTab(tabName, element) {
       document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
