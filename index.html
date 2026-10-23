@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Satoshi Tap - Progressive Mining</title>
+  <title>Satoshi Tap - Pro Hashrate Edition</title>
 
   <!-- SDK Telegram Mini App -->
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
@@ -415,7 +415,7 @@
     </div>
   </main>
 
-  <!-- 2. SCHERMATA SHOP -->
+  <!-- 2. SCHERMATA SHOP (PACCHETTI HASHRATE AMPLIATI) -->
   <main id="screen-shop" class="screen">
     <div class="action-card">
       <div class="card-title" style="margin-bottom: 6px;">🛒 Pacchetti Hashrate Cloud</div>
@@ -443,6 +443,38 @@
           <span>+0.80000000 Satoshi target</span>
         </div>
         <button class="btn-buy-shop" onclick="buyHashratePackage('5 TH/s', 0.80000000, 10.00)">10.00 USDT</button>
+      </div>
+
+      <div class="shop-item">
+        <div class="shop-info">
+          <strong>Rig Pro (10 TH/s)</strong>
+          <span>+1.80000000 Satoshi target</span>
+        </div>
+        <button class="btn-buy-shop" onclick="buyHashratePackage('10 TH/s', 1.80000000, 20.00)">20.00 USDT</button>
+      </div>
+
+      <div class="shop-item">
+        <div class="shop-info">
+          <strong>Rig Advanced (25 TH/s)</strong>
+          <span>+4.50000000 Satoshi target</span>
+        </div>
+        <button class="btn-buy-shop" onclick="buyHashratePackage('25 TH/s', 4.50000000, 150.00)">150.00 USDT</button>
+      </div>
+
+      <div class="shop-item">
+        <div class="shop-info">
+          <strong>Rig Master (50 TH/s)</strong>
+          <span>+9.50000000 Satoshi target</span>
+        </div>
+        <button class="btn-buy-shop" onclick="buyHashratePackage('50 TH/s', 9.50000000, 280.00)">280.00 USDT</button>
+      </div>
+
+      <div class="shop-item">
+        <div class="shop-info">
+          <strong>Rig Farm Enterprise (100 TH/s)</strong>
+          <span>+20.00000000 Satoshi target</span>
+        </div>
+        <button class="btn-buy-shop" onclick="buyHashratePackage('100 TH/s', 20.00000000, 500.00)">500.00 USDT</button>
       </div>
     </div>
   </main>
@@ -542,7 +574,6 @@
     }
 
     function updateUI() {
-      // Aggiornamento della grafica in tempo reale (8 decimali)
       document.getElementById('user-score').innerText = Number(appData.score).toFixed(8);
       let usdVal = (appData.score / 100000000) * currentBtcPrice;
       document.getElementById('fiat-val').innerText = `Valore stimato: ~$${usdVal.toFixed(6)} USD`;
@@ -562,7 +593,6 @@
       checkMiningProgress();
     }
 
-    // Gestione della progressione fluida da 0 verso il target nelle 12 ore
     function checkMiningProgress() {
       const now = Date.now();
       const btn = document.getElementById('btn-mining-action');
@@ -576,7 +606,6 @@
         const elapsed = now - appData.miningStartTime;
         const progress = Math.min(elapsed / totalDuration, 1);
 
-        // Calcola il saldo corrente scalando progressivamente da 0 fino al target stabilito
         appData.score = Number((appData.targetScore * progress).toFixed(8));
         saveData();
 
@@ -587,7 +616,7 @@
         alertBox.innerText = `⏳ Sessione 12h in corso. Completamento tra: ${h}h ${m}m ${s}s`;
       } else {
         if (appData.miningEndTime !== 0 && appData.score < appData.targetScore) {
-          appData.score = appData.targetScore; // Assicura che arrivi esattamente al 100% alla fine
+          appData.score = appData.targetScore;
           saveData();
         }
         btn.disabled = false;
@@ -601,7 +630,6 @@
 
       appData.miningStartTime = now;
       appData.miningEndTime = now + TWELVE_HOURS;
-      // Imposta il guadagno totale della sessione (es. +0.50000000 Satoshi)
       appData.targetScore = Number((appData.score + 0.50000000).toFixed(8));
       saveData();
       updateUI();
@@ -660,7 +688,6 @@
       document.getElementById('withdraw-amount').value = '';
     }
 
-    // Loop continuo ogni secondo per aggiornare la barra e la progressione del saldo
     setInterval(() => {
       updateUI();
     }, 1000);
