@@ -343,6 +343,69 @@
       box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
     }
 
+    /* MODALE GUIDA */
+    .modal-overlay {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0, 0, 0, 0.8);
+      display: none;
+      justify-content: center;
+      align-items: center;
+      z-index: 2000;
+      padding: 16px;
+      backdrop-filter: blur(5px);
+    }
+
+    .modal-content {
+      background: #1e293b;
+      border: 1px solid rgba(245, 158, 11, 0.3);
+      border-radius: 20px;
+      width: 100%;
+      max-width: 400px;
+      max-height: 85vh;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    }
+
+    .modal-header {
+      padding: 16px;
+      background: rgba(15, 23, 42, 0.9);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+    }
+
+    .modal-body {
+      padding: 16px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      font-size: 12px;
+      color: #cbd5e1;
+      line-height: 1.4;
+    }
+
+    .modal-body h4 {
+      color: #f59e0b;
+      font-size: 13px;
+      margin-top: 4px;
+    }
+
+    .modal-close {
+      background: #ef4444;
+      color: #fff;
+      border: none;
+      padding: 6px 12px;
+      border-radius: 8px;
+      font-weight: bold;
+      font-size: 11px;
+      cursor: pointer;
+    }
+
     /* STORICO TRANSAZIONI */
     .tx-list {
       max-height: 180px;
@@ -429,10 +492,33 @@
       ⚡ SATOSHI<br><span style="font-size: 12px; color: #94a3b8;">CLOUD MINING BTC</span>
     </div>
     <div class="header-btns">
-      <button class="pill-btn" onclick="haptic(); alert('Sezione Guida')">❓ Guida</button>
+      <button class="pill-btn" onclick="haptic(); openGuide()">❓ Guida</button>
       <button class="pill-btn" onclick="haptic(); alert('Audio attivo')">🔊 Audio</button>
     </div>
   </header>
+
+  <!-- MODALE GUIDA INFORMATIVA -->
+  <div id="guide-modal" class="modal-overlay">
+    <div class="modal-content">
+      <div class="modal-header">
+        <span style="font-weight: bold; color: #f59e0b; font-size: 14px;">📖 Guida di Satoshi Tap</span>
+        <button class="modal-close" onclick="haptic(); closeGuide()">Chiudi</button>
+      </div>
+      <div class="modal-body">
+        <h4>⚡ Cos'è il Cloud Mining?</h4>
+        <p>Il cloud mining ti permette di avviare sessioni manuali della durata di 12 ore. Cliccando su "Avvia Sessione", la potenza di calcolo attiva genererà progressivamente Satoshi in tempo reale.</p>
+        
+        <h4>🛒 A cosa servono i Pacchetti Rig?</h4>
+        <p>Acquistando i pacchetti nello Shop (Rig Micro, Mini, Standard, ecc.), aumenti la tua potenza attiva in GH/s o TH/s. Più potenza possiedi, maggiore sarà la velocità e la quantità di Satoshi generati durante ogni sessione di 12 ore.</p>
+        
+        <h4>📥 Ricarica e Credito</h4>
+        <p>Le ricariche e gli acquisti avvengono <strong>esclusivamente sulla rete nativa Bitcoin (BTC)</strong>. Assicurati di inviare fondi unicamente al nostro indirizzo ufficiale per evitare la perdita di asset.</p>
+
+        <h4>💸 Prelievi in Bitcoin</h4>
+        <p>Il prelievo minimo è fissato ad <strong>1 intero Satoshi</strong> ed è possibile effettuarlo inserendo il proprio indirizzo wallet BTC personale. Per motivi di sicurezza e attivazione account, è richiesto un deposito minimo iniziale sulla rete Bitcoin.</p>
+      </div>
+    </div>
+  </div>
 
   <!-- CONTENITORE PRINCIPALE DELLE SCHERMATE -->
   <div class="content-area">
@@ -471,11 +557,11 @@
 
       <div id="view-withdraw" class="action-card" style="display: none;">
         <div class="card-title">Trasferisci Satoshi</div>
-        <div class="card-subtitle">Minimo prelevabile: 1.00000000 SAT (1 Satoshi intero). Richiesto deposito attivo sulla rete Bitcoin. Stato: <span id="withdraw-status-label" style="color: #ef4444; font-weight: bold;">Bloccato</span></div>
+        <div class="card-subtitle">Minimo prelevabile: 1.00000000 SAT (1 Satoshi intero). Prelievi esclusivi in Bitcoin (BTC). Stato: <span id="withdraw-status-label" style="color: #ef4444; font-weight: bold;">Bloccato</span></div>
         
         <div class="input-group">
           <div class="input-box">
-            <label>Indirizzo Wallet BTC / Destinazione</label>
+            <label>Indirizzo Wallet BTC Personale</label>
             <input type="text" id="withdraw-address" placeholder="Indirizzo Bitcoin...">
           </div>
           <button class="btn-copy" onclick="copyText('withdraw-address', this)">Copia</button>
@@ -485,7 +571,7 @@
           <label>Importo Satoshi (Min: 1.00000000)</label>
           <input type="number" id="withdraw-amount" placeholder="1.00000000" step="0.00001">
         </div>
-        <button class="btn-action-primary" onclick="requestWithdrawal()">Conferma Prelievo</button>
+        <button class="btn-action-primary" onclick="requestWithdrawal()">Conferma Prelievo BTC</button>
       </div>
     </div>
 
@@ -645,6 +731,16 @@
       }
     }
 
+    function openGuide() {
+      const modal = document.getElementById('guide-modal');
+      if (modal) modal.style.display = 'flex';
+    }
+
+    function closeGuide() {
+      const modal = document.getElementById('guide-modal');
+      if (modal) modal.style.display = 'none';
+    }
+
     function copyText(elementId, btnElement) {
       haptic();
       const input = document.getElementById(elementId);
@@ -663,7 +759,7 @@
       }
     }
 
-    let appData = JSON.parse(localStorage.getItem('satoshi_btc_native_v2')) || {
+    let appData = JSON.parse(localStorage.getItem('satoshi_btc_native_v3')) || {
       score: 0.00000000,
       deposit: 0.00000000,
       hashrate: 0,
@@ -679,7 +775,7 @@
 
     function saveData() {
       try {
-        localStorage.setItem('satoshi_btc_native_v2', JSON.stringify(appData));
+        localStorage.setItem('satoshi_btc_native_v3', JSON.stringify(appData));
       } catch (e) {}
     }
 
@@ -687,7 +783,7 @@
       if (!appData.history) appData.history = [];
       const dateStr = new Date().toLocaleString('it-IT', { dateStyle: 'short', timeStyle: 'short' });
       appData.history.unshift({ title, date: dateStr, status });
-      if (appData.history.length > 15) appData.history.pop(); // Mantieni ultimi 15
+      if (appData.history.length > 15) appData.history.pop();
       saveData();
       renderHistory();
     }
@@ -890,7 +986,7 @@
       appData.score = Number(((appData.score || 0) - amt).toFixed(8));
       appData.targetScore = Number(((appData.targetScore || 0) - amt).toFixed(8));
       if (appData.targetScore < 0) appData.targetScore = 0;
-      addHistoryItem(`Prelievo di ${amt.toFixed(8)} Sat`, "In attesa");
+      addHistoryItem(`Prelievo BTC (${amt.toFixed(8)} Sat)`, "In attesa");
       saveData();
       updateUI();
       alert("Prelievo Bitcoin inviato con successo sulla blockchain!");
