@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Satoshi Tap - Mining Edition</title>
+  <title>Satoshi Tap - Final Edition</title>
 
   <!-- SDK Telegram Mini App -->
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
@@ -125,7 +125,7 @@
       width: 100%;
     }
 
-    /* SCHERMATE GENERALI & WALLET */
+    /* SCHERMATE GENERALI */
     .section-header {
       text-align: center;
       padding: 20px 10px 16px;
@@ -147,6 +147,62 @@
       color: #8b949e;
       font-size: 13px;
       line-height: 1.4;
+    }
+
+    .stats-container {
+      display: flex;
+      gap: 12px;
+      margin: 16px 0;
+    }
+
+    .stat-card {
+      flex: 1;
+      background: #161b22;
+      border: 1px solid #30363d;
+      padding: 14px;
+      border-radius: 14px;
+      text-align: center;
+    }
+
+    .stat-title {
+      display: block;
+      font-size: 11px;
+      color: #8b949e;
+      margin-bottom: 6px;
+      text-transform: uppercase;
+    }
+
+    .stat-value {
+      font-size: 18px;
+      font-weight: 700;
+      color: #f7931a;
+    }
+
+    .action-buttons {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+
+    .friends-list-container h3 {
+      font-size: 15px;
+      margin-bottom: 10px;
+      color: #c9d1d9;
+    }
+
+    .friends-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      max-height: 200px;
+      overflow-y: auto;
+    }
+
+    .empty-state {
+      text-align: center;
+      color: #8b949e;
+      font-size: 13px;
+      padding: 20px 0;
     }
 
     .card-box {
@@ -182,7 +238,7 @@
     }
 
     .btn-primary {
-      width: 100%;
+      flex: 2;
       background: #f7931a;
       color: #ffffff;
       border: none;
@@ -193,8 +249,26 @@
       cursor: pointer;
     }
 
-    .btn-primary:active {
+    .btn-secondary {
+      flex: 1;
+      background: #21262d;
+      color: #c9d1d9;
+      border: 1px solid #30363d;
+      padding: 14px;
+      border-radius: 12px;
+      font-weight: 600;
+      font-size: 15px;
+      cursor: pointer;
+    }
+
+    .btn-primary:active, .btn-secondary:active {
       transform: scale(0.98);
+    }
+
+    .btn-primary:disabled {
+      background: #30363d;
+      color: #8b949e;
+      cursor: not-allowed;
     }
 
     /* NAVBAR IN BASSO */
@@ -271,26 +345,53 @@
         <label>Hash Transazione (TXID)</label>
         <input type="text" id="txid-input" placeholder="Incolla TXID della transazione...">
       </div>
-      <button class="btn-primary" onclick="submitDeposit()">Verifica e Accredita (10 USDT)</button>
+      <button class="btn-primary" style="width: 100%;" onclick="submitDeposit()">Verifica e Accredita (10 USDT)</button>
     </div>
   </main>
 
-  <!-- 3. SCHERMATA DAILY -->
+  <!-- 3. SCHERMATA DAILY (BONUS GIORNALIERO MINIMO) -->
   <main id="screen-daily" class="screen">
     <div class="section-header">
       <div class="icon-box">🔥</div>
       <h2>Daily Rewards</h2>
-      <p>Accedi ogni giorno per riscattare bonus extra!</p>
+      <p>Riscatta il tuo bonus giornaliero (+0.00005 Satoshi).</p>
     </div>
-    <button class="btn-primary" onclick="claimDaily()">Riscatta Bonus Giornaliero</button>
+    <div class="card-box" style="text-align: center;">
+      <div style="font-size: 14px; color: #8b949e; margin-bottom: 15px;">Ricompensa disponibile ogni 24 ore</div>
+      <button class="btn-primary" id="daily-btn" style="width: 100%;" onclick="claimDaily()">Riscatta Bonus (+0.00005 SAT)</button>
+      <div id="daily-timer" style="margin-top: 12px; font-size: 12px; color: #f7931a; font-weight: bold;"></div>
+    </div>
   </main>
 
-  <!-- 4. SCHERMATA FRIENDS -->
+  <!-- 4. SCHERMATA FRIENDS (REFERRAL) -->
   <main id="screen-friends" class="screen">
-    <div class="section-header">
+    <div class="section-header" style="padding-bottom: 10px;">
       <div class="icon-box">🤝</div>
-      <h2>Invita Amici</h2>
-      <p>Guadagna il 10% dai tuoi amici invitati.</p>
+      <h2>Invita Amici!</h2>
+      <p>Ricevi il <strong>10%</strong> di tutti i token guadagnati dai tuoi amici.</p>
+    </div>
+
+    <div class="stats-container">
+      <div class="stat-card">
+        <span class="stat-title">Amici Invitati</span>
+        <span id="friends-count" class="stat-value">0</span>
+      </div>
+      <div class="stat-card">
+        <span class="stat-title">Guadagni Referral</span>
+        <span id="friends-earnings" class="stat-value">0 🪙</span>
+      </div>
+    </div>
+
+    <div class="action-buttons">
+      <button class="btn-primary" onclick="inviteFriend()">🚀 Invita</button>
+      <button class="btn-secondary" onclick="copyReferralLink()">📋 Copia Link</button>
+    </div>
+
+    <div class="friends-list-container">
+      <h3>I tuoi Amici</h3>
+      <div id="friends-list" class="friends-list">
+        <p class="empty-state">Non hai ancora invitato nessun amico.</p>
+      </div>
     </div>
   </main>
 
@@ -315,7 +416,7 @@
         <label>Importo Satoshi da prelevare</label>
         <input type="number" id="withdraw-amount" placeholder="0.00">
       </div>
-      <button class="btn-primary" onclick="requestWithdrawal()">Conferma Prelievo</button>
+      <button class="btn-primary" style="width: 100%;" onclick="requestWithdrawal()">Conferma Prelievo</button>
     </div>
   </main>
 
@@ -348,12 +449,16 @@
     if (tg) { tg.expand(); tg.ready(); }
 
     // DATI PERSISTENTI
-    let score = parseFloat(localStorage.getItem('satoshi_score')) || 0.00;
+    let score = parseFloat(localStorage.getItem('satoshi_score')) || 0.00000;
     let userDeposit = parseFloat(localStorage.getItem('user_deposit')) || 0.00;
     let miningEndTime = parseInt(localStorage.getItem('mining_end_time')) || 0;
-    let currentBtcPrice = 90000; // Valore predefinito di riserva
+    let lastDailyClaim = parseInt(localStorage.getItem('last_daily_claim')) || 0;
+    let currentBtcPrice = 90000;
 
-    // RECUPERO PREZZO LIVE BITCOIN
+    const BOT_USERNAME = "Satoshiap_bot";
+    const userId = tg?.initDataUnsafe?.user?.id || "12345678";
+    const referralLink = `https://t.me/${BOT_USERNAME}?start=ref_${userId}`;
+
     async function fetchBtcPrice() {
       try {
         const res = await fetch('https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=usd');
@@ -369,9 +474,9 @@
     }
 
     function updateUI() {
-      document.getElementById('user-score').innerText = score.toFixed(2);
-      let usdVal = (score / 100000000) * currentBtcPrice; // Stima Satoshi in USD
-      document.getElementById('fiat-value').innerText = `~$${usdVal.toFixed(2)} USD`;
+      document.getElementById('user-score').innerText = score.toFixed(5);
+      let usdVal = (score / 100000000) * currentBtcPrice;
+      document.getElementById('fiat-value').innerText = `~$${usdVal.toFixed(6)} USD`;
       document.getElementById('deposit-balance').innerText = `${userDeposit.toFixed(2)} USDT`;
 
       const statusEl = document.getElementById('withdraw-status');
@@ -384,10 +489,11 @@
       }
 
       checkTimerStatus();
+      checkDailyStatus();
     }
 
-    // GESTIONE TIMER E LIMITE 1000 SATOSHI
     const TWELVE_HOURS = 12 * 60 * 60 * 1000;
+    const TWENTY_FOUR_HOURS = 24 * 60 * 60 * 1000;
 
     function checkTimerStatus() {
       const now = Date.now();
@@ -396,13 +502,11 @@
       const timerText = document.getElementById('timer-text');
 
       if (score >= 1000 && miningEndTime === 0) {
-        // Raggiunti i 1000 Satoshi per la prima volta, avvia il timer di 12h
         miningEndTime = now + TWELVE_HOURS;
         localStorage.setItem('mining_end_time', miningEndTime);
       }
 
       if (miningEndTime > now) {
-        // Timer attivo
         tapBtn.classList.add('disabled');
         timerContainer.style.display = 'block';
 
@@ -413,7 +517,6 @@
 
         timerText.innerText = `Sessione completata (1000 SAT). Ricarica tra: ${h}h ${m}m ${s}s`;
       } else if (miningEndTime <= now && miningEndTime > 0) {
-        // Timer scaduto -> Resetta per una nuova sessione
         score = 0;
         miningEndTime = 0;
         localStorage.setItem('satoshi_score', score);
@@ -424,9 +527,40 @@
       }
     }
 
+    function checkDailyStatus() {
+      const now = Date.now();
+      const dailyBtn = document.getElementById('daily-btn');
+      const dailyTimer = document.getElementById('daily-timer');
+      const timeElapsed = now - lastDailyClaim;
+
+      if (timeElapsed < TWENTY_FOUR_HOURS) {
+        dailyBtn.disabled = true;
+        const remaining = TWENTY_FOUR_HOURS - timeElapsed;
+        const h = Math.floor(remaining / (1000 * 60 * 60));
+        const m = Math.floor((remaining % (1000 * 60 * 60)) / (1000 * 60));
+        const s = Math.floor((remaining % (1000 * 60)) / 1000);
+        dailyTimer.innerText = `Prossimo bonus tra: ${h}h ${m}m ${s}s`;
+      } else {
+        dailyBtn.disabled = false;
+        dailyTimer.innerText = "Bonus disponibile!";
+      }
+    }
+
+    function claimDaily() {
+      const now = Date.now();
+      if (now - lastDailyClaim < TWENTY_FOUR_HOURS) return;
+
+      score += 0.00005; // Bonus giornaliero minimo impostato a 0.00005 SAT
+      lastDailyClaim = now;
+      localStorage.setItem('satoshi_score', score);
+      localStorage.setItem('last_daily_claim', lastDailyClaim);
+      updateUI();
+      alert("Bonus giornaliero di +0.00005 Satoshi riscosso con successo!");
+    }
+
     function tapCoin() {
       const now = Date.now();
-      if (miningEndTime > now) return; // Bloccato dal timer
+      if (miningEndTime > now) return;
 
       score += 1;
       if (score >= 1000) {
@@ -437,17 +571,18 @@
       updateUI();
     }
 
-    // CONTROLLO TIMER OGNI SECONDO
-    setInterval(checkTimerStatus, 1000);
+    setInterval(() => {
+      checkTimerStatus();
+      checkDailyStatus();
+    }, 1000);
 
-    // FUNZIONI FINANZIARIE
     function submitDeposit() {
       const txid = document.getElementById('txid-input').value;
       if (!txid) {
         alert("Inserisci l'hash della transazione (TXID).");
         return;
       }
-      userDeposit += 10.00; // Simulazione accredito test
+      userDeposit += 10.00;
       localStorage.setItem('user_deposit', userDeposit);
       updateUI();
       alert("Ricarica verificata e accreditata con successo!");
@@ -472,27 +607,46 @@
         return;
       }
 
-      let fee = amount * 0.05; // 5% fee
+      let fee = amount * 0.05;
       let finalAmount = amount - fee;
 
       score -= amount;
       localStorage.setItem('satoshi_score', score);
       updateUI();
-      alert(`Prelievo di ${finalAmount.toFixed(2)} Satoshi inviato con successo (Fee di rete del 5% applicata).`);
+      alert(`Prelievo di ${finalAmount.toFixed(5)} Satoshi inviato con successo (Fee del 5% applicata).`);
       document.getElementById('withdraw-amount').value = '';
     }
 
-    // GESTIONE CAMBIO SCHERMATA
+    async function inviteFriend() {
+      const shareText = "Unisciti a me su Satoshi Tap e inizia a guadagnare token! 🚀";
+      if (navigator.share) {
+        try { await navigator.share({ title: 'Satoshi Tap', text: shareText, url: referralLink }); } catch (err) {}
+      } else {
+        const shareUrl = `https://t.me/share/url?url=${encodeURIComponent(referralLink)}&text=${encodeURIComponent(shareText)}`;
+        if (tg) { tg.openTelegramLink(shareUrl); } else { window.open(shareUrl, '_blank'); }
+      }
+    }
+
+    function copyReferralLink() {
+      if (navigator.clipboard) {
+        navigator.clipboard.writeText(referralLink).then(() => {
+          showAlert("Link copiato negli appunti!");
+        }).catch(() => { prompt("Copia il tuo link:", referralLink); });
+      } else {
+        prompt("Copia il tuo link:", referralLink);
+      }
+    }
+
+    function showAlert(msg) {
+      if (tg && tg.showAlert) { tg.showAlert(msg); } else { alert(msg); }
+    }
+
     function switchTab(tabName, element) {
       document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
       document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
 
       document.getElementById(`screen-${tabName}`).classList.add('active');
       element.classList.add('active');
-    }
-
-    function claimDaily() {
-      alert("Bonus giornaliero riscosso!");
     }
 
     fetchBtcPrice();
