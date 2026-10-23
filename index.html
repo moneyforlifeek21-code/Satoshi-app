@@ -137,30 +137,30 @@
       width: 90px;
       height: 90px;
       background: linear-gradient(135deg, #1e293b, #0f172a);
-      border: 2px solid rgba(0, 122, 255, 0.4);
+      border: 2px solid rgba(247, 147, 26, 0.4);
       border-radius: 20px;
       display: flex;
       align-items: center;
       justify-content: center;
       font-size: 40px;
-      box-shadow: 0 0 25px rgba(0, 122, 255, 0.2), inset 0 0 15px rgba(0, 122, 255, 0.1);
+      box-shadow: 0 0 25px rgba(247, 147, 26, 0.2), inset 0 0 15px rgba(247, 147, 26, 0.1);
       position: relative;
       animation: holoFloat 3s ease-in-out infinite;
     }
 
     @keyframes holoFloat {
-      0% { transform: translateY(0px); box-shadow: 0 5px 20px rgba(0, 122, 255, 0.3); }
-      50% { transform: translateY(-6px); box-shadow: 0 15px 30px rgba(247, 147, 26, 0.3); border-color: rgba(247, 147, 26, 0.5); }
-      100% { transform: translateY(0px); box-shadow: 0 5px 20px rgba(0, 122, 255, 0.3); }
+      0% { transform: translateY(0px); box-shadow: 0 5px 20px rgba(247, 147, 26, 0.2); }
+      50% { transform: translateY(-6px); box-shadow: 0 15px 30px rgba(247, 147, 26, 0.4); }
+      100% { transform: translateY(0px); box-shadow: 0 5px 20px rgba(247, 147, 26, 0.2); }
     }
 
     .holo-status-led {
       position: absolute;
       top: 8px; right: 8px;
       width: 10px; height: 10px;
-      background: #10b981;
+      background: #f59e0b;
       border-radius: 50%;
-      box-shadow: 0 0 10px #10b981;
+      box-shadow: 0 0 10px #f59e0b;
       animation: ledBlink 1s infinite alternate;
     }
 
@@ -242,6 +242,26 @@
       border-radius: 8px;
       display: inline-block;
       border: 1px solid rgba(56, 189, 248, 0.2);
+    }
+
+    /* PULSANTE FREE MINING STARTER */
+    .btn-free-starter {
+      width: 100%;
+      background: linear-gradient(135deg, #f59e0b, #d97706);
+      color: #fff;
+      border: none;
+      padding: 12px;
+      border-radius: 14px;
+      font-weight: 700;
+      font-size: 14px;
+      cursor: pointer;
+      box-shadow: 0 4px 15px rgba(245, 158, 11, 0.3);
+      margin-bottom: 15px;
+      transition: transform 0.15s ease;
+    }
+
+    .btn-free-starter:active {
+      transform: scale(0.97);
     }
 
     /* FORM AZIONI */
@@ -560,10 +580,11 @@
   <div class="modal-overlay" id="guide-modal" onclick="if(event.target === this) closeHowTo()">
     <div class="modal-card">
       <h3>🖥️ Centro Controllo Cloud Mining</h3>
-      <p>Regole di acquisto e funzionamento:</p>
+      <p>Regole di sblocco e prelievo:</p>
       <ul>
-        <li><strong>Fondi Reali Obbligatori:</strong> I potenziamenti si acquistano solo ricaricando fondi in USDT. Non è possibile usare i Satoshi minati per fare upgrade.</li>
-        <li><strong>Prelievi in Satoshi:</strong> Il saldo minato viene prelevato in autonomia con trattenuta della commissione di rete del 5%.</li>
+        <li><strong>Sblocco Prelievi (Minimo 3 USDT):</strong> Per poter prelevare i Satoshi minati, è richiesto un deposito verificato di almeno 3.00 USDT sul conto.</li>
+        <li><strong>Mining Starter Gratuito:</strong> Attiva il rig base gratuito per iniziare a estrarre a bassissimo regime.</li>
+        <li><strong>Commissione Prelievo:</strong> Trattenuta del 5% di rete accreditata all'admin.</li>
       </ul>
       <button class="btn-close" onclick="closeHowTo()">Ho Capito!</button>
     </div>
@@ -585,6 +606,9 @@
         </div>
       </div>
 
+      <!-- PULSANTE START MINING / STARTER GRATUITO -->
+      <button class="btn-free-starter" id="btn-start-starter" onclick="activateFreeStarter()">🚀 Attiva Mining Starter Gratuito</button>
+
       <div class="balance-display-box">
         <div style="font-size: 11px; color: #94a3b8; text-transform: uppercase; margin-bottom: 4px; font-weight: 700; letter-spacing: 0.5px;">Saldo Mining Disponibile</div>
         <div class="crypto-amount">
@@ -597,7 +621,7 @@
 
       <div class="action-form">
         <div class="form-title">Trasferisci Satoshi</div>
-        <div class="form-subtitle">Prelievo rapido con commissione del 5%</div>
+        <div class="form-subtitle">Prelievo rapido (Richiesto deposito minimo di 3 USDT per sbloccare)</div>
 
         <div class="input-group">
           <label>Indirizzo Wallet / Destinazione</label>
@@ -619,11 +643,11 @@
     <div class="stats-grid">
       <div class="stat-card">
         <span>Potenza Farm</span>
-        <strong id="total-hashrate" style="color: #38bdf8;">10 GH/s</strong>
+        <strong id="total-hashrate" style="color: #38bdf8;">2 GH/s</strong>
       </div>
       <div class="stat-card">
         <span>Resa al Mese</span>
-        <strong id="monthly-yield-usdt" style="color: #34d399;">~$0.30 USDT</strong>
+        <strong id="monthly-yield-usdt" style="color: #34d399;">~$0.05 USDT</strong>
       </div>
     </div>
   </main>
@@ -691,7 +715,7 @@
   <main id="screen-deposit" class="screen">
     <div class="mining-panel">
       <h2>📥 Ricarica Fondi</h2>
-      <p style="color: #94a3b8; font-size: 13px; margin: 6px 0 16px 0;">Invia criptovalute al wallet ufficiale per ricaricare il conto acquisti</p>
+      <p style="color: #94a3b8; font-size: 13px; margin: 6px 0 16px 0;">Invia almeno 3 USDT per sbloccare i prelievi o ricarica per i tuoi acquisti</p>
 
       <div class="input-group">
         <label>Seleziona Moneta</label>
@@ -789,11 +813,17 @@
     const referralLink = `https://t.me/${BOT_USERNAME}?start=ref_${userId}`;
 
     let balance = parseFloat(localStorage.getItem('btc_balance')) || 0.00000000;
-    let totalHashrate = parseInt(localStorage.getItem('btc_hashrate')) || 10;
-    let userDepositBalance = parseFloat(localStorage.getItem('usdt_deposit_balance')) || 0.00; // Saldo USDT reale per acquisti
+    let totalHashrate = parseInt(localStorage.getItem('btc_hashrate')) || 2;
+    let userDepositBalance = parseFloat(localStorage.getItem('usdt_deposit_balance')) || 0.00;
+    let starterActivated = localStorage.getItem('starter_activated') === 'true';
     let currentBtcPrice = 90000;
     
     let selectedRig = { name: '', ghs: 0, priceUsdt: 0, monthlyYieldUsdt: 0 };
+
+    if (starterActivated) {
+      document.getElementById('btn-free-starter').innerText = "✅ Mining Starter Attivo";
+      document.getElementById('btn-free-starter').style.background = "linear-gradient(135deg, #334155, #1e293b)";
+    }
 
     async function fetchLiveBtcPrice() {
       try {
@@ -814,6 +844,24 @@
 
     updateUI();
 
+    function activateFreeStarter() {
+      startMusicOnFirstInteraction();
+      if (!starterActivated) {
+        starterActivated = true;
+        totalHashrate = 5;
+        localStorage.setItem('starter_activated', 'true');
+        localStorage.setItem('btc_hashrate', totalHashrate);
+        
+        document.getElementById('btn-free-starter').innerText = "✅ Mining Starter Attivo";
+        document.getElementById('btn-free-starter').style.background = "linear-gradient(135deg, #334155, #1e293b)";
+        
+        updateUI();
+        alert("Rig Starter Gratuito attivato! La tua farm ha iniziato a estrarre i primi Satoshi a bassissimo regime.");
+      } else {
+        alert("Il rig starter è già attivo sul tuo account!");
+      }
+    }
+
     function updateUI() {
       document.getElementById('user-balance').innerText = balance.toFixed(8);
       const fiatVal = (balance * currentBtcPrice).toFixed(2);
@@ -821,12 +869,12 @@
       document.getElementById('total-hashrate').innerText = `${totalHashrate} GH/s`;
       document.getElementById('deposit-balance-display').innerText = `Saldo USDT per acquisti: ${userDepositBalance.toFixed(2)} USDT`;
       
-      const monthlyUsd = (totalHashrate * 0.20).toFixed(2);
+      const monthlyUsd = (totalHashrate * 0.05).toFixed(2);
       document.getElementById('monthly-yield-usdt').innerText = `~$${monthlyUsd} USDT`;
     }
 
     setInterval(() => {
-      const monthlyUsd = totalHashrate * 0.20;
+      const monthlyUsd = totalHashrate * 0.05;
       const monthlyBtc = monthlyUsd / currentBtcPrice;
       const incrementPerSecond = monthlyBtc / 2592000;
 
@@ -850,7 +898,6 @@
     function confirmUSDTBuy() {
       startMusicOnFirstInteraction();
       
-      // Controllo rigido: impedisce l'acquisto se l'utente non ha ricaricato fondi reali in USDT
       if (userDepositBalance < selectedRig.priceUsdt) {
         alert(`Saldo USDT insufficiente (${userDepositBalance.toFixed(2)} USDT). Per acquistare il pacchetto ${selectedRig.name} servono ${selectedRig.priceUsdt.toFixed(2)} USDT. Esegui prima una ricarica nella sezione apposita!`);
         switchTab('deposit', document.querySelectorAll('.nav-item')[2]);
@@ -904,6 +951,13 @@
       }
       if (!amt || amt <= 0 || amt > balance) {
         alert("Importo non valido o superiore al saldo disponibile.");
+        return;
+      }
+
+      // Controllo di sblocco: l'utente deve aver depositato almeno 3 USDT per sbloccare i prelievi
+      if (userDepositBalance < 3.00) {
+        alert(`Prelievo bloccato! Per sbloccare i pagamenti e prelevare i tuoi Satoshi, devi aver effettuato un deposito verificato di almeno 3.00 USDT (Il tuo deposito attuale è ${userDepositBalance.toFixed(2)} USDT). Ricarica ora nella sezione apposita!`);
+        switchTab('deposit', document.querySelectorAll('.nav-item')[2]);
         return;
       }
 
