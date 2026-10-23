@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Satoshi Mining - Game Edition</title>
+  <title>Satoshi Mining - Animated Edition</title>
 
   <!-- SDK Telegram Mini App -->
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
@@ -29,7 +29,7 @@
       overflow-x: hidden;
     }
 
-    /* BARRA SUPERIORE BILANCI E GEMME */
+    /* BARRA SUPERIORE */
     .top-game-header {
       background: linear-gradient(135deg, #3d2817, #1f140b);
       border: 2px solid #e3a008;
@@ -74,14 +74,14 @@
       color: #fff;
     }
 
-    /* AREA CENTRALE GIOCO / MINIERA */
+    /* AREA MINIERA ANIMATA CON OMINO MINATORE */
     .mine-viewport {
       position: relative;
       flex: 1;
       background: linear-gradient(to bottom, #2b1f16, #120d09);
       border: 2px solid #4e3520;
       border-radius: 18px;
-      min-height: 320px;
+      min-height: 340px;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
@@ -133,21 +133,73 @@
       font-size: 16px;
     }
 
-    /* CUMULO D'ORO CENTRALE */
-    .gold-pile-display {
-      text-align: center;
+    /* SCENA CENTRALE ANIMATA (BITCOIN + OMINO) */
+    .mining-scene-center {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
       margin: auto;
-      font-size: 70px;
+      position: relative;
+      height: 180px;
+    }
+
+    /* Bitcoin Centrale che trema se minato */
+    .animated-bitcoin {
+      font-size: 65px;
       filter: drop-shadow(0 10px 15px rgba(0,0,0,0.8));
-      animation: floatGold 3s ease-in-out infinite;
+      transition: transform 0.1s ease;
     }
 
-    @keyframes floatGold {
-      0%, 100% { transform: translateY(0); }
-      50% { transform: translateY(-5px); }
+    .mining-active .animated-bitcoin {
+      animation: hitBtc 0.6s infinite ease-in-out;
     }
 
-    /* BARRA TOTAL HASH RATE IN BASSO ALLA MINIERA */
+    @keyframes hitBtc {
+      0%, 100% { transform: scale(1) rotate(0deg); }
+      50% { transform: scale(0.92) rotate(-3deg); filter: drop-shadow(0 0 15px #f59e0b); }
+    }
+
+    /* Omino Minatore Animato con Piccone */
+    .animated-miner {
+      font-size: 45px;
+      position: absolute;
+      bottom: 10px;
+      display: none; /* Parte nascosto finché non si attiva lo starter */
+      filter: drop-shadow(0 5px 10px rgba(0,0,0,0.7));
+    }
+
+    .mining-active .animated-miner {
+      display: block;
+      animation: minerSwing 0.6s infinite ease-in-out;
+    }
+
+    @keyframes minerSwing {
+      0% { transform: translateX(-30px) rotate(0deg); }
+      50% { transform: translateX(-15px) rotate(-25deg); }
+      100% { transform: translateX(-30px) rotate(0deg); }
+    }
+
+    /* Scintille animate quando spacca */
+    .mining-sparks {
+      position: absolute;
+      font-size: 20px;
+      display: none;
+      pointer-events: none;
+    }
+
+    .mining-active .mining-sparks {
+      display: block;
+      animation: sparkAnim 0.6s infinite linear;
+    }
+
+    @keyframes sparkAnim {
+      0% { opacity: 0; transform: translate(0, 0) scale(0.5); }
+      50% { opacity: 1; transform: translate(15px, -20px) scale(1.2); }
+      100% { opacity: 0; transform: translate(30px, -40px) scale(0.8); }
+    }
+
+    /* BARRA TOTAL HASH RATE */
     .total-hash-banner {
       background: linear-gradient(135deg, #78350f, #451a03);
       border: 2px solid #b45309;
@@ -174,7 +226,7 @@
       display: flex;
     }
 
-    /* PANNELLI AZIONE E SHOP */
+    /* PANNELLI */
     .panel-card {
       background: linear-gradient(135deg, rgba(35, 25, 18, 0.95), rgba(18, 13, 9, 0.98));
       border: 2px solid #573a21;
@@ -230,7 +282,7 @@
       margin-top: 5px;
     }
 
-    /* MODAL POPUP OFFERTA SPECIALE */
+    /* MODAL */
     .modal-overlay {
       position: fixed;
       top: 0; left: 0; right: 0; bottom: 0;
@@ -327,11 +379,11 @@
       <button class="close-btn" onclick="closeOfferModal()">✕</button>
       <div style="background: #ef4444; color: #fff; font-weight: 900; font-size: 12px; padding: 3px 10px; border-radius: 12px; display: inline-block; margin-bottom: 8px;">OFF 50%</div>
       <h3 style="color: #ffd700; font-size: 18px; margin-bottom: 4px;">STARTER GIFT PACK</h3>
-      <p style="color: #cbd5e1; font-size: 11px; margin-bottom: 10px;">Skilled Miner x2 • Permanent Ownership[span_2](start_span)[span_2](end_span)</p>
+      <p style="color: #cbd5e1; font-size: 11px; margin-bottom: 10px;">Skilled Miner x2 • Permanent Ownership[span_0](start_span)[span_0](end_span)</p>
       <div style="font-size: 55px; margin: 8px 0;">⛏️💰</div>
-      <div style="color: #38bdf8; font-weight: 900; font-size: 14px; margin-bottom: 10px;">+600 GH/s Potenza[span_3](start_span)[span_3](end_span)</div>
-      <div style="text-decoration: line-through; color: #9ca3af; font-size: 13px;">$19.9[span_4](start_span)[span_4](end_span)</div>
-      <button class="btn-gold-action" style="margin-top: 10px; font-size: 16px;" onclick="buyStarterOffer()">Acquista $9.9[span_5](start_span)[span_5](end_span)</button>
+      <div style="color: #38bdf8; font-weight: 900; font-size: 14px; margin-bottom: 10px;">+600 GH/s Potenza[span_1](start_span)[span_1](end_span)</div>
+      <div style="text-decoration: line-through; color: #9ca3af; font-size: 13px;">$19,9[span_2](start_span)[span_2](end_span)</div>
+      <button class="btn-gold-action" style="margin-top: 10px; font-size: 16px;" onclick="buyStarterOffer()">Acquista $9,9[span_3](start_span)[span_3](end_span)</button>
     </div>
   </div>
 
@@ -339,31 +391,36 @@
   <div class="modal-overlay" id="guide-modal" onclick="if(event.target === this) closeHowTo()">
     <div class="offer-box">
       <h3 style="color: #f59e0b; margin-bottom: 8px;">⚙️ Guida & Regole</h3>
-      <p style="font-size: 12px; color: #cbd5e1; line-height: 1.4; margin-bottom: 6px;">• Attiva il mining per accumulare Satoshi in tempo reale.</p>
+      <p style="font-size: 12px; color: #cbd5e1; line-height: 1.4; margin-bottom: 6px;">• Attiva il mining per avviare l'omino minatore in tempo reale.</p>
       <p style="font-size: 12px; color: #cbd5e1; line-height: 1.4; margin-bottom: 6px;">• Prelievi sbloccati con un deposito minimo verificato di 3.00 USDT.</p>
       <p style="font-size: 12px; color: #cbd5e1; line-height: 1.4; margin-bottom: 10px;">• Commissione di rete del 5% sui pagamenti.</p>
       <button class="btn-gold-action" style="padding: 10px; font-size: 13px;" onclick="closeHowTo()">Chiudi</button>
     </div>
   </div>
 
-  <!-- 1. SCHERMATA MINE -->
+  <!-- 1. SCHERMATA MINE CON ANIMAZIONE MINATORE -->
   <main id="screen-mine" class="screen active">
-    <div class="mine-viewport">
+    <div class="mine-viewport" id="mine-viewport-box">
       <div class="side-menu-left">
-        <button class="game-icon-btn" onclick="openHowTo()"><span>⚙️</span>Settings[span_6](start_span)[span_6](end_span)</button>
-        <button class="game-icon-btn" onclick="openHowTo()"><span>❓</span>FAQ[span_7](start_span)[span_7](end_span)</button>
-        <button class="game-icon-btn" onclick="showOfferModal()" style="border-color: #f59e0b;"><span>🎁</span>Free Miner[span_8](start_span)[span_8](end_span)</button>
+        <button class="game-icon-btn" onclick="openHowTo()"><span>⚙️</span>Settings[span_4](start_span)[span_4](end_span)</button>
+        <button class="game-icon-btn" onclick="openHowTo()"><span>❓</span>FAQ[span_5](start_span)[span_5](end_span)</button>
+        <button class="game-icon-btn" onclick="showOfferModal()" style="border-color: #f59e0b;"><span>🎁</span>Free Miner[span_6](start_span)[span_6](end_span)</button>
       </div>
 
       <div class="side-menu-right">
-        <button class="game-icon-btn" onclick="alert('Classifica globale attiva!')"><span>⭐</span>Rating[span_9](start_span)[span_9](end_span)</button>
-        <button class="game-icon-btn" onclick="alert('Canale Telegram ufficiale!')"><span>📢</span>Subscribe[span_10](start_span)[span_10](end_span)</button>
+        <button class="game-icon-btn" onclick="alert('Classifica globale attiva!')"><span>⭐</span>Rating[span_7](start_span)[span_7](end_span)</button>
+        <button class="game-icon-btn" onclick="alert('Canale Telegram ufficiale!')"><span>📢</span>Subscribe[span_8](start_span)[span_8](end_span)</button>
       </div>
 
-      <div class="gold-pile-display">🪙⛰️</div>
+      <!-- SCENA CENTRALE ANIMATA -->
+      <div class="mining-scene-center">
+        <div class="animated-bitcoin">🪙</div>
+        <div class="animated-miner">⛏️🧔</div>
+        <div class="mining-sparks">✨</div>
+      </div>
 
       <div class="total-hash-banner">
-        ⚡ Total: <span id="total-hashrate">0</span> GH/s[span_11](start_span)[span_11](end_span)
+        ⚡ Total: <span id="total-hashrate">0</span> GH/s[span_9](start_span)[span_9](end_span)
       </div>
     </div>
 
@@ -448,23 +505,23 @@
   <nav class="navbar">
     <div class="nav-item active" onclick="switchTab('mine', this)">
       <span class="nav-icon">⛏️</span>
-      <span>Mine[span_12](start_span)[span_12](end_span)</span>
+      <span>Mine[span_10](start_span)[span_10](end_span)</span>
     </div>
     <div class="nav-item" onclick="switchTab('shop', this)">
       <span class="nav-icon">🛒</span>
-      <span>Shop[span_13](start_span)[span_13](end_span)</span>
+      <span>Shop[span_11](start_span)[span_11](end_span)</span>
     </div>
     <div class="nav-item" onclick="switchTab('bonus', this)">
       <span class="nav-icon">🎁</span>
-      <span>Bonus[span_14](start_span)[span_14](end_span)</span>
+      <span>Bonus[span_12](start_span)[span_12](end_span)</span>
     </div>
     <div class="nav-item" onclick="switchTab('wallet', this)">
       <span class="nav-icon">👛</span>
-      <span>Wallet[span_15](start_span)[span_15](end_span)</span>
+      <span>Wallet[span_13](start_span)[span_13](end_span)</span>
     </div>
     <div class="nav-item" onclick="switchTab('tasks', this)">
       <span class="nav-icon">📋</span>
-      <span>Tasks[span_16](start_span)[span_16](end_span)</span>
+      <span>Tasks[span_14](start_span)[span_14](end_span)</span>
     </div>
   </nav>
 
@@ -478,7 +535,9 @@
     let starterActivated = localStorage.getItem('starter_activated') === 'true';
     let currentBtcPrice = 90000;
 
+    // Se attivo all'avvio, avvia l'animazione dell'omino
     if (starterActivated) {
+      document.getElementById('mine-viewport-box').classList.add('mining-active');
       const btn = document.getElementById('btn-start-starter');
       if (btn) {
         btn.innerText = "✅ Mining Starter Attivo";
@@ -511,13 +570,17 @@
         totalHashrate += 5;
         localStorage.setItem('starter_activated', 'true');
         localStorage.setItem('btc_hashrate', totalHashrate);
+        
+        // Attiva l'animazione dell'omino minatore e del Bitcoin
+        document.getElementById('mine-viewport-box').classList.add('mining-active');
+        
         const btn = document.getElementById('btn-start-starter');
         if (btn) {
           btn.innerText = "✅ Mining Starter Attivo";
           btn.style.background = "linear-gradient(135deg, #334155, #1e293b)";
         }
         updateUI();
-        alert("Rig Starter Gratuito attivato! Il contatore ha iniziato a estrarre Satoshi in tempo reale.");
+        alert("Rig Starter Gratuito attivato! L'omino ha iniziato a spaccare il Bitcoin in tempo reale.");
       } else {
         alert("Il rig starter è già attivo sul tuo account!");
       }
@@ -528,12 +591,13 @@
 
     function buyStarterOffer() {
       userDepositBalance += 10;
-      totalHashrate += 600;[span_17](start_span)[span_17](end_span)
+      totalHashrate += 600;[span_15](start_span)[span_15](end_span)
       localStorage.setItem('usdt_deposit_balance', userDepositBalance);
       localStorage.setItem('btc_hashrate', totalHashrate);
+      document.getElementById('mine-viewport-box').classList.add('mining-active');
       updateUI();
       closeOfferModal();
-      alert("Starter Gift Pack attivato! +600 GH/s aggiunti con successo[span_18](start_span)[span_18](end_span).");
+      alert("Starter Gift Pack attivato! +600 GH/s aggiunti e minatore potenziato[span_16](start_span)[span_16](end_span).");
     }
 
     function buyPackage(ghs, price) {
@@ -546,6 +610,7 @@
       totalHashrate += ghs;
       localStorage.setItem('usdt_deposit_balance', userDepositBalance);
       localStorage.setItem('btc_hashrate', totalHashrate);
+      document.getElementById('mine-viewport-box').classList.add('mining-active');
       updateUI();
       alert(`Pacchetto acquistato con successo! +${ghs} GH/s aggiunti.`);
     }
