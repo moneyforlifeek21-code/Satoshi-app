@@ -264,7 +264,7 @@
       color: #007aff;
     }
 
-    /* SHOP & LISTE */
+    /* SHOP & LISTE CON IMMAGINI */
     .card-list {
       display: flex;
       flex-direction: column;
@@ -281,6 +281,17 @@
       justify-content: space-between;
       align-items: center;
       box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+      gap: 16px;
+    }
+
+    .item-icon {
+      width: 50px;
+      height: 50px;
+      object-fit: contain;
+    }
+
+    .item-details {
+      flex: 1;
     }
 
     .btn-buy {
@@ -491,7 +502,7 @@
     </div>
   </main>
 
-  <!-- 2. SCHERMATA SHOP -->
+  <!-- 2. SCHERMATA SHOP CON IMMAGINI -->
   <main id="screen-upgrades" class="screen">
     <div style="text-align: center; margin-bottom: 15px;">
       <h2>🚀 Shop Potenziamenti</h2>
@@ -499,21 +510,24 @@
     </div>
     <div class="card-list">
       <div class="item-card">
-        <div>
+        <img src="https://i.ibb.co/LhB5f8Z/asic-miner.png" alt="Rig ASIC Minor" class="item-icon">
+        <div class="item-details">
           <strong style="color: #1a202c; font-size: 15px;">Rig ASIC Minor (+50 GH/s)</strong>
           <p style="color: #2f855a; font-size: 12px; font-weight:600; margin-top: 4px;">Resa stimata: ~$5.00 / mese</p>
         </div>
         <button class="btn-buy" onclick="openCheckout('Rig ASIC Minor', 50, 25.00, 5.00)">25.00 USDT</button>
       </div>
       <div class="item-card">
-        <div>
+        <img src="https://i.ibb.co/V3QYmR1/asic-miner-pro.png" alt="Rig ASIC Pro" class="item-icon">
+        <div class="item-details">
           <strong style="color: #1a202c; font-size: 15px;">Rig ASIC Pro (+200 GH/s)</strong>
           <p style="color: #2f855a; font-size: 12px; font-weight:600; margin-top: 4px;">Resa stimata: ~$20.00 / mese</p>
         </div>
         <button class="btn-buy" onclick="openCheckout('Rig ASIC Pro', 200, 100.00, 20.00)">100.00 USDT</button>
       </div>
       <div class="item-card">
-        <div>
+        <img src="https://i.ibb.co/Y7Xg8yN/data-center.png" alt="Farm Data Center" class="item-icon">
+        <div class="item-details">
           <strong style="color: #1a202c; font-size: 15px;">Farm Data Center (+650 GH/s)</strong>
           <p style="color: #2f855a; font-size: 12px; font-weight:600; margin-top: 4px;">Resa stimata: ~$60.00 / mese</p>
         </div>
@@ -660,7 +674,8 @@
       document.getElementById('fiat-val').innerText = `Valore stimato: ~$${fiatVal}`;
       document.getElementById('total-hashrate').innerText = `${totalHashrate} GH/s`;
       
-      const monthlyUsd = (totalHashrate * 0.20).toFixed(2);
+      // Resa mensile in USDT calcolata in basso a destra
+      const monthlyUsd = (totalHashrate * 0.20).toFixed(2); // Aggiornato con resa sostenibile
       document.getElementById('monthly-yield-usdt').innerText = `~$${monthlyUsd} USDT`;
     }
 
@@ -714,110 +729,4 @@
         return;
       }
       alert("Richiesta di ricarica inviata con successo! Sarà accreditata non appena confermata.");
-      document.getElementById('txid-input').value = '';
-    }
-
-    function setMaxBalance() {
-      document.getElementById('withdraw-amount').value = balance.toFixed(8);
-    }
-
-    function requestWithdrawal() {
-      startMusicOnFirstInteraction();
-      const addr = document.getElementById('withdraw-address').value;
-      const amt = parseFloat(document.getElementById('withdraw-amount').value);
-
-      if (!addr) {
-        alert("Inserisci un indirizzo di destinazione valido.");
-        return;
-      }
-      if (!amt || amt <= 0 || amt > balance) {
-        alert("Importo non valido o superiore al saldo disponibile.");
-        return;
-      }
-
-      // Applicazione fee di prelievo del 5% trattenuta dall'admin
-      const fee = amt * 0.05;
-      const netAmount = amt - fee;
-
-      alert(`Prelievo di ${netAmount.toFixed(8)} ₿ inviato con successo! (Commissione di rete applicata: ${fee.toFixed(8)} ₿ accreditata al wallet admin).`);
-      balance -= amt;
-      updateUI();
-      localStorage.setItem('btc_balance', balance);
-      document.getElementById('withdraw-amount').value = '';
-    }
-
-    function saveWalletAddress() {
-      startMusicOnFirstInteraction();
-      const addr = document.getElementById('wallet-saved-address').value;
-      if (addr) {
-        localStorage.setItem('btc_saved_wallet', addr);
-        document.getElementById('withdraw-address').value = addr;
-        alert("Indirizzo wallet salvato con successo!");
-      }
-    }
-
-    const bgMusic = document.getElementById('bg-music');
-    let audioEnabled = true;
-    let musicStarted = false;
-
-    function startMusicOnFirstInteraction() {
-      if (!musicStarted && audioEnabled) {
-        bgMusic.play().then(() => { musicStarted = true; }).catch(() => {});
-      }
-    }
-
-    function toggleAudio() {
-      audioEnabled = !audioEnabled;
-      const btn = document.getElementById('sound-btn');
-      if (audioEnabled) {
-        btn.innerText = '🔊 Audio';
-        bgMusic.play().then(() => { musicStarted = true; }).catch(() => {});
-      } else {
-        btn.innerText = '🔇 Mute';
-        bgMusic.pause();
-      }
-    }
-
-    async function shareReferral() {
-      startMusicOnFirstInteraction();
-      const shareText = "Unisciti alla mia Cloud Mining Farm e guadagna Bitcoin! 🚀";
-      if (navigator.share) {
-        try { await navigator.share({ title: 'Satoshi Mining', text: shareText, url: referralLink }); } catch(e) {}
-      } else {
-        const url = `https://t.me/share/url?url=${encodeURIComponent(referralLink)}&text=${encodeURIComponent(shareText)}`;
-        if (tg) tg.openTelegramLink(url);
-        else window.open(url, '_blank');
-      }
-    }
-
-    function copyReferral() {
-      startMusicOnFirstInteraction();
-      navigator.clipboard.writeText(referralLink);
-      alert("Link di invito copiato!");
-    }
-
-    function openHowTo() {
-      startMusicOnFirstInteraction();
-      document.getElementById('guide-modal').style.display = 'flex';
-    }
-
-    function closeHowTo() {
-      document.getElementById('guide-modal').style.display = 'none';
-    }
-
-    function switchTab(tabName, element) {
-      startMusicOnFirstInteraction();
-      document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-      document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-      document.getElementById(`screen-${tabName}`).classList.add('active');
-      if (element && element.classList) {
-        document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-        element.classList.add('active');
-      }
-    }
-
-    document.addEventListener('click', startMusicOnFirstInteraction, { once: true });
-    document.addEventListener('touchstart', startMusicOnFirstInteraction, { once: true });
-  </script>
-</body>
-</html>
+      document.getElementById('txid-input').value =
