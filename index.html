@@ -19,15 +19,15 @@
     }
 
     body {
-      /* SFONDO BLOCKCHAIN TECH SCURO */
       background-color: #080b10;
       background-image: 
-        radial-gradient(circle at 50% 30%, rgba(247, 147, 26, 0.08) 0%, transparent 60%),
+        radial-gradient(circle at 50% 30%, rgba(247, 147, 26, 0.15) 0%, transparent 70%),
+        radial-gradient(circle at 20% 80%, rgba(0, 150, 255, 0.1) 0%, transparent 50%),
         radial-gradient(rgba(247, 147, 26, 0.15) 1px, transparent 1px),
         linear-gradient(to right, rgba(255, 255, 255, 0.02) 1px, transparent 1px),
         linear-gradient(to bottom, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
-      background-size: 100% 100%, 24px 24px, 40px 40px, 40px 40px;
-      background-position: center, 0 0, 0 0, 0 0;
+      background-size: 100% 100%, 100% 100%, 24px 24px, 40px 40px, 40px 40px;
+      background-position: center, center, 0 0, 0 0, 0 0;
       color: #ffffff;
       min-height: 100vh;
       display: flex;
@@ -127,16 +127,12 @@
     }
 
     .btc-coin-btn {
-      width: 210px;
-      height: 210px;
+      width: 250px;
+      height: 250px;
       border-radius: 50%;
-      background: radial-gradient(circle at 35% 35%, #ffb84d 0%, #F7931A 50%, #ab5a00 100%);
-      border: 6px solid #ffd185;
-      box-shadow: 0 10px 45px rgba(247, 147, 26, 0.45), inset 0 0 15px rgba(0,0,0,0.5);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 105px;
+      background: url('watermarked_img_464798897363966570.jpg') center/cover no-repeat;
+      border: 3px solid rgba(247, 147, 26, 0.5);
+      box-shadow: 0 0 35px rgba(247, 147, 26, 0.3), 0 0 15px rgba(0, 150, 255, 0.3);
       cursor: pointer;
       transition: transform 0.05s ease;
       touch-action: manipulation;
@@ -341,7 +337,7 @@
 </head>
 <body>
 
-  <!-- ELEMENTO AUDIO DI SOTTOFONDO CONTINUO -->
+  <!-- AUDIO DI SOTTOFONDO -->
   <audio id="bg-music" loop preload="auto">
     <source src="https://actions.google.com/sounds/v1/science_fiction/arcade_game_loop.ogg" type="audio/ogg">
   </audio>
@@ -361,12 +357,11 @@
   <div class="modal-overlay" id="guide-modal">
     <div class="modal-card">
       <h3>🪙 Come funziona?</h3>
-      <p>Benvenuto in Satoshi Tap! Ecco come iniziare a minare:</p>
+      <p>Benvenuto in Satoshi Tap! La progressione è graduale:</p>
       <ul>
-        <li><strong>1 Tap = 1 Satoshi:</strong> Tocca la moneta centrale per raccogliere token.</li>
-        <li><strong>Scorta Tap (1000 max):</strong> Hai fino a 1000 tap disponibili.</li>
-        <li><strong>Ricarica Automatica:</strong> Quando finisci i tap, ricevi 1 Satoshi ogni 20 minuti finché la scorta non torna piena.</li>
-        <li><strong>Invita Amici:</strong> Condividi il tuo link su WhatsApp o altri social per ricevere bonus!</li>
+        <li><strong>Scorta Iniziale Ridotta (200 tap):</strong> Gestisci con attenzione la tua energia.</li>
+        <li><strong>Investi nei Potenziamenti:</strong> Usa i tuoi Satoshi nello Shop per aumentare la capienza e sbloccare vantaggi.</li>
+        <li><strong>Sistema Referral:</strong> Invita amici per ottenere una percentuale sui loro guadagni e scalare insieme!</li>
       </ul>
       <button class="btn-close" onclick="closeHowTo()">Ho Capito!</button>
     </div>
@@ -380,45 +375,43 @@
     </div>
 
     <div class="tap-area">
-      <div class="btc-coin-btn" onclick="handleTap(event)">
-        ₿
-      </div>
+      <div class="btc-coin-btn" onclick="handleTap(event)"></div>
     </div>
 
     <div class="energy-container">
       <div class="energy-header">
         <span>⚡ Scorta Tap</span>
-        <span><strong id="energy-val">1000</strong> / 1000</span>
+        <span><strong id="energy-val">200</strong> / <span id="max-energy-val">200</span></span>
       </div>
       <div class="energy-bar-bg">
         <div id="energy-fill" class="energy-bar-fill"></div>
       </div>
       <div class="timer-info" id="timer-status">
-        Scorta al massimo!
+        Ricarica in corso...
       </div>
     </div>
   </main>
 
-  <!-- 2. SCHERMATA UPGRADES -->
+  <!-- 2. SCHERMATA UPGRADES (SHOP) -->
   <main id="screen-upgrades" class="screen">
     <div style="text-align: center; margin-bottom: 15px;">
-      <h2>🚀 Potenziamenti</h2>
-      <p style="color: #8a94a6; font-size: 13px;">Aumenta le tue prestazioni di mining</p>
+      <h2>🚀 Potenziamenti & Investimenti</h2>
+      <p style="color: #8a94a6; font-size: 13px;">Investi i tuoi Satoshi per crescere più velocemente</p>
     </div>
     <div class="card-list">
       <div class="item-card">
         <div>
-          <strong style="color: #fff;">Multi-Tap</strong>
-          <p style="color: #8a94a6; font-size: 12px;">+1 Satoshi per ogni tocco</p>
+          <strong style="color: #fff;">Espansione Scorta (+100 max)</strong>
+          <p style="color: #8a94a6; font-size: 12px;">Aumenta la capacità energetica</p>
         </div>
-        <button class="btn-sub" style="padding: 8px 12px; font-size: 12px;">100 🪙</button>
+        <button class="btn-sub" onclick="buyUpgrade('energy', 50)" style="padding: 8px 12px; font-size: 12px;">50 🪙</button>
       </div>
       <div class="item-card">
         <div>
-          <strong style="color: #fff;">Auto-Miner 8-bit</strong>
-          <p style="color: #8a94a6; font-size: 12px;">Mina automaticamente in background</p>
+          <strong style="color: #fff;">Multi-Tap Avanzato</strong>
+          <p style="color: #8a94a6; font-size: 12px;">Guadagna +1 Satoshi extra per tocco</p>
         </div>
-        <button class="btn-sub" style="padding: 8px 12px; font-size: 12px;">500 🪙</button>
+        <button class="btn-sub" onclick="buyUpgrade('multitap', 150)" style="padding: 8px 12px; font-size: 12px;">150 🪙</button>
       </div>
     </div>
   </main>
@@ -427,26 +420,26 @@
   <main id="screen-tasks" class="screen">
     <div style="text-align: center; margin-bottom: 15px;">
       <h2>📋 Missioni</h2>
-      <p style="color: #8a94a6; font-size: 13px;">Completa le task per guadagnare bonus</p>
+      <p style="color: #8a94a6; font-size: 13px;">Completa le task per ottenere capitale iniziale</p>
     </div>
     <div class="card-list">
       <div class="item-card">
         <div>
           <strong style="color: #fff;">Unisciti al canale Telegram</strong>
-          <p style="color: #F7931A; font-size: 12px;">+200 Satoshi</p>
+          <p style="color: #F7931A; font-size: 12px;">+50 Satoshi</p>
         </div>
         <button class="btn-sub" style="padding: 8px 12px; font-size: 12px;">Esegui</button>
       </div>
     </div>
   </main>
 
-  <!-- 4. SCHERMATA FRIENDS -->
+  <!-- 4. SCHERMATA FRIENDS (REFERRAL) -->
   <main id="screen-friends" class="screen">
     <div class="friends-box">
       <div class="friends-icon">🤝</div>
-      <h2>Invita i tuoi Amici!</h2>
+      <h2>Rete di Affiliazione</h2>
       <p style="color: #8a94a6; font-size: 13px; margin-top: 6px;">
-        Guadagna il <strong style="color: #F7931A;">10%</strong> di tutti i Satoshi raccolti dai tuoi amici.
+        Guadagna una percentuale basata sull'attività dei tuoi referral diretti e della community.
       </p>
 
       <div class="action-btn-group">
@@ -455,9 +448,10 @@
       </div>
 
       <div style="text-align: left; margin-top: 20px;">
-        <h3 style="font-size: 15px; margin-bottom: 10px;">I tuoi Amici Invitati</h3>
-        <div class="item-card" style="justify-content: center; color: #8a94a6; font-size: 13px;">
-          Nessun amico invitato finora.
+        <h3 style="font-size: 15px; margin-bottom: 10px;">Statistiche Referral</h3>
+        <div class="item-card" style="justify-content: space-between; color: #d1d5db; font-size: 13px;">
+          <span>Amici Invitati: <strong style="color: #F7931A;" id="ref-count">0</strong></span>
+          <span>Bonus Maturati: <strong style="color: #F7931A;">0 ₿</strong></span>
         </div>
       </div>
     </div>
@@ -512,25 +506,27 @@
     const userId = tg?.initDataUnsafe?.user?.id || "12345678";
     const referralLink = `https://t.me/${BOT_USERNAME}?start=ref_${userId}`;
 
-    // 2. STATO GAME
+    // 2. STATO GAME (Economia bilanciata e scorta ridotta a 200)
     let balance = parseInt(localStorage.getItem('btc_balance')) || 0;
-    let energy = parseInt(localStorage.getItem('btc_energy')) || 1000;
-    const maxEnergy = 1000;
+    let maxEnergy = parseInt(localStorage.getItem('btc_max_energy')) || 200;
+    let energy = parseInt(localStorage.getItem('btc_energy')) ?? maxEnergy;
+    let tapPower = parseInt(localStorage.getItem('btc_tap_power')) || 1;
 
     document.getElementById('user-balance').innerText = balance;
+    document.getElementById('max-energy-val').innerText = maxEnergy;
     updateEnergyUI();
 
     // 3. TAP LOGIC
     function handleTap(e) {
       startMusicOnFirstInteraction();
 
-      if (energy <= 0) {
+      if (energy < tapPower) {
         if (tg && tg.HapticFeedback) tg.HapticFeedback.notificationOccurred('error');
         return;
       }
 
-      balance += 1;
-      energy -= 1;
+      balance += tapPower;
+      energy -= tapPower;
 
       document.getElementById('user-balance').innerText = balance;
       updateEnergyUI();
@@ -550,7 +546,34 @@
       document.getElementById('energy-fill').style.width = `${pct}%`;
     }
 
-    // 4. TIMER 1 SATOSHI OGNI 20 MINUTI (1200 SECONDI)
+    // 4. SHOP INVESTMENTS
+    function buyUpgrade(type, cost) {
+      startMusicOnFirstInteraction();
+      if (balance < cost) {
+        alert("Saldo insufficiente! Continua a minare o invita amici.");
+        return;
+      }
+
+      balance -= cost;
+      document.getElementById('user-balance').innerText = balance;
+      localStorage.setItem('btc_balance', balance);
+
+      if (type === 'energy') {
+        maxEnergy += 100;
+        energy = maxEnergy;
+        localStorage.setItem('btc_max_energy', maxEnergy);
+        localStorage.setItem('btc_energy', energy);
+        document.getElementById('max-energy-val').innerText = maxEnergy;
+        updateEnergyUI();
+        alert("Potenziamento acquistato: Scorta massima aumentata!");
+      } else if (type === 'multitap') {
+        tapPower += 1;
+        localStorage.setItem('btc_tap_power', tapPower);
+        alert("Potenziamento acquistato: Multi-Tap potenziato!");
+      }
+    }
+
+    // 5. TIMER RICARICA ENERGIA
     let secondsLeft = 1200;
 
     setInterval(() => {
@@ -559,7 +582,7 @@
         const mins = Math.floor(secondsLeft / 60);
         const secs = secondsLeft % 60;
         document.getElementById('timer-status').innerText = 
-          `Ricarica +1 Satoshi in: ${mins.toString().padStart(2,'0')}:${secs.toString().padStart(2,'0')}`;
+          `Ricarica energia in: ${mins.toString().padStart(2,'0')}:${secs.toString().padStart(2,'0')}`;
 
         if (secondsLeft <= 0) {
           energy = Math.min(maxEnergy, energy + 1);
@@ -573,7 +596,7 @@
       }
     }, 1000);
 
-    // 5. AUDIO MANAGEMENT (MUSICA DI SOTTOFONDO CONTINUA + EFFETTO TAP)
+    // 6. AUDIO MANAGEMENT
     const bgMusic = document.getElementById('bg-music');
     let audioEnabled = true;
     let musicStarted = false;
@@ -625,10 +648,10 @@
       } catch(e) {}
     }
 
-    // 6. SHARE MULTI-SOCIAL
+    // 7. SHARE & REFERRAL
     async function shareReferral() {
       startMusicOnFirstInteraction();
-      const shareText = "Unisciti a me su Satoshi Tap e inizia a guadagnare Bitcoin gratis! 🚀";
+      const shareText = "Unisciti a me su Satoshi Tap e inizia a minare Bitcoin! 🚀";
 
       if (navigator.share) {
         try {
@@ -655,7 +678,7 @@
       }
     }
 
-    // 7. GUIDA MODAL CONTROLS
+    // 8. GUIDA MODAL
     function openHowTo() {
       startMusicOnFirstInteraction();
       document.getElementById('guide-modal').style.display = 'flex';
@@ -665,7 +688,7 @@
       document.getElementById('guide-modal').style.display = 'none';
     }
 
-    // 8. NAVIGATION
+    // 9. NAVIGATION
     function switchTab(tabName, element) {
       startMusicOnFirstInteraction();
       document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
@@ -675,7 +698,6 @@
       element.classList.add('active');
     }
 
-    // Avvia l'audio al primo tocco ovunque sullo schermo
     document.addEventListener('click', startMusicOnFirstInteraction, { once: true });
     document.addEventListener('touchstart', startMusicOnFirstInteraction, { once: true });
   </script>
