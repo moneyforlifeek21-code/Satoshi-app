@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Satoshi Tap - Cloud Hashrate Edition</title>
+  <title>Satoshi Tap - Cloud Mining</title>
 
   <!-- SDK Telegram Mini App -->
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
@@ -65,18 +65,21 @@
       cursor: pointer;
     }
 
-    /* SCHERMATE */
-    .screen {
-      display: none;
+    /* CONTENITORE SCHERMATE */
+    .content-area {
       flex: 1;
-      flex-direction: column;
       max-width: 480px;
       margin: 0 auto;
       width: 100%;
+    }
+
+    .panel {
+      display: none;
+      flex-direction: column;
       gap: 12px;
     }
 
-    .screen.active {
+    .panel.active {
       display: flex;
     }
 
@@ -88,6 +91,7 @@
       border-radius: 14px;
       padding: 4px;
       gap: 4px;
+      margin-bottom: 12px;
     }
 
     .sub-tab {
@@ -369,158 +373,163 @@
     </div>
   </header>
 
-  <!-- 1. SCHERMATA MINE -->
-  <main id="screen-mine" class="screen active">
-    <div class="sub-tabs">
-      <div class="sub-tab active" id="subtab-active" onclick="switchSubTab('active')">Mining Attivo</div>
-      <div class="sub-tab" id="subtab-withdraw" onclick="switchSubTab('withdraw')">Prelievi</div>
-    </div>
+  <!-- CONTENITORE PRINCIPALE DELLE SCHERMATE -->
+  <div class="content-area">
 
-    <!-- VISTA 1: MINING MANUALE 12H CON HASHRATE -->
-    <div id="view-active-mining" style="display: flex; flex-direction: column; gap: 12px;">
-      <div class="mining-card">
-        <div class="lightning-icon-box">
-          ⛏️
-          <div class="lightning-dot"></div>
+    <!-- 1. TAB MINE (PANNELLO PRINCIPALE) -->
+    <div id="panel-mine" class="panel active">
+      <div class="sub-tabs">
+        <div class="sub-tab active" id="subtab-active" onclick="switchSubTab('active')">Mining Attivo</div>
+        <div class="sub-tab" id="subtab-withdraw" onclick="switchSubTab('withdraw')">Prelievi</div>
+      </div>
+
+      <!-- SOTTO-VISTA: MINING ATTIVO -->
+      <div id="view-active-mining" style="display: flex; flex-direction: column; gap: 12px;">
+        <div class="mining-card">
+          <div class="lightning-icon-box">
+            ⛏️
+            <div class="lightning-dot"></div>
+          </div>
+          
+          <div id="timer-alert-box" class="timer-alert"></div>
+
+          <button class="btn-starter" id="btn-mining-action" onclick="startMiningSession()">🚀 Avvia Sessione Mining (12h)</button>
+          
+          <div class="balance-label">Saldo Mining Disponibile</div>
+          <div class="balance-amount">₿ <span id="user-score">0.00000000</span></div>
+          <div class="fiat-info" id="fiat-val">Valore stimato: ~$0.00 USD</div>
+          <div class="btc-live-info" id="btc-live-price">Prezzo BTC Live: ~$81,651 USD</div>
+          
+          <div class="usdt-purchases-badge">
+            Potenza Attiva: <span id="user-hashrate">0 GH/s</span>
+          </div>
+          <div style="margin-top: 6px;">
+            <span class="usdt-purchases-badge">Saldo Depositi: <span id="usdt-dep">0.00</span> USDT</span>
+          </div>
         </div>
+      </div>
+
+      <!-- SOTTO-VISTA: PRELIEVI -->
+      <div id="view-withdraw" class="action-card" style="display: none;">
+        <div class="card-title">Trasferisci Satoshi</div>
+        <div class="card-subtitle">Minimo prelevabile: 1.00000000 SAT (1 Satoshi intero). Richiesto deposito di sblocco (3 USDT). Stato: <span id="withdraw-status-label" style="color: #ef4444; font-weight: bold;">Bloccato</span></div>
         
-        <div id="timer-alert-box" class="timer-alert"></div>
+        <div class="input-box">
+          <label>Indirizzo Wallet / Destinazione</label>
+          <input type="text" id="withdraw-address" placeholder="Inserisci indirizzo BTC o TON...">
+        </div>
+        <div class="input-box">
+          <label>Importo Satoshi (Min: 1.00000000)</label>
+          <input type="number" id="withdraw-amount" placeholder="1.00000000" step="0.00001">
+        </div>
+        <button class="btn-action-primary" onclick="requestWithdrawal()">Conferma Prelievo</button>
+      </div>
+    </div>
 
-        <button class="btn-starter" id="btn-mining-action" onclick="startMiningSession()">🚀 Avvia Sessione Mining (12h)</button>
+    <!-- 2. TAB SHOP -->
+    <div id="panel-shop" class="panel">
+      <div class="action-card">
+        <div class="card-title" style="margin-bottom: 6px;">🛒 Pacchetti Hashrate Cloud</div>
+        <div class="card-subtitle">Acquista potenza di calcolo per velocizzare la generazione di Satoshi in 12 ore.</div>
         
-        <div class="balance-label">Saldo Mining Disponibile</div>
-        <div class="balance-amount">₿ <span id="user-score">0.00000000</span></div>
-        <div class="fiat-info" id="fiat-val">Valore stimato: ~$0.00 USD</div>
-        <div class="btc-live-info" id="btc-live-price">Prezzo BTC Live: ~$81,651 USD</div>
-        
-        <div class="usdt-purchases-badge">
-          Potenza Attiva: <span id="user-hashrate">0 GH/s</span>
+        <div class="shop-item">
+          <div class="shop-info">
+            <strong>Rig Micro (500 GH/s)</strong>
+            <span>+500 GH/s potenza cloud</span>
+          </div>
+          <button class="btn-buy-shop" onclick="buyHashratePackage(500, '500 GH/s', 2.50)">2.50 USDT</button>
         </div>
-        <div style="margin-top: 6px;">
-          <span class="usdt-purchases-badge">Saldo Depositi: <span id="usdt-dep">0.00</span> USDT</span>
+
+        <div class="shop-item">
+          <div class="shop-info">
+            <strong>Rig Mini (2 TH/s)</strong>
+            <span>+2,000 GH/s (2 TH/s)</span>
+          </div>
+          <button class="btn-buy-shop" onclick="buyHashratePackage(2000, '2 TH/s', 5.00)">5.00 USDT</button>
+        </div>
+
+        <div class="shop-item">
+          <div class="shop-info">
+            <strong>Rig Standard (5 TH/s)</strong>
+            <span>+5,000 GH/s (5 TH/s)</span>
+          </div>
+          <button class="btn-buy-shop" onclick="buyHashratePackage(5000, '5 TH/s', 10.00)">10.00 USDT</button>
+        </div>
+
+        <div class="shop-item">
+          <div class="shop-info">
+            <strong>Rig Pro (10 TH/s)</strong>
+            <span>+10,000 GH/s (10 TH/s)</span>
+          </div>
+          <button class="btn-buy-shop" onclick="buyHashratePackage(10000, '10 TH/s', 20.00)">20.00 USDT</button>
+        </div>
+
+        <div class="shop-item">
+          <div class="shop-info">
+            <strong>Rig Advanced (25 TH/s)</strong>
+            <span>+25,000 GH/s (25 TH/s)</span>
+          </div>
+          <button class="btn-buy-shop" onclick="buyHashratePackage(25000, '25 TH/s', 150.00)">150.00 USDT</button>
+        </div>
+
+        <div class="shop-item">
+          <div class="shop-info">
+            <strong>Rig Master (50 TH/s)</strong>
+            <span>+50,000 GH/s (50 TH/s)</span>
+          </div>
+          <button class="btn-buy-shop" onclick="buyHashratePackage(50000, '50 TH/s', 280.00)">280.00 USDT</button>
+        </div>
+
+        <div class="shop-item">
+          <div class="shop-info">
+            <strong>Rig Farm Enterprise (100 TH/s)</strong>
+            <span>+100,000 GH/s (100 TH/s)</span>
+          </div>
+          <button class="btn-buy-shop" onclick="buyHashratePackage(100000, '100 TH/s', 500.00)">500.00 USDT</button>
         </div>
       </div>
     </div>
 
-    <!-- VISTA 2: PRELIEVI RAPIDI -->
-    <div id="view-withdraw" class="action-card" style="display: none;">
-      <div class="card-title">Trasferisci Satoshi</div>
-      <div class="card-subtitle">Minimo prelevabile: 1.00000000 SAT (1 Satoshi intero). Richiesto deposito di sblocco (3 USDT). Stato: <span id="withdraw-status-label" style="color: #ef4444; font-weight: bold;">Bloccato</span></div>
-      
-      <div class="input-box">
-        <label>Indirizzo Wallet / Destinazione</label>
-        <input type="text" id="withdraw-address" placeholder="Inserisci indirizzo BTC o TON...">
-      </div>
-      <div class="input-box">
-        <label>Importo Satoshi (Min: 1.00000000)</label>
-        <input type="number" id="withdraw-amount" placeholder="1.00000000" step="0.00001">
-      </div>
-      <button class="btn-action-primary" onclick="requestWithdrawal()">Conferma Prelievo</button>
-    </div>
-  </main>
-
-  <!-- 2. SCHERMATA SHOP -->
-  <main id="screen-shop" class="screen">
-    <div class="action-card">
-      <div class="card-title" style="margin-bottom: 6px;">🛒 Pacchetti Hashrate Cloud</div>
-      <div class="card-subtitle">Acquista potenza di calcolo per velocizzare la generazione di Satoshi in 12 ore.</div>
-      
-      <div class="shop-item">
-        <div class="shop-info">
-          <strong>Rig Micro (500 GH/s)</strong>
-          <span>+500 GH/s potenza cloud</span>
+    <!-- 3. TAB TASKS -->
+    <div id="panel-tasks" class="panel">
+      <div class="action-card">
+        <div class="card-title" style="margin-bottom: 6px;">📋 Task & Missioni</div>
+        <div class="card-subtitle">Completa le attività sponsorizzate per ottenere vantaggi esclusivi.</div>
+        <div style="background: rgba(15, 23, 42, 0.8); padding: 14px; border-radius: 12px; font-size: 13px; color: #94a3b8; text-align: center;">
+          Nessuna missione attiva al momento. Torna presto!
         </div>
-        <button class="btn-buy-shop" onclick="buyHashratePackage(500, '500 GH/s', 2.50)">2.50 USDT</button>
-      </div>
-
-      <div class="shop-item">
-        <div class="shop-info">
-          <strong>Rig Mini (2 TH/s)</strong>
-          <span>+2,000 GH/s (2 TH/s)</span>
-        </div>
-        <button class="btn-buy-shop" onclick="buyHashratePackage(2000, '2 TH/s', 5.00)">5.00 USDT</button>
-      </div>
-
-      <div class="shop-item">
-        <div class="shop-info">
-          <strong>Rig Standard (5 TH/s)</strong>
-          <span>+5,000 GH/s (5 TH/s)</span>
-        </div>
-        <button class="btn-buy-shop" onclick="buyHashratePackage(5000, '5 TH/s', 10.00)">10.00 USDT</button>
-      </div>
-
-      <div class="shop-item">
-        <div class="shop-info">
-          <strong>Rig Pro (10 TH/s)</strong>
-          <span>+10,000 GH/s (10 TH/s)</span>
-        </div>
-        <button class="btn-buy-shop" onclick="buyHashratePackage(10000, '10 TH/s', 20.00)">20.00 USDT</button>
-      </div>
-
-      <div class="shop-item">
-        <div class="shop-info">
-          <strong>Rig Advanced (25 TH/s)</strong>
-          <span>+25,000 GH/s (25 TH/s)</span>
-        </div>
-        <button class="btn-buy-shop" onclick="buyHashratePackage(25000, '25 TH/s', 150.00)">150.00 USDT</button>
-      </div>
-
-      <div class="shop-item">
-        <div class="shop-info">
-          <strong>Rig Master (50 TH/s)</strong>
-          <span>+50,000 GH/s (50 TH/s)</span>
-        </div>
-        <button class="btn-buy-shop" onclick="buyHashratePackage(50000, '50 TH/s', 280.00)">280.00 USDT</button>
-      </div>
-
-      <div class="shop-item">
-        <div class="shop-info">
-          <strong>Rig Farm Enterprise (100 TH/s)</strong>
-          <span>+100,000 GH/s (100 TH/s)</span>
-        </div>
-        <button class="btn-buy-shop" onclick="buyHashratePackage(100000, '100 TH/s', 500.00)">500.00 USDT</button>
       </div>
     </div>
-  </main>
 
-  <!-- 3. SCHERMATA TASKS -->
-  <main id="screen-tasks" class="screen">
-    <div class="action-card">
-      <div class="card-title" style="margin-bottom: 6px;">📋 Task & Missioni</div>
-      <div class="card-subtitle">Completa le attività sponsorizzate per ottenere vantaggi esclusivi.</div>
-      <div style="background: rgba(15, 23, 42, 0.8); padding: 14px; border-radius: 12px; font-size: 13px; color: #94a3b8; text-align: center;">
-        Nessuna missione attiva al momento. Torna presto!
+    <!-- 4. TAB RICARICA -->
+    <div id="panel-ricarica" class="panel">
+      <div class="action-card">
+        <div class="card-title" style="margin-bottom: 8px;">📥 Ricarica Blockchain Bitcoin</div>
+        <div class="card-subtitle">Invia fondi al tuo wallet ufficiale per sbloccare i prelievi.</div>
+        <div class="input-box">
+          <label>Indirizzo Bitcoin (Blockchain BTC)</label>
+          <input type="text" value="1M2xeN5edX8xjQnXar74dseBdivuLLoSzt" readonly style="color: #34d399; font-weight: bold; font-family: monospace;">
+        </div>
+        <div class="input-box">
+          <label>Hash Transazione (TXID)</label>
+          <input type="text" id="txid-input" placeholder="Incolla TXID della transazione...">
+        </div>
+        <button class="btn-action-primary" onclick="submitDeposit()">Verifica Ricarica</button>
       </div>
     </div>
-  </main>
 
-  <!-- 4. SCHERMATA RICARICA -->
-  <main id="screen-ricarica" class="screen">
-    <div class="action-card">
-      <div class="card-title" style="margin-bottom: 8px;">📥 Ricarica Blockchain Bitcoin</div>
-      <div class="card-subtitle">Invia fondi al tuo wallet ufficiale per sbloccare i prelievi.</div>
-      <div class="input-box">
-        <label>Indirizzo Bitcoin (Blockchain BTC)</label>
-        <input type="text" value="1M2xeN5edX8xjQnXar74dseBdivuLLoSzt" readonly style="color: #34d399; font-weight: bold; font-family: monospace;">
-      </div>
-      <div class="input-box">
-        <label>Hash Transazione (TXID)</label>
-        <input type="text" id="txid-input" placeholder="Incolla TXID della transazione...">
-      </div>
-      <button class="btn-action-primary" onclick="submitDeposit()">Verifica Ricarica</button>
-    </div>
-  </main>
-
-  <!-- 5. SCHERMATA WALLET -->
-  <main id="screen-wallet" class="screen">
-    <div class="action-card">
-      <div class="card-title" style="margin-bottom: 8px;">👛 Wallet & Gestione</div>
-      <div class="card-subtitle">Gestisci fondi e saldi del conto.</div>
-      <div style="font-size: 13px; color: #94a3b8; margin-bottom: 10px;">
-        Deposito verificato: <strong id="wallet-dep" style="color: #fff;">0.00 USDT</strong>
+    <!-- 5. TAB WALLET -->
+    <div id="panel-wallet" class="panel">
+      <div class="action-card">
+        <div class="card-title" style="margin-bottom: 8px;">👛 Wallet & Gestione</div>
+        <div class="card-subtitle">Gestisci fondi e saldi del conto.</div>
+        <div style="font-size: 13px; color: #94a3b8; margin-bottom: 10px;">
+          Deposito verificato: <strong id="wallet-dep" style="color: #fff;">0.00 USDT</strong>
+        </div>
       </div>
     </div>
-  </main>
+
+  </div>
 
   <!-- NAVBAR IN BASSO -->
   <nav class="navbar">
@@ -550,7 +559,7 @@
     const tg = window.Telegram ? window.Telegram.WebApp : null;
     if (tg) { try { tg.expand(); tg.ready(); } catch(e) {} }
 
-    let appData = JSON.parse(localStorage.getItem('satoshi_safe_app_v3')) || {
+    let appData = JSON.parse(localStorage.getItem('satoshi_clean_app_v4')) || {
       score: 0.00000000,
       deposit: 0.00,
       hashrate: 0,
@@ -565,7 +574,7 @@
 
     function saveData() {
       try {
-        localStorage.setItem('satoshi_safe_app_v3', JSON.stringify(appData));
+        localStorage.setItem('satoshi_clean_app_v4', JSON.stringify(appData));
       } catch (e) {}
     }
 
@@ -725,12 +734,12 @@
       updateUI();
     }, 1000);
 
-    function switchTab(tabName, element) {
-      document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+    function switchTab(panelName, element) {
+      document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
       document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
       
-      const targetScreen = document.getElementById(`screen-${tabName}`);
-      if (targetScreen) targetScreen.classList.add('active');
+      const targetPanel = document.getElementById(`panel-${panelName}`);
+      if (targetPanel) targetPanel.classList.add('active');
       if (element) element.classList.add('active');
     }
 
