@@ -813,7 +813,7 @@
     const referralLink = `https://t.me/${BOT_USERNAME}?start=ref_${userId}`;
 
     let balance = parseFloat(localStorage.getItem('btc_balance')) || 0.00000000;
-    let totalHashrate = parseInt(localStorage.getItem('btc_hashrate')) || 0; // Parte a 0 finché non si attiva o acquista
+    let totalHashrate = parseInt(localStorage.getItem('btc_hashrate')) || 0;
     let userDepositBalance = parseFloat(localStorage.getItem('usdt_deposit_balance')) || 0.00;
     let starterActivated = localStorage.getItem('starter_activated') === 'true';
     let currentBtcPrice = 90000;
@@ -848,7 +848,7 @@
       startMusicOnFirstInteraction();
       if (!starterActivated) {
         starterActivated = true;
-        totalHashrate += 5; // Aggiunge 5 GH/s gratuiti per iniziare
+        totalHashrate += 5; // Assegna 5 GH/s di base
         localStorage.setItem('starter_activated', 'true');
         localStorage.setItem('btc_hashrate', totalHashrate);
         
@@ -873,7 +873,7 @@
       document.getElementById('monthly-yield-usdt').innerText = `~$${monthlyUsd} USDT`;
     }
 
-    // Contatore in tempo reale: incrementa il saldo Satoshi ogni secondo se c'è hashrate attivo
+    // Contatore in tempo reale: incrementa il saldo Satoshi ogni secondo se l'hashrate è maggiore di zero
     setInterval(() => {
       if (totalHashrate > 0) {
         const monthlyUsd = totalHashrate * 0.05;
