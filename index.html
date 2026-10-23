@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Satoshi Tap - Micro Hashrate Edition</title>
+  <title>Satoshi Tap - Progressive Mining</title>
 
   <!-- SDK Telegram Mini App -->
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
@@ -178,7 +178,7 @@
     }
 
     .balance-amount {
-      font-size: 26px;
+      font-size: 22px;
       font-weight: 900;
       color: #f59e0b;
       font-family: monospace;
@@ -375,7 +375,7 @@
       <div class="sub-tab" id="subtab-withdraw" onclick="switchSubTab('withdraw')">Prelievi</div>
     </div>
 
-    <!-- VISTA 1: MINING MANUALE 12H -->
+    <!-- VISTA 1: MINING MANUALE 12H PROGRESSIVO -->
     <div id="view-active-mining" style="display: flex; flex-direction: column; gap: 12px;">
       <div class="mining-card">
         <div class="lightning-icon-box">
@@ -388,7 +388,7 @@
         <button class="btn-starter" id="btn-mining-action" onclick="startMiningSession()">🚀 Avvia Sessione Mining (12h)</button>
         
         <div class="balance-label">Saldo Mining Disponibile</div>
-        <div class="balance-amount">₿ <span id="user-score">0.00000</span></div>
+        <div class="balance-amount">₿ <span id="user-score">0.00000000</span></div>
         <div class="fiat-info" id="fiat-val">Valore stimato: ~$0.00 USD</div>
         <div class="btc-live-info" id="btc-live-price">Prezzo BTC Live: ~$81,651 USD</div>
         
@@ -415,7 +415,7 @@
     </div>
   </main>
 
-  <!-- 2. SCHERMATA SHOP (PACCHETTI HASHRATE RIDOTTI) -->
+  <!-- 2. SCHERMATA SHOP -->
   <main id="screen-shop" class="screen">
     <div class="action-card">
       <div class="card-title" style="margin-bottom: 6px;">🛒 Pacchetti Hashrate Cloud</div>
@@ -424,25 +424,25 @@
       <div class="shop-item">
         <div class="shop-info">
           <strong>Rig Micro (500 GH/s)</strong>
-          <span>+0.01000 Satoshi bonus</span>
+          <span>+0.10000000 Satoshi target</span>
         </div>
-        <button class="btn-buy-shop" onclick="buyHashratePackage('500 GH/s', 0.01000, 2.50)">2.50 USDT</button>
+        <button class="btn-buy-shop" onclick="buyHashratePackage('500 GH/s', 0.10000000, 2.50)">2.50 USDT</button>
       </div>
 
       <div class="shop-item">
         <div class="shop-info">
           <strong>Rig Mini (2 TH/s)</strong>
-          <span>+0.03000 Satoshi bonus</span>
+          <span>+0.30000000 Satoshi target</span>
         </div>
-        <button class="btn-buy-shop" onclick="buyHashratePackage('2 TH/s', 0.03000, 5.00)">5.00 USDT</button>
+        <button class="btn-buy-shop" onclick="buyHashratePackage('2 TH/s', 0.30000000, 5.00)">5.00 USDT</button>
       </div>
 
       <div class="shop-item">
         <div class="shop-info">
           <strong>Rig Standard (5 TH/s)</strong>
-          <span>+0.08000 Satoshi bonus</span>
+          <span>+0.80000000 Satoshi target</span>
         </div>
-        <button class="btn-buy-shop" onclick="buyHashratePackage('5 TH/s', 0.08000, 10.00)">10.00 USDT</button>
+        <button class="btn-buy-shop" onclick="buyHashratePackage('5 TH/s', 0.80000000, 10.00)">10.00 USDT</button>
       </div>
     </div>
   </main>
@@ -514,18 +514,20 @@
     const tg = window.Telegram ? window.Telegram.WebApp : null;
     if (tg) { try { tg.expand(); tg.ready(); } catch(e) {} }
 
-    let appData = JSON.parse(localStorage.getItem('satoshi_micro_hashrate')) || {
-      score: 0.00000,
+    let appData = JSON.parse(localStorage.getItem('satoshi_progressive_12h')) || {
+      score: 0.00000000,
       deposit: 0.00,
-      miningEndTime: 0
+      miningStartTime: 0,
+      miningEndTime: 0,
+      targetScore: 0.00000000
     };
 
     let currentBtcPrice = 81651;
     const MIN_WITHDRAW = 1.000000;
-    const TWELVE_HOURS = 12 * 60 * 60 * 1000;
+    const TWELVE_HOURS = 12 * 60 * 60 * 1000; // 12 ore
 
     function saveData() {
-      localStorage.setItem('satoshi_micro_hashrate', JSON.stringify(appData));
+      localStorage.setItem('satoshi_progressive_12h', JSON.stringify(appData));
     }
 
     async function fetchBtcPrice() {
@@ -540,7 +542,8 @@
     }
 
     function updateUI() {
-      document.getElementById('user-score').innerText = Number(appData.score).toFixed(5);
+      // Aggiornamento della grafica in tempo reale (8 decimali)
+      document.getElementById('user-score').innerText = Number(appData.score).toFixed(8);
       let usdVal = (appData.score / 100000000) * currentBtcPrice;
       document.getElementById('fiat-val').innerText = `Valore stimato: ~$${usdVal.toFixed(6)} USD`;
       document.getElementById('btc-live-price').innerText = `Prezzo BTC Live: ~$${currentBtcPrice.toLocaleString()} USD`;
@@ -556,10 +559,11 @@
         statusLbl.style.color = "#ef4444";
       }
 
-      checkMiningSession();
+      checkMiningProgress();
     }
 
-    function checkMiningSession() {
+    // Gestione della progressione fluida da 0 verso il target nelle 12 ore
+    function checkMiningProgress() {
       const now = Date.now();
       const btn = document.getElementById('btn-mining-action');
       const alertBox = document.getElementById('timer-alert-box');
@@ -567,12 +571,25 @@
       if (appData.miningEndTime > now) {
         btn.disabled = true;
         alertBox.style.display = 'block';
+
+        const totalDuration = TWELVE_HOURS;
+        const elapsed = now - appData.miningStartTime;
+        const progress = Math.min(elapsed / totalDuration, 1);
+
+        // Calcola il saldo corrente scalando progressivamente da 0 fino al target stabilito
+        appData.score = Number((appData.targetScore * progress).toFixed(8));
+        saveData();
+
         const remaining = Math.ceil((appData.miningEndTime - now) / 1000);
         const h = Math.floor(remaining / 3600);
         const m = Math.floor((remaining % 3600) / 60);
         const s = remaining % 60;
-        alertBox.innerText = `⏳ Sessione 12h in corso. Riavvio tra: ${h}h ${m}m ${s}s`;
+        alertBox.innerText = `⏳ Sessione 12h in corso. Completamento tra: ${h}h ${m}m ${s}s`;
       } else {
+        if (appData.miningEndTime !== 0 && appData.score < appData.targetScore) {
+          appData.score = appData.targetScore; // Assicura che arrivi esattamente al 100% alla fine
+          saveData();
+        }
         btn.disabled = false;
         alertBox.style.display = 'none';
       }
@@ -582,19 +599,21 @@
       const now = Date.now();
       if (appData.miningEndTime > now) return;
 
-      appData.score = Number((appData.score + 0.50000).toFixed(5));
+      appData.miningStartTime = now;
       appData.miningEndTime = now + TWELVE_HOURS;
+      // Imposta il guadagno totale della sessione (es. +0.50000000 Satoshi)
+      appData.targetScore = Number((appData.score + 0.50000000).toFixed(8));
       saveData();
       updateUI();
-      alert("Sessione di mining manuale avviata con successo per 12 ore!");
+      alert("Sessione di mining avviata! Il saldo inizierà a salire progressivamente.");
     }
 
     function buyHashratePackage(powerName, bonusScore, usdtPrice) {
       appData.deposit = Number((appData.deposit + usdtPrice).toFixed(2));
-      appData.score = Number((appData.score + bonusScore).toFixed(5));
+      appData.targetScore = Number((appData.targetScore + bonusScore).toFixed(8));
       saveData();
       updateUI();
-      alert(`Rig (${powerName}) acquistato con successo! +${bonusScore} Satoshi accreditati.`);
+      alert(`Rig (${powerName}) acquistato con successo! +${bonusScore} Satoshi aggiunti al target.`);
     }
 
     function submitDeposit() {
@@ -632,15 +651,18 @@
         return; 
       }
 
-      appData.score = Number((appData.score - amt).toFixed(5));
+      appData.score = Number((appData.score - amt).toFixed(8));
+      appData.targetScore = Number((appData.targetScore - amt).toFixed(8));
+      if (appData.targetScore < 0) appData.targetScore = 0;
       saveData();
       updateUI();
       alert("Prelievo inviato con successo!");
       document.getElementById('withdraw-amount').value = '';
     }
 
+    // Loop continuo ogni secondo per aggiornare la barra e la progressione del saldo
     setInterval(() => {
-      checkMiningSession();
+      updateUI();
     }, 1000);
 
     function switchTab(tabName, element) {
