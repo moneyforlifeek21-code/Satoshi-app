@@ -582,8 +582,8 @@
       <h3>🖥️ Centro Controllo Cloud Mining</h3>
       <p>Regole di sblocco e prelievo:</p>
       <ul>
-        <li><strong>Sblocco Prelievi (Minimo 3 USDT):</strong> Per poter prelevare i Satoshi minati, è richiesto un deposito verificato di almeno 3.00 USDT sul conto.</li>
-        <li><strong>Mining Starter Gratuito:</strong> Attiva il rig base gratuito per iniziare a estrarre a bassissimo regime.</li>
+        <li><strong>Mining Starter Gratuito:</strong> Clicca sul pulsante per avviare il contatore automatico dei Satoshi in tempo reale.</li>
+        <li><strong>Sblocco Prelievi (Minimo 3 USDT):</strong> Richiesto deposito verificato di almeno 3.00 USDT per abilitare i pagamenti esterni.</li>
         <li><strong>Commissione Prelievo:</strong> Trattenuta del 5% di rete accreditata all'admin.</li>
       </ul>
       <button class="btn-close" onclick="closeHowTo()">Ho Capito!</button>
@@ -643,11 +643,11 @@
     <div class="stats-grid">
       <div class="stat-card">
         <span>Potenza Farm</span>
-        <strong id="total-hashrate" style="color: #38bdf8;">2 GH/s</strong>
+        <strong id="total-hashrate" style="color: #38bdf8;">0 GH/s</strong>
       </div>
       <div class="stat-card">
         <span>Resa al Mese</span>
-        <strong id="monthly-yield-usdt" style="color: #34d399;">~$0.05 USDT</strong>
+        <strong id="monthly-yield-usdt" style="color: #34d399;">~$0.00 USDT</strong>
       </div>
     </div>
   </main>
@@ -813,7 +813,7 @@
     const referralLink = `https://t.me/${BOT_USERNAME}?start=ref_${userId}`;
 
     let balance = parseFloat(localStorage.getItem('btc_balance')) || 0.00000000;
-    let totalHashrate = parseInt(localStorage.getItem('btc_hashrate')) || 2;
+    let totalHashrate = parseInt(localStorage.getItem('btc_hashrate')) || 0; // Parte a 0 finché non si attiva o acquista
     let userDepositBalance = parseFloat(localStorage.getItem('usdt_deposit_balance')) || 0.00;
     let starterActivated = localStorage.getItem('starter_activated') === 'true';
     let currentBtcPrice = 90000;
@@ -848,7 +848,7 @@
       startMusicOnFirstInteraction();
       if (!starterActivated) {
         starterActivated = true;
-        totalHashrate = 5;
+        totalHashrate += 5; // Aggiunge 5 GH/s gratuiti per iniziare
         localStorage.setItem('starter_activated', 'true');
         localStorage.setItem('btc_hashrate', totalHashrate);
         
@@ -856,7 +856,7 @@
         document.getElementById('btn-free-starter').style.background = "linear-gradient(135deg, #334155, #1e293b)";
         
         updateUI();
-        alert("Rig Starter Gratuito attivato! La tua farm ha iniziato a estrarre i primi Satoshi a bassissimo regime.");
+        alert("Rig Starter Gratuito attivato! Il contatore ha iniziato a estrarre Satoshi in tempo reale.");
       } else {
         alert("Il rig starter è già attivo sul tuo account!");
       }
@@ -873,14 +873,17 @@
       document.getElementById('monthly-yield-usdt').innerText = `~$${monthlyUsd} USDT`;
     }
 
+    // Contatore in tempo reale: incrementa il saldo Satoshi ogni secondo se c'è hashrate attivo
     setInterval(() => {
-      const monthlyUsd = totalHashrate * 0.05;
-      const monthlyBtc = monthlyUsd / currentBtcPrice;
-      const incrementPerSecond = monthlyBtc / 2592000;
+      if (totalHashrate > 0) {
+        const monthlyUsd = totalHashrate * 0.05;
+        const monthlyBtc = monthlyUsd / currentBtcPrice;
+        const incrementPerSecond = monthlyBtc / 2592000;
 
-      balance += incrementPerSecond;
-      updateUI();
-      localStorage.setItem('btc_balance', balance);
+        balance += incrementPerSecond;
+        updateUI();
+        localStorage.setItem('btc_balance', balance);
+      }
     }, 1000);
 
     function openCheckout(name, ghs, priceUsdt, monthlyUsdYield) {
@@ -954,7 +957,6 @@
         return;
       }
 
-      // Controllo di sblocco: l'utente deve aver depositato almeno 3 USDT per sbloccare i prelievi
       if (userDepositBalance < 3.00) {
         alert(`Prelievo bloccato! Per sbloccare i pagamenti e prelevare i tuoi Satoshi, devi aver effettuato un deposito verificato di almeno 3.00 USDT (Il tuo deposito attuale è ${userDepositBalance.toFixed(2)} USDT). Ricarica ora nella sezione apposita!`);
         switchTab('deposit', document.querySelectorAll('.nav-item')[2]);
