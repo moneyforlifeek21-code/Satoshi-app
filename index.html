@@ -19,11 +19,11 @@
     }
 
     body {
-      background-color: #f4f7fb;
+      background-color: #0b132b;
       background-image: 
-        radial-gradient(circle at 50% 0%, rgba(247, 147, 26, 0.08) 0%, transparent 60%),
-        radial-gradient(circle at 100% 100%, rgba(0, 122, 255, 0.06) 0%, transparent 50%);
-      color: #1a202c;
+        radial-gradient(circle at 50% 0%, rgba(247, 147, 26, 0.15) 0%, transparent 50%),
+        radial-gradient(circle at 100% 100%, rgba(0, 122, 255, 0.1) 0%, transparent 50%);
+      color: #f8fafc;
       min-height: 100vh;
       display: flex;
       flex-direction: column;
@@ -44,11 +44,12 @@
       justify-content: space-between;
       align-items: center;
       padding: 12px 16px;
-      background: #ffffff;
-      border: 1px solid #e2e8f0;
+      background: rgba(30, 41, 59, 0.7);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
       border-radius: 18px;
       margin-bottom: 15px;
-      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.03);
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
     }
 
     .brand {
@@ -57,18 +58,20 @@
       gap: 8px;
       font-weight: 800;
       font-size: 16px;
-      color: #2d3748;
+      color: #ffffff;
+      letter-spacing: 0.5px;
     }
 
     .brand span {
       color: #F7931A;
       animation: pulseIcon 2s infinite;
+      font-size: 20px;
     }
 
     @keyframes pulseIcon {
-      0% { transform: scale(1); }
-      50% { transform: scale(1.15); }
-      100% { transform: scale(1); }
+      0% { transform: scale(1); text-shadow: 0 0 10px rgba(247,147,26,0.5); }
+      50% { transform: scale(1.15); text-shadow: 0 0 20px rgba(247,147,26,0.8); }
+      100% { transform: scale(1); text-shadow: 0 0 10px rgba(247,147,26,0.5); }
     }
 
     .header-actions {
@@ -77,14 +80,20 @@
     }
 
     .icon-btn {
-      background: #edf2f7;
-      border: 1px solid #cbd5e0;
-      color: #2d3748;
-      padding: 6px 12px;
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      color: #e2e8f0;
+      padding: 6px 14px;
       border-radius: 20px;
-      font-size: 13px;
+      font-size: 12px;
       font-weight: 600;
       cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .icon-btn:active {
+      transform: scale(0.95);
+      background: rgba(255, 255, 255, 0.15);
     }
 
     /* SCHERMATE PRINCIPALI */
@@ -107,29 +116,78 @@
       to { opacity: 1; transform: translateY(0); }
     }
 
-    /* PANNELLO PRINCIPALE */
+    /* PANNELLO MINING CENTRALE CON OLOGRAMMA ANIMATO */
     .mining-panel {
-      background: #ffffff;
-      border: 1px solid #e2e8f0;
+      background: linear-gradient(135deg, rgba(30, 41, 59, 0.8), rgba(15, 23, 42, 0.9));
+      border: 1px solid rgba(255, 255, 255, 0.08);
       border-radius: 24px;
       padding: 20px;
       margin-bottom: 15px;
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* Ologramma Animato Rig ASIC */
+    .mining-visual-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      margin: 10px 0 20px 0;
+      position: relative;
+    }
+
+    .mining-rig-holo {
+      width: 90px;
+      height: 90px;
+      background: linear-gradient(135deg, #1e293b, #0f172a);
+      border: 2px solid rgba(0, 122, 255, 0.4);
+      border-radius: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 40px;
+      box-shadow: 0 0 25px rgba(0, 122, 255, 0.2), inset 0 0 15px rgba(0, 122, 255, 0.1);
+      position: relative;
+      animation: holoFloat 3s ease-in-out infinite;
+    }
+
+    @keyframes holoFloat {
+      0% { transform: translateY(0px); box-shadow: 0 5px 20px rgba(0, 122, 255, 0.3); }
+      50% { transform: translateY(-6px); box-shadow: 0 15px 30px rgba(247, 147, 26, 0.3); border-color: rgba(247, 147, 26, 0.5); }
+      100% { transform: translateY(0px); box-shadow: 0 5px 20px rgba(0, 122, 255, 0.3); }
+    }
+
+    .holo-status-led {
+      position: absolute;
+      top: 8px; right: 8px;
+      width: 10px; height: 10px;
+      background: #10b981;
+      border-radius: 50%;
+      box-shadow: 0 0 10px #10b981;
+      animation: ledBlink 1s infinite alternate;
+    }
+
+    @keyframes ledBlink {
+      from { opacity: 0.4; }
+      to { opacity: 1; }
     }
 
     .panel-tabs {
       display: flex;
-      background: #edf2f7;
+      background: rgba(15, 23, 42, 0.6);
       padding: 4px;
       border-radius: 14px;
       margin-bottom: 20px;
+      border: 1px solid rgba(255, 255, 255, 0.04);
     }
 
     .tab-btn {
       flex: 1;
       background: transparent;
       border: none;
-      color: #718096;
+      color: #94a3b8;
       padding: 10px;
       font-size: 13px;
       font-weight: 600;
@@ -140,24 +198,26 @@
     }
 
     .tab-btn.active {
-      background: #ffffff;
-      color: #1a202c;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+      background: rgba(255, 255, 255, 0.1);
+      color: #ffffff;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.2);
     }
 
     .balance-display-box {
-      text-align: left;
+      text-align: center;
       margin-bottom: 20px;
     }
 
     .crypto-amount {
-      font-size: 34px;
+      font-size: 32px;
       font-weight: 900;
-      color: #1a202c;
+      color: #ffffff;
       display: flex;
       align-items: center;
-      gap: 8px;
+      justify-content: center;
+      gap: 6px;
       margin-bottom: 4px;
+      text-shadow: 0 2px 10px rgba(0,0,0,0.3);
     }
 
     .crypto-amount span {
@@ -166,14 +226,14 @@
 
     .fiat-equivalent {
       font-size: 13px;
-      color: #718096;
+      color: #94a3b8;
       font-weight: 600;
     }
 
     /* FORM AZIONI */
     .action-form {
-      background: #f8fafc;
-      border: 1px solid #e2e8f0;
+      background: rgba(15, 23, 42, 0.5);
+      border: 1px solid rgba(255, 255, 255, 0.06);
       border-radius: 18px;
       padding: 16px;
       margin-top: 10px;
@@ -182,19 +242,19 @@
     .form-title {
       font-size: 15px;
       font-weight: 700;
-      color: #1a202c;
+      color: #ffffff;
       margin-bottom: 4px;
     }
 
     .form-subtitle {
       font-size: 12px;
-      color: #718096;
+      color: #94a3b8;
       margin-bottom: 14px;
     }
 
     .input-group {
-      background: #ffffff;
-      border: 1px solid #cbd5e0;
+      background: rgba(30, 41, 59, 0.8);
+      border: 1px solid rgba(255, 255, 255, 0.1);
       border-radius: 12px;
       padding: 10px 14px;
       margin-bottom: 12px;
@@ -205,18 +265,23 @@
 
     .input-group label {
       font-size: 11px;
-      color: #718096;
+      color: #94a3b8;
       font-weight: 600;
     }
 
-    .input-group input {
+    .input-group input, .input-group select {
       background: transparent;
       border: none;
-      color: #1a202c;
+      color: #ffffff;
       font-size: 14px;
       outline: none;
       width: 100%;
       font-weight: 600;
+    }
+
+    .input-group select option {
+      background: #1e293b;
+      color: #ffffff;
     }
 
     .btn-action-primary {
@@ -229,8 +294,13 @@
       font-weight: 700;
       font-size: 15px;
       cursor: pointer;
-      box-shadow: 0 4px 15px rgba(0, 122, 255, 0.3);
+      box-shadow: 0 6px 20px rgba(0, 122, 255, 0.4);
       margin-top: 5px;
+      transition: transform 0.15s ease;
+    }
+
+    .btn-action-primary:active {
+      transform: scale(0.97);
     }
 
     /* STATISTICHE HASH RATE */
@@ -242,29 +312,30 @@
     }
 
     .stat-card {
-      background: #ffffff;
-      border: 1px solid #e2e8f0;
+      background: linear-gradient(135deg, rgba(30, 41, 59, 0.8), rgba(15, 23, 42, 0.9));
+      border: 1px solid rgba(255, 255, 255, 0.08);
       padding: 16px;
       border-radius: 18px;
       text-align: left;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+      box-shadow: 0 8px 20px rgba(0,0,0,0.2);
     }
 
     .stat-card span {
-      font-size: 12px;
-      color: #718096;
+      font-size: 11px;
+      color: #94a3b8;
       display: block;
       margin-bottom: 6px;
       font-weight: 600;
+      text-transform: uppercase;
     }
 
     .stat-card strong {
-      font-size: 15px;
+      font-size: 16px;
       font-weight: 800;
-      color: #007aff;
+      color: #38bdf8;
     }
 
-    /* SHOP & LISTE CON IMMAGINI */
+    /* SHOP & LISTE CON IMMAGINI E BADGE */
     .card-list {
       display: flex;
       flex-direction: column;
@@ -273,21 +344,41 @@
     }
 
     .item-card {
-      background: #ffffff;
-      border: 1px solid #e2e8f0;
+      background: linear-gradient(135deg, rgba(30, 41, 59, 0.85), rgba(15, 23, 42, 0.95));
+      border: 1px solid rgba(255, 255, 255, 0.08);
       padding: 16px;
-      border-radius: 16px;
+      border-radius: 20px;
       display: flex;
-      justify-content: space-between;
       align-items: center;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+      box-shadow: 0 8px 25px rgba(0,0,0,0.25);
       gap: 16px;
+      position: relative;
+      overflow: hidden;
     }
 
-    .item-icon {
-      width: 50px;
-      height: 50px;
-      object-fit: contain;
+    .item-badge {
+      position: absolute;
+      top: 0; right: 0;
+      background: linear-gradient(135deg, #f59e0b, #d97706);
+      color: #ffffff;
+      font-size: 9px;
+      font-weight: 800;
+      padding: 3px 10px;
+      border-bottom-left-radius: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .item-icon-wrapper {
+      width: 55px;
+      height: 55px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 28px;
     }
 
     .item-details {
@@ -295,21 +386,27 @@
     }
 
     .btn-buy {
-      background: linear-gradient(135deg, #00bfff, #007acc);
+      background: linear-gradient(135deg, #10b981, #059669);
       color: #fff;
       border: none;
-      padding: 10px 18px;
+      padding: 10px 16px;
       border-radius: 12px;
       font-weight: bold;
       font-size: 13px;
       cursor: pointer;
+      box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);
+      transition: transform 0.15s ease;
+    }
+
+    .btn-buy:active {
+      transform: scale(0.95);
     }
 
     /* CHECKOUT & RICARICA WALLET */
     .back-btn {
-      background: #edf2f7;
-      border: none;
-      color: #2d3748;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      color: #ffffff;
       padding: 8px 14px;
       border-radius: 10px;
       font-weight: 600;
@@ -322,27 +419,28 @@
     }
 
     .checkout-box {
-      background: #ffffff;
-      border: 1px solid #e2e8f0;
-      border-radius: 22px;
+      background: linear-gradient(135deg, rgba(30, 41, 59, 0.9), rgba(15, 23, 42, 0.95));
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 24px;
       padding: 24px;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+      box-shadow: 0 15px 35px rgba(0,0,0,0.3);
       text-align: center;
     }
 
     .price-tag-usdt {
       font-size: 38px;
       font-weight: 900;
-      color: #2f855a;
+      color: #34d399;
       margin: 15px 0 5px 0;
+      text-shadow: 0 0 20px rgba(52, 211, 153, 0.3);
     }
 
     /* MODAL GUIDA */
     .modal-overlay {
       position: fixed;
       top: 0; left: 0; right: 0; bottom: 0;
-      background: rgba(0,0,0,0.5);
-      backdrop-filter: blur(4px);
+      background: rgba(11, 19, 43, 0.8);
+      backdrop-filter: blur(8px);
       display: none;
       justify-content: center;
       align-items: center;
@@ -351,13 +449,14 @@
     }
 
     .modal-card {
-      background: #ffffff;
-      border: 1px solid #cbd5e0;
-      border-radius: 22px;
+      background: #1e293b;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 24px;
       padding: 24px;
       max-width: 400px;
       width: 100%;
-      color: #1a202c;
+      color: #ffffff;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.4);
     }
 
     .modal-card h3 {
@@ -368,7 +467,7 @@
 
     .modal-card p, .modal-card li {
       font-size: 13px;
-      color: #4a5568;
+      color: #cbd5e1;
       line-height: 1.5;
       margin-bottom: 8px;
     }
@@ -384,6 +483,7 @@
       font-size: 14px;
       cursor: pointer;
       margin-top: 15px;
+      box-shadow: 0 4px 15px rgba(247, 147, 26, 0.3);
     }
 
     /* NAVBAR IN BASSO */
@@ -391,13 +491,14 @@
       position: fixed;
       bottom: 0; left: 0; right: 0;
       height: 65px;
-      background: #ffffff;
-      border-top: 1px solid #e2e8f0;
+      background: rgba(15, 23, 42, 0.9);
+      backdrop-filter: blur(12px);
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
       display: flex;
       justify-content: space-around;
       align-items: center;
       z-index: 1000;
-      box-shadow: 0 -4px 20px rgba(0,0,0,0.05);
+      box-shadow: 0 -5px 20px rgba(0,0,0,0.3);
     }
 
     .nav-item {
@@ -405,11 +506,12 @@
       flex-direction: column;
       align-items: center;
       gap: 4px;
-      color: #a0aec0;
+      color: #64748b;
       font-size: 11px;
       font-weight: 600;
       cursor: pointer;
       width: 20%;
+      transition: all 0.2s ease;
     }
 
     .nav-item.active {
@@ -443,11 +545,11 @@
   <!-- MODAL GUIDA -->
   <div class="modal-overlay" id="guide-modal" onclick="if(event.target === this) closeHowTo()">
     <div class="modal-card">
-      <h3>🖥️ Guida Cloud Mining</h3>
-      <p>Gestisci i depositi e acquista potenza:</p>
+      <h3>🖥️ Centro Controllo Cloud Mining</h3>
+      <p>Benvenuto nella piattaforma di cloud mining di ultima generazione:</p>
       <ul>
-        <li><strong>Ricarica Fondi:</strong> Invia criptovalute al wallet ufficiale della piattaforma.</li>
-        <li><strong>Acquisto Potenza:</strong> Potenzia la tua farm e incrementa i guadagni in USDT in modo semplice e sicuro.</li>
+        <li><strong>Rig Olografico Attivo:</strong> Il tuo sistema estrae Satoshi in tempo reale 24/7.</li>
+        <li><strong>Ricariche Dirette:</strong> Deposita in modo sicuro e acquista pacchetti ad alta resa.</li>
       </ul>
       <button class="btn-close" onclick="closeHowTo()">Ho Capito!</button>
     </div>
@@ -461,8 +563,16 @@
         <button class="tab-btn" onclick="switchTab('wallet', document.querySelectorAll('.nav-item')[4])">Prelievi</button>
       </div>
 
+      <!-- ANIMAZIONE OLOGRAFICA CENTRALE -->
+      <div class="mining-visual-container">
+        <div class="mining-rig-holo">
+          ⚡
+          <div class="holo-status-led"></div>
+        </div>
+      </div>
+
       <div class="balance-display-box">
-        <div style="font-size: 11px; color: #718096; text-transform: uppercase; margin-bottom: 6px; font-weight: 700;">Saldo Mining Disponibile</div>
+        <div style="font-size: 11px; color: #94a3b8; text-transform: uppercase; margin-bottom: 4px; font-weight: 700; letter-spacing: 0.5px;">Saldo Mining Disponibile</div>
         <div class="crypto-amount">
           <span>₿</span> <span id="user-balance">0.00000000</span>
         </div>
@@ -471,7 +581,7 @@
 
       <div class="action-form">
         <div class="form-title">Trasferisci Satoshi</div>
-        <div class="form-subtitle">Prelievo con commissione di rete del 5% (accreditata al wallet admin)</div>
+        <div class="form-subtitle">Prelievo rapido con commissione del 5%</div>
 
         <div class="input-group">
           <label>Indirizzo Wallet / Destinazione</label>
@@ -482,7 +592,7 @@
           <label>Importo da prelevare</label>
           <div style="display: flex; justify-content: space-between; align-items: center;">
             <input type="number" id="withdraw-amount" placeholder="0.00">
-            <button onclick="setMaxBalance()" style="background: #edf2f7; border: none; color: #007aff; font-size: 11px; padding: 4px 8px; border-radius: 6px; cursor: pointer; font-weight: bold;">MAX</button>
+            <button onclick="setMaxBalance()" style="background: rgba(255,255,255,0.1); border: none; color: #38bdf8; font-size: 11px; padding: 4px 8px; border-radius: 6px; cursor: pointer; font-weight: bold;">MAX</button>
           </div>
         </div>
 
@@ -493,45 +603,47 @@
     <div class="stats-grid">
       <div class="stat-card">
         <span>Potenza Farm</span>
-        <strong id="total-hashrate">10 GH/s</strong>
+        <strong id="total-hashrate" style="color: #38bdf8;">10 GH/s</strong>
       </div>
       <div class="stat-card">
-        <span>Resa al Mese (USDT)</span>
-        <strong id="monthly-yield-usdt" style="color: #2f855a;">~$0.30 USDT</strong>
+        <span>Resa al Mese</span>
+        <strong id="monthly-yield-usdt" style="color: #34d399;">~$0.30 USDT</strong>
       </div>
     </div>
   </main>
 
-  <!-- 2. SCHERMATA SHOP CON IMMAGINI -->
+  <!-- 2. SCHERMATA SHOP CON IMMAGINI E BADGE -->
   <main id="screen-upgrades" class="screen">
     <div style="text-align: center; margin-bottom: 15px;">
       <h2>🚀 Shop Potenziamenti</h2>
-      <p style="color: #718096; font-size: 13px;">Investi in USDT per aumentare la potenza e la resa mensile</p>
+      <p style="color: #94a3b8; font-size: 13px;">Seleziona l'hardware ASIC per potenziare la tua farm</p>
     </div>
     <div class="card-list">
       <div class="item-card">
-        <img src="https://i.ibb.co/LhB5f8Z/asic-miner.png" alt="Rig ASIC Minor" class="item-icon">
+        <div class="item-icon-wrapper">💻</div>
         <div class="item-details">
-          <strong style="color: #1a202c; font-size: 15px;">Rig ASIC Minor (+50 GH/s)</strong>
-          <p style="color: #2f855a; font-size: 12px; font-weight:600; margin-top: 4px;">Resa stimata: ~$5.00 / mese</p>
+          <strong style="color: #ffffff; font-size: 15px;">Rig ASIC Minor (+50 GH/s)</strong>
+          <p style="color: #34d399; font-size: 12px; font-weight:600; margin-top: 4px;">Resa stimata: ~$5.00 / mese</p>
         </div>
-        <button class="btn-buy" onclick="openCheckout('Rig ASIC Minor', 50, 25.00, 5.00)">25.00 USDT</button>
+        <button class="btn-buy" onclick="openCheckout('Rig ASIC Minor', 50, 25.00, 5.00)">25 USDT</button>
       </div>
       <div class="item-card">
-        <img src="https://i.ibb.co/V3QYmR1/asic-miner-pro.png" alt="Rig ASIC Pro" class="item-icon">
+        <div class="item-badge">🔥 Più Popolare</div>
+        <div class="item-icon-wrapper">⚡</div>
         <div class="item-details">
-          <strong style="color: #1a202c; font-size: 15px;">Rig ASIC Pro (+200 GH/s)</strong>
-          <p style="color: #2f855a; font-size: 12px; font-weight:600; margin-top: 4px;">Resa stimata: ~$20.00 / mese</p>
+          <strong style="color: #ffffff; font-size: 15px;">Rig ASIC Pro (+200 GH/s)</strong>
+          <p style="color: #34d399; font-size: 12px; font-weight:600; margin-top: 4px;">Resa stimata: ~$20.00 / mese</p>
         </div>
-        <button class="btn-buy" onclick="openCheckout('Rig ASIC Pro', 200, 100.00, 20.00)">100.00 USDT</button>
+        <button class="btn-buy" onclick="openCheckout('Rig ASIC Pro', 200, 100.00, 20.00)">100 USDT</button>
       </div>
       <div class="item-card">
-        <img src="https://i.ibb.co/Y7Xg8yN/data-center.png" alt="Farm Data Center" class="item-icon">
+        <div class="item-badge" style="background: linear-gradient(135deg, #3b82f6, #1d4ed8);">💎 Data Center</div>
+        <div class="item-icon-wrapper">🏢</div>
         <div class="item-details">
-          <strong style="color: #1a202c; font-size: 15px;">Farm Data Center (+650 GH/s)</strong>
-          <p style="color: #2f855a; font-size: 12px; font-weight:600; margin-top: 4px;">Resa stimata: ~$60.00 / mese</p>
+          <strong style="color: #ffffff; font-size: 15px;">Farm Data Center (+650 GH/s)</strong>
+          <p style="color: #34d399; font-size: 12px; font-weight:600; margin-top: 4px;">Resa stimata: ~$60.00 / mese</p>
         </div>
-        <button class="btn-buy" onclick="openCheckout('Farm Data Center', 650, 300.00, 60.00)">300.00 USDT</button>
+        <button class="btn-buy" onclick="openCheckout('Farm Data Center', 650, 300.00, 60.00)">300 USDT</button>
       </div>
     </div>
   </main>
@@ -541,15 +653,15 @@
     <button class="back-btn" onclick="switchTab('upgrades', document.querySelectorAll('.nav-item')[1])">← Torna allo Shop</button>
     
     <div class="checkout-box">
-      <div style="font-size: 13px; color: #718096; text-transform: uppercase; font-weight: 700;" id="checkout-title">Rig ASIC Pro</div>
-      <div style="font-size: 14px; color: #007aff; font-weight: 700; margin-top: 4px;" id="checkout-ghs">+200 GH/s</div>
+      <div style="font-size: 12px; color: #94a3b8; text-transform: uppercase; font-weight: 700; letter-spacing: 0.5px;" id="checkout-title">Rig ASIC Pro</div>
+      <div style="font-size: 14px; color: #38bdf8; font-weight: 700; margin-top: 4px;" id="checkout-ghs">+200 GH/s</div>
       
       <div class="price-tag-usdt" id="checkout-price">100.00 USDT</div>
-      <div style="font-size: 12px; color: #2f855a; font-weight: 600; margin-bottom: 20px;" id="checkout-yield">Ritorno stimato: ~$20.00 / mese</div>
+      <div style="font-size: 12px; color: #34d399; font-weight: 600; margin-bottom: 20px;" id="checkout-yield">Ritorno stimato: ~$20.00 / mese</div>
 
       <div class="input-group" style="text-align: left;">
         <label>Rete di Pagamento</label>
-        <select style="background:transparent; border:none; color:#1a202c; font-size:14px; outline:none; width:100%; font-weight:600;">
+        <select>
           <option>USDT (TON Network)</option>
           <option>USDT (TRC20)</option>
         </select>
@@ -563,11 +675,11 @@
   <main id="screen-deposit" class="screen">
     <div class="mining-panel">
       <h2>📥 Ricarica Fondi</h2>
-      <p style="color: #718096; font-size: 13px; margin: 6px 0 16px 0;">Invia criptovalute al wallet ufficiale per ricaricare il conto</p>
+      <p style="color: #94a3b8; font-size: 13px; margin: 6px 0 16px 0;">Invia criptovalute al wallet ufficiale per ricaricare il conto</p>
 
       <div class="input-group">
         <label>Seleziona Moneta</label>
-        <select id="deposit-coin" style="background:transparent; border:none; color:#1a202c; font-size:14px; outline:none; width:100%; font-weight:600;">
+        <select id="deposit-coin">
           <option value="USDT">USDT (Tether)</option>
           <option value="TON">TON (Toncoin)</option>
           <option value="BTC">Bitcoin (BTC)</option>
@@ -577,13 +689,13 @@
       </div>
 
       <div class="input-group">
-        <label>Il Tuo Indirizzo Wallet Ufficiale (Destinazione fondi)</label>
-        <input type="text" id="admin-wallet-input" value="UQC_TUO_INDIRIZZO_WALLET_UFFICIALE_QUI" style="font-size:12px; color:#2f855a; font-weight:bold;" readonly>
+        <label>Indirizzo Wallet Ufficiale (Destinazione fondi)</label>
+        <input type="text" id="admin-wallet-input" value="UQC_TUO_INDIRIZZO_WALLET_UFFICIALE_QUI" style="font-size:12px; color:#34d399; font-weight:bold;" readonly>
       </div>
       <button class="btn-buy" style="width:100%; margin-bottom: 15px;" onclick="copyAdminWallet()">Copia Indirizzo Wallet</button>
 
       <div class="input-group">
-        <label>Inserisci Hash della Transazione / TXID dopo il pagamento</label>
+        <label>Hash della Transazione / TXID</label>
         <input type="text" id="txid-input" placeholder="Incolla qui l'hash della transazione...">
       </div>
       <button class="btn-action-primary" onclick="submitDeposit()">Verifica e Accredita Ricarica</button>
@@ -595,7 +707,7 @@
     <div class="mining-panel" style="text-align: center;">
       <div style="font-size: 40px; margin-bottom: 10px;">🤝</div>
       <h2>Rete di Affiliazione</h2>
-      <p style="color: #718096; font-size: 13px; margin: 8px 0 20px 0;">
+      <p style="color: #94a3b8; font-size: 13px; margin: 8px 0 20px 0;">
         Invita amici e ricevi una percentuale della loro potenza di calcolo.
       </p>
 
@@ -606,7 +718,7 @@
 
       <div class="item-card" style="justify-content: space-between; font-size: 13px;">
         <span>Amici Invitati: <strong style="color: #F7931A;" id="ref-count">0</strong></span>
-        <span>Potenza Extra: <strong style="color: #007aff;">+0 GH/s</strong></span>
+        <span>Potenza Extra: <strong style="color: #38bdf8;">+0 GH/s</strong></span>
       </div>
     </div>
   </main>
@@ -615,7 +727,7 @@
   <main id="screen-wallet" class="screen">
     <div class="mining-panel">
       <h2>👛 Gestione Portafoglio</h2>
-      <p style="color: #718096; font-size: 13px; margin: 6px 0 16px 0;">Imposta il tuo indirizzo di prelievo sicuro</p>
+      <p style="color: #94a3b8; font-size: 13px; margin: 6px 0 16px 0;">Imposta il tuo indirizzo di prelievo sicuro</p>
       
       <div class="input-group">
         <label>Indirizzo Wallet Predefinito</label>
@@ -674,8 +786,7 @@
       document.getElementById('fiat-val').innerText = `Valore stimato: ~$${fiatVal}`;
       document.getElementById('total-hashrate').innerText = `${totalHashrate} GH/s`;
       
-      // Resa mensile in USDT calcolata in basso a destra
-      const monthlyUsd = (totalHashrate * 0.20).toFixed(2); // Aggiornato con resa sostenibile
+      const monthlyUsd = (totalHashrate * 0.20).toFixed(2);
       document.getElementById('monthly-yield-usdt').innerText = `~$${monthlyUsd} USDT`;
     }
 
@@ -729,4 +840,109 @@
         return;
       }
       alert("Richiesta di ricarica inviata con successo! Sarà accreditata non appena confermata.");
-      document.getElementById('txid-input').value =
+      document.getElementById('txid-input').value = '';
+    }
+
+    function setMaxBalance() {
+      document.getElementById('withdraw-amount').value = balance.toFixed(8);
+    }
+
+    function requestWithdrawal() {
+      startMusicOnFirstInteraction();
+      const addr = document.getElementById('withdraw-address').value;
+      const amt = parseFloat(document.getElementById('withdraw-amount').value);
+
+      if (!addr) {
+        alert("Inserisci un indirizzo di destinazione valido.");
+        return;
+      }
+      if (!amt || amt <= 0 || amt > balance) {
+        alert("Importo non valido o superiore al saldo disponibile.");
+        return;
+      }
+
+      const fee = amt * 0.05;
+      const netAmount = amt - fee;
+
+      alert(`Prelievo di ${netAmount.toFixed(8)} ₿ inviato con successo! (Commissione di rete applicata: ${fee.toFixed(8)} ₿ accreditata al wallet admin).`);
+      balance -= amt;
+      updateUI();
+      localStorage.setItem('btc_balance', balance);
+      document.getElementById('withdraw-amount').value = '';
+    }
+
+    function saveWalletAddress() {
+      startMusicOnFirstInteraction();
+      const addr = document.getElementById('wallet-saved-address').value;
+      if (addr) {
+        localStorage.setItem('btc_saved_wallet', addr);
+        document.getElementById('withdraw-address').value = addr;
+        alert("Indirizzo wallet salvato con successo!");
+      }
+    }
+
+    const bgMusic = document.getElementById('bg-music');
+    let audioEnabled = true;
+    let musicStarted = false;
+
+    function startMusicOnFirstInteraction() {
+      if (!musicStarted && audioEnabled) {
+        bgMusic.play().then(() => { musicStarted = true; }).catch(() => {});
+      }
+    }
+
+    function toggleAudio() {
+      audioEnabled = !audioEnabled;
+      const btn = document.getElementById('sound-btn');
+      if (audioEnabled) {
+        btn.innerText = '🔊 Audio';
+        bgMusic.play().then(() => { musicStarted = true; }).catch(() => {});
+      } else {
+        btn.innerText = '🔇 Mute';
+        bgMusic.pause();
+      }
+    }
+
+    async function shareReferral() {
+      startMusicOnFirstInteraction();
+      const shareText = "Unisciti alla mia Cloud Mining Farm e guadagna Bitcoin! 🚀";
+      if (navigator.share) {
+        try { await navigator.share({ title: 'Satoshi Mining', text: shareText, url: referralLink }); } catch(e) {}
+      } else {
+        const url = `https://t.me/share/url?url=${encodeURIComponent(referralLink)}&text=${encodeURIComponent(shareText)}`;
+        if (tg) tg.openTelegramLink(url);
+        else window.open(url, '_blank');
+      }
+    }
+
+    function copyReferral() {
+      startMusicOnFirstInteraction();
+      navigator.clipboard.writeText(referralLink);
+      alert("Link di invito copiato!");
+    }
+
+    function openHowTo() {
+      startMusicOnFirstInteraction();
+      document.getElementById('guide-modal').style.display = 'flex';
+    }
+
+    function closeHowTo() {
+      document.getElementById('guide-modal').style.display = 'none';
+    }
+
+    function switchTab(tabName, element) {
+      startMusicOnFirstInteraction();
+      document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+      document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+      document.getElementById(`screen-${tabName}`).classList.add('active');
+      if (element && element.classList) {
+        document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+        element.classList.add('active');
+      }
+    }
+
+    document.addEventListener('click', startMusicOnFirstInteraction, { once: true });
+    document.addEventListener('touchstart', startMusicOnFirstInteraction, { once: true });
+  </script>
+</body>
+</html>
