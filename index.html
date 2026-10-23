@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Satoshi Tap - Bitcoin Miner</title>
+  <title>Satoshi Mining Farm - Cloud Bitcoin</title>
 
   <!-- SDK Telegram Mini App -->
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
@@ -37,7 +37,7 @@
       overflow-x: hidden;
     }
 
-    /* BARRA SUPERIORE AUDIO & INFO */
+    /* BARRA SUPERIORE */
     .top-header {
       display: flex;
       justify-content: space-between;
@@ -116,72 +116,62 @@
       letter-spacing: 1px;
     }
 
-    /* TAP AREA */
-    .tap-area {
+    /* MINING DASHBOARD (SERVER ROOM) */
+    .mining-dashboard {
       flex: 1;
       display: flex;
       flex-direction: column;
       justify-content: center;
       align-items: center;
       position: relative;
+      text-align: center;
     }
 
-    .btc-coin-btn {
-      width: 250px;
-      height: 250px;
-      border-radius: 50%;
-      background: url('watermarked_img_464798897363966570.jpg') center/cover no-repeat;
-      border: 3px solid rgba(247, 147, 26, 0.5);
-      box-shadow: 0 0 35px rgba(247, 147, 26, 0.3), 0 0 15px rgba(0, 150, 255, 0.3);
-      cursor: pointer;
-      transition: transform 0.05s ease;
-      touch-action: manipulation;
-    }
-
-    .btc-coin-btn:active {
-      transform: scale(0.92);
-    }
-
-    /* ENERGIA E TIMER */
-    .energy-container {
+    .rig-server-card {
       width: 100%;
-      background: rgba(18, 24, 34, 0.85);
+      background: rgba(18, 24, 34, 0.9);
+      border: 1px solid rgba(0, 150, 255, 0.4);
+      border-radius: 20px;
+      padding: 24px;
+      box-shadow: 0 0 30px rgba(0, 150, 255, 0.2);
+      backdrop-filter: blur(10px);
+      margin-bottom: 20px;
+    }
+
+    .server-icon {
+      font-size: 60px;
+      margin-bottom: 12px;
+      text-shadow: 0 0 15px rgba(247, 147, 26, 0.5);
+    }
+
+    .hashrate-display {
+      font-size: 28px;
+      font-weight: 800;
+      color: #00bfff;
+      margin: 8px 0;
+    }
+
+    .mining-stats {
+      display: flex;
+      justify-content: space-around;
+      width: 100%;
+      background: rgba(11, 15, 20, 0.8);
       border: 1px solid rgba(247, 147, 26, 0.2);
       padding: 14px;
       border-radius: 16px;
-      margin-top: 20px;
-      backdrop-filter: blur(8px);
+      margin-top: 15px;
     }
 
-    .energy-header {
-      display: flex;
-      justify-content: space-between;
-      font-size: 13px;
-      color: #a0aab8;
-      margin-bottom: 8px;
-    }
-
-    .energy-bar-bg {
-      width: 100%;
-      height: 12px;
-      background: #0b0f14;
-      border-radius: 6px;
-      overflow: hidden;
-    }
-
-    .energy-bar-fill {
-      height: 100%;
-      width: 100%;
-      background: linear-gradient(90deg, #F7931A, #ffc875);
-      border-radius: 6px;
-      transition: width 0.2s ease;
-    }
-
-    .timer-info {
-      text-align: center;
+    .stat-item span {
+      display: block;
       font-size: 11px;
-      color: #6c788a;
-      margin-top: 8px;
+      color: #8a94a6;
+      text-transform: uppercase;
+    }
+
+    .stat-item strong {
+      font-size: 16px;
+      color: #fff;
     }
 
     /* MODAL GUIDA */
@@ -211,26 +201,13 @@
       color: #F7931A;
       font-size: 20px;
       margin-bottom: 12px;
-      display: flex;
-      align-items: center;
-      gap: 8px;
     }
 
-    .modal-card p {
+    .modal-card p, .modal-card li {
       font-size: 13px;
       color: #a0aab8;
       line-height: 1.5;
-      margin-bottom: 10px;
-    }
-
-    .modal-card ul {
-      margin: 10px 0 20px 20px;
-      font-size: 13px;
-      color: #d1d5db;
-    }
-
-    .modal-card li {
-      margin-bottom: 6px;
+      margin-bottom: 8px;
     }
 
     .btn-close {
@@ -243,9 +220,63 @@
       font-weight: bold;
       font-size: 14px;
       cursor: pointer;
+      margin-top: 15px;
     }
 
-    /* SCHERMATA FRIENDS */
+    /* SHOP & CARDS */
+    .card-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-top: 15px;
+    }
+
+    .item-card {
+      background: rgba(18, 24, 34, 0.85);
+      border: 1px solid #2e3a4e;
+      padding: 14px;
+      border-radius: 14px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .btn-buy {
+      background: linear-gradient(135deg, #00bfff, #007acc);
+      color: #fff;
+      border: none;
+      padding: 10px 16px;
+      border-radius: 10px;
+      font-weight: bold;
+      font-size: 13px;
+      cursor: pointer;
+      box-shadow: 0 4px 15px rgba(0, 191, 255, 0.3);
+    }
+
+    .btn-main {
+      width: 100%;
+      background: #F7931A;
+      color: #fff;
+      border: none;
+      padding: 14px;
+      border-radius: 14px;
+      font-weight: 800;
+      cursor: pointer;
+      font-size: 15px;
+    }
+
+    .btn-sub {
+      background: #1a2230;
+      color: #fff;
+      border: 1px solid #2e3a4e;
+      padding: 10px 16px;
+      border-radius: 14px;
+      font-weight: 700;
+      cursor: pointer;
+      font-size: 13px;
+    }
+
+    /* FRIENDS & WALLET */
     .friends-box {
       text-align: center;
     }
@@ -259,47 +290,6 @@
       display: flex;
       gap: 10px;
       margin: 20px 0;
-    }
-
-    .btn-main {
-      flex: 2;
-      background: #F7931A;
-      color: #fff;
-      border: none;
-      padding: 14px;
-      border-radius: 14px;
-      font-weight: 800;
-      cursor: pointer;
-      font-size: 15px;
-    }
-
-    .btn-sub {
-      flex: 1;
-      background: #1a2230;
-      color: #fff;
-      border: 1px solid #2e3a4e;
-      padding: 14px;
-      border-radius: 14px;
-      font-weight: 700;
-      cursor: pointer;
-    }
-
-    /* CARDS & CARDS LIST */
-    .card-list {
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-      margin-top: 15px;
-    }
-
-    .item-card {
-      background: rgba(18, 24, 34, 0.85);
-      border: 1px solid #2e3a4e;
-      padding: 14px;
-      border-radius: 14px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
     }
 
     /* NAVBAR IN BASSO */
@@ -345,7 +335,7 @@
   <!-- BARRA SUPERIORE -->
   <header class="top-header">
     <div class="brand">
-      <span>₿</span> SATOSHI TAP
+      <span>₿</span> SATOSHI MINING
     </div>
     <div class="header-actions">
       <button class="icon-btn" onclick="openHowTo()">❓ Guida</button>
@@ -356,62 +346,72 @@
   <!-- MODAL GUIDA -->
   <div class="modal-overlay" id="guide-modal">
     <div class="modal-card">
-      <h3>🪙 Come funziona?</h3>
-      <p>Benvenuto in Satoshi Tap! La progressione è graduale:</p>
+      <h3>🖥️ Come funziona il Cloud Mining?</h3>
+      <p>Benvenuto nella tua Mining Farm di Bitcoin!</p>
       <ul>
-        <li><strong>Scorta Iniziale Ridotta (200 tap):</strong> Gestisci con attenzione la tua energia.</li>
-        <li><strong>Investi nei Potenziamenti:</strong> Usa i tuoi Satoshi nello Shop per aumentare la capienza e sbloccare vantaggi.</li>
-        <li><strong>Sistema Referral:</strong> Invita amici per ottenere una percentuale sui loro guadagni e scalare insieme!</li>
+        <li><strong>Potenza di Calcolo (GH/s):</strong> Più Gigahash possiedi, più Satoshi estraggono i tuoi server automaticamente ogni secondo.</li>
+        <li><strong>Investimento in TON:</strong> I potenziamenti si acquistano investendo in criptovalute tramite wallet esterno.</li>
+        <li><strong>Saldo Reale:</strong> I Satoshi estratti si accumulano nel tuo wallet personale pronti per il prelievo.</li>
       </ul>
       <button class="btn-close" onclick="closeHowTo()">Ho Capito!</button>
     </div>
   </div>
 
-  <!-- 1. SCHERMATA MINE (HOME) -->
+  <!-- 1. SCHERMATA MINE (DASHBOARD FARM) -->
   <main id="screen-mine" class="screen active">
     <div class="balance-box">
-      <div class="balance-label">Saldo Totale</div>
-      <div class="balance-val">₿ <span id="user-balance">0</span></div>
+      <div class="balance-label">Satoshi Estratti</div>
+      <div class="balance-val">₿ <span id="user-balance">0.00</span></div>
     </div>
 
-    <div class="tap-area">
-      <div class="btc-coin-btn" onclick="handleTap(event)"></div>
-    </div>
+    <div class="mining-dashboard">
+      <div class="rig-server-card">
+        <div class="server-icon">⚡</div>
+        <div style="font-size: 13px; color: #8a94a6; text-transform: uppercase;">Potenza Farm Attiva</div>
+        <div class="hashrate-display"><span id="total-hashrate">10</span> GH/s</div>
+        <p style="font-size: 12px; color: #00bfff;">Stato: Estrazione in corso 24/7</p>
+      </div>
 
-    <div class="energy-container">
-      <div class="energy-header">
-        <span>⚡ Scorta Tap</span>
-        <span><strong id="energy-val">200</strong> / <span id="max-energy-val">200</span></span>
-      </div>
-      <div class="energy-bar-bg">
-        <div id="energy-fill" class="energy-bar-fill"></div>
-      </div>
-      <div class="timer-info" id="timer-status">
-        Ricarica in corso...
+      <div class="mining-stats">
+        <div class="stat-item">
+          <span>Estrazione al Minuto</span>
+          <strong id="mining-speed" style="color: #F7931A;">+0.5 ₿</strong>
+        </div>
+        <div class="stat-item">
+          <span>Rig Attivi</span>
+          <strong id="active-rigs">1 Base</strong>
+        </div>
       </div>
     </div>
   </main>
 
-  <!-- 2. SCHERMATA UPGRADES (SHOP) -->
+  <!-- 2. SCHERMATA SHOP (INVESTIMENTO HASH RATE) -->
   <main id="screen-upgrades" class="screen">
     <div style="text-align: center; margin-bottom: 15px;">
-      <h2>🚀 Potenziamenti & Investimenti</h2>
-      <p style="color: #8a94a6; font-size: 13px;">Investi i tuoi Satoshi per crescere più velocemente</p>
+      <h2>🚀 Acquista Potenza (Hash Rate)</h2>
+      <p style="color: #8a94a6; font-size: 13px;">Investi in TON per aumentare i Gigahash e accelerare il mining</p>
     </div>
     <div class="card-list">
       <div class="item-card">
         <div>
-          <strong style="color: #fff;">Espansione Scorta (+100 max)</strong>
-          <p style="color: #8a94a6; font-size: 12px;">Aumenta la capacità energetica</p>
+          <strong style="color: #fff;">Rig ASIC Minor (+50 GH/s)</strong>
+          <p style="color: #8a94a6; font-size: 12px;">Ottimizzato per piccoli investitori</p>
         </div>
-        <button class="btn-sub" onclick="buyUpgrade('energy', 50)" style="padding: 8px 12px; font-size: 12px;">50 🪙</button>
+        <button class="btn-buy" onclick="buyHashrate(50, 1.0, 'Rig ASIC Minor')">1.0 TON</button>
       </div>
       <div class="item-card">
         <div>
-          <strong style="color: #fff;">Multi-Tap Avanzato</strong>
-          <p style="color: #8a94a6; font-size: 12px;">Guadagna +1 Satoshi extra per tocco</p>
+          <strong style="color: #fff;">Rig ASIC Pro (+150 GH/s)</strong>
+          <p style="color: #8a94a6; font-size: 12px;">Alta potenza di calcolo</p>
         </div>
-        <button class="btn-sub" onclick="buyUpgrade('multitap', 150)" style="padding: 8px 12px; font-size: 12px;">150 🪙</button>
+        <button class="btn-buy" onclick="buyHashrate(150, 2.5, 'Rig ASIC Pro')">2.5 TON</button>
+      </div>
+      <div class="item-card">
+        <div>
+          <strong style="color: #fff;">Farm Data Center (+500 GH/s)</strong>
+          <p style="color: #8a94a6; font-size: 12px;">Massima resa e stabilità</p>
+        </div>
+        <button class="btn-buy" onclick="buyHashrate(500, 6.0, 'Farm Data Center')">6.0 TON</button>
       </div>
     </div>
   </main>
@@ -419,16 +419,16 @@
   <!-- 3. SCHERMATA TASKS -->
   <main id="screen-tasks" class="screen">
     <div style="text-align: center; margin-bottom: 15px;">
-      <h2>📋 Missioni</h2>
-      <p style="color: #8a94a6; font-size: 13px;">Completa le task per ottenere capitale iniziale</p>
+      <h2>📋 Missioni Community</h2>
+      <p style="color: #8a94a6; font-size: 13px;">Segui i canali ufficiali per bonus extra</p>
     </div>
     <div class="card-list">
       <div class="item-card">
         <div>
           <strong style="color: #fff;">Unisciti al canale Telegram</strong>
-          <p style="color: #F7931A; font-size: 12px;">+50 Satoshi</p>
+          <p style="color: #F7931A; font-size: 12px;">+10 Satoshi bonus</p>
         </div>
-        <button class="btn-sub" style="padding: 8px 12px; font-size: 12px;">Esegui</button>
+        <button class="btn-sub" onclick="completeTask(10, this)">Esegui</button>
       </div>
     </div>
   </main>
@@ -439,19 +439,19 @@
       <div class="friends-icon">🤝</div>
       <h2>Rete di Affiliazione</h2>
       <p style="color: #8a94a6; font-size: 13px; margin-top: 6px;">
-        Guadagna una percentuale basata sull'attività dei tuoi referral diretti e della community.
+        Invita amici e ricevi una percentuale della loro potenza di calcolo.
       </p>
 
       <div class="action-btn-group">
         <button class="btn-main" onclick="shareReferral()">🚀 Invita Amici</button>
-        <button class="btn-sub" onclick="copyReferral()">📋 Copia Link</button>
+        <button class="btn-sub" onclick="copyReferral()">📋 Copia</button>
       </div>
 
       <div style="text-align: left; margin-top: 20px;">
-        <h3 style="font-size: 15px; margin-bottom: 10px;">Statistiche Referral</h3>
+        <h3 style="font-size: 15px; margin-bottom: 10px;">Le tue Statistiche</h3>
         <div class="item-card" style="justify-content: space-between; color: #d1d5db; font-size: 13px;">
           <span>Amici Invitati: <strong style="color: #F7931A;" id="ref-count">0</strong></span>
-          <span>Bonus Maturati: <strong style="color: #F7931A;">0 ₿</strong></span>
+          <span>Potenza Extra: <strong style="color: #00bfff;">+0 GH/s</strong></span>
         </div>
       </div>
     </div>
@@ -461,7 +461,7 @@
   <main id="screen-wallet" class="screen">
     <div style="text-align: center; margin-bottom: 15px;">
       <h2>👛 Portafoglio Crypto</h2>
-      <p style="color: #8a94a6; font-size: 13px;">Collega il tuo wallet per i futuri prelievi</p>
+      <p style="color: #8a94a6; font-size: 13px;">Gestisci i prelievi dei tuoi Satoshi estratti</p>
     </div>
     <div class="item-card" style="flex-direction: column; gap: 12px; align-items: stretch;">
       <label style="font-size: 12px; color: #8a94a6;">Indirizzo Bitcoin (BTC / TON)</label>
@@ -473,7 +473,7 @@
   <!-- NAVBAR IN BASSO -->
   <nav class="navbar">
     <div class="nav-item active" onclick="switchTab('mine', this)">
-      <span class="nav-icon">🔨</span>
+      <span class="nav-icon">🖥️</span>
       <span>Mine</span>
     </div>
     <div class="nav-item" onclick="switchTab('upgrades', this)">
@@ -495,7 +495,6 @@
   </nav>
 
   <script>
-    // 1. INIZIALIZZAZIONE TELEGRAM
     const tg = window.Telegram ? window.Telegram.WebApp : null;
     if (tg) {
       tg.expand();
@@ -506,114 +505,74 @@
     const userId = tg?.initDataUnsafe?.user?.id || "12345678";
     const referralLink = `https://t.me/${BOT_USERNAME}?start=ref_${userId}`;
 
-    // 2. STATO GAME (Economia bilanciata e scorta ridotta a 200)
-    let balance = parseInt(localStorage.getItem('btc_balance')) || 0;
-    let maxEnergy = parseInt(localStorage.getItem('btc_max_energy')) || 200;
-    let energy = parseInt(localStorage.getItem('btc_energy')) ?? maxEnergy;
-    let tapPower = parseInt(localStorage.getItem('btc_tap_power')) || 1;
+    // Stato Cloud Mining basato su Hash Rate (GH/s)
+    let balance = parseFloat(localStorage.getItem('btc_balance')) || 0.00;
+    let totalHashrate = parseInt(localStorage.getItem('btc_hashrate')) || 10; // 10 GH/s base gratuita
 
-    document.getElementById('user-balance').innerText = balance;
-    document.getElementById('max-energy-val').innerText = maxEnergy;
-    updateEnergyUI();
+    document.getElementById('user-balance').innerText = balance.toFixed(2);
+    document.getElementById('total-hashrate').innerText = totalHashrate;
+    updateMiningSpeed();
 
-    // 3. TAP LOGIC
-    function handleTap(e) {
-      startMusicOnFirstInteraction();
-
-      if (energy < tapPower) {
-        if (tg && tg.HapticFeedback) tg.HapticFeedback.notificationOccurred('error');
-        return;
-      }
-
-      balance += tapPower;
-      energy -= tapPower;
-
-      document.getElementById('user-balance').innerText = balance;
-      updateEnergyUI();
-      playTapSound();
-
-      if (tg && tg.HapticFeedback) {
-        tg.HapticFeedback.impactOccurred('light');
-      }
-
-      localStorage.setItem('btc_balance', balance);
-      localStorage.setItem('btc_energy', energy);
+    function updateMiningSpeed() {
+      // 10 GH/s = 0.01 Satoshi al secondo (es. 0.6 Satoshi al minuto)
+      const speedPerMin = (totalHashrate * 0.06).toFixed(2);
+      document.getElementById('mining-speed').innerText = `+${speedPerMin} ₿`;
     }
 
-    function updateEnergyUI() {
-      document.getElementById('energy-val').innerText = energy;
-      const pct = (energy / maxEnergy) * 100;
-      document.getElementById('energy-fill').style.width = `${pct}%`;
-    }
-
-    // 4. SHOP INVESTMENTS
-    function buyUpgrade(type, cost) {
-      startMusicOnFirstInteraction();
-      if (balance < cost) {
-        alert("Saldo insufficiente! Continua a minare o invita amici.");
-        return;
-      }
-
-      balance -= cost;
-      document.getElementById('user-balance').innerText = balance;
-      localStorage.setItem('btc_balance', balance);
-
-      if (type === 'energy') {
-        maxEnergy += 100;
-        energy = maxEnergy;
-        localStorage.setItem('btc_max_energy', maxEnergy);
-        localStorage.setItem('btc_energy', energy);
-        document.getElementById('max-energy-val').innerText = maxEnergy;
-        updateEnergyUI();
-        alert("Potenziamento acquistato: Scorta massima aumentata!");
-      } else if (type === 'multitap') {
-        tapPower += 1;
-        localStorage.setItem('btc_tap_power', tapPower);
-        alert("Potenziamento acquistato: Multi-Tap potenziato!");
-      }
-    }
-
-    // 5. TIMER RICARICA ENERGIA
-    let secondsLeft = 1200;
-
+    // Motore di Cloud Mining Automatico (ogni secondo estrae in base ai GH/s)
     setInterval(() => {
-      if (energy < maxEnergy) {
-        secondsLeft--;
-        const mins = Math.floor(secondsLeft / 60);
-        const secs = secondsLeft % 60;
-        document.getElementById('timer-status').innerText = 
-          `Ricarica energia in: ${mins.toString().padStart(2,'0')}:${secs.toString().padStart(2,'0')}`;
-
-        if (secondsLeft <= 0) {
-          energy = Math.min(maxEnergy, energy + 1);
-          updateEnergyUI();
-          localStorage.setItem('btc_energy', energy);
-          secondsLeft = 1200;
-        }
-      } else {
-        document.getElementById('timer-status').innerText = "Scorta al massimo!";
-        secondsLeft = 1200;
-      }
+      const increment = (totalHashrate * 0.06) / 60; // incremento al secondo
+      balance += increment;
+      document.getElementById('user-balance').innerText = balance.toFixed(2);
+      localStorage.setItem('btc_balance', balance);
     }, 1000);
 
-    // 6. AUDIO MANAGEMENT
+    // Acquisto Hashrate tramite investimento in TON
+    function buyHashrate(ghs, tonCost, rigName) {
+      startMusicOnFirstInteraction();
+      
+      // Qui viene simulata la richiesta di pagamento tramite Wallet TON esterno
+      const confirmBuy = confirm(`Vuoi investire ${tonCost} TON per acquistare ${rigName} (${ghs} GH/s)?`);
+      if (confirmBuy) {
+        totalHashrate += ghs;
+        document.getElementById('total-hashrate').innerText = totalHashrate;
+        localStorage.setItem('btc_hashrate', totalHashrate);
+        updateMiningSpeed();
+        alert(`Investimento completato! Aggiunti +${ghs} GH/s alla tua farm.`);
+      }
+    }
+
+    // Tasks
+    function completeTask(reward, btnElement) {
+      startMusicOnFirstInteraction();
+      if (tg) tg.openTelegramLink("https://t.me/" + BOT_USERNAME);
+      else window.open("https://t.me/" + BOT_USERNAME, "_blank");
+
+      setTimeout(() => {
+        balance += reward;
+        document.getElementById('user-balance').innerText = balance.toFixed(2);
+        localStorage.setItem('btc_balance', balance);
+        btnElement.innerText = "Completato ✅";
+        btnElement.disabled = true;
+        btnElement.style.background = "#2e3a4e";
+        alert(`Bonus di +${reward} Satoshi aggiunto al tuo wallet!`);
+      }, 1500);
+    }
+
+    // Audio & Navigation
     const bgMusic = document.getElementById('bg-music');
     let audioEnabled = true;
     let musicStarted = false;
-    let audioCtx = null;
 
     function startMusicOnFirstInteraction() {
       if (!musicStarted && audioEnabled) {
-        bgMusic.play().then(() => {
-          musicStarted = true;
-        }).catch(() => {});
+        bgMusic.play().then(() => { musicStarted = true; }).catch(() => {});
       }
     }
 
     function toggleAudio() {
       audioEnabled = !audioEnabled;
       const btn = document.getElementById('sound-btn');
-
       if (audioEnabled) {
         btn.innerText = '🔊 Audio';
         bgMusic.play().then(() => { musicStarted = true; }).catch(() => {});
@@ -623,44 +582,11 @@
       }
     }
 
-    function getAudioContext() {
-      if (!audioCtx) {
-        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-      }
-      return audioCtx;
-    }
-
-    function playTapSound() {
-      if (!audioEnabled) return;
-      try {
-        const ctx = getAudioContext();
-        const osc = ctx.createOscillator();
-        const gain = ctx.createGain();
-        osc.type = 'square';
-        osc.frequency.setValueAtTime(600, ctx.currentTime);
-        osc.frequency.exponentialRampToValueAtTime(1200, ctx.currentTime + 0.05);
-        gain.gain.setValueAtTime(0.08, ctx.currentTime);
-        gain.gain.linearRampToValueAtTime(0.01, ctx.currentTime + 0.05);
-        osc.connect(gain);
-        gain.connect(ctx.destination);
-        osc.start();
-        osc.stop(ctx.currentTime + 0.05);
-      } catch(e) {}
-    }
-
-    // 7. SHARE & REFERRAL
     async function shareReferral() {
       startMusicOnFirstInteraction();
-      const shareText = "Unisciti a me su Satoshi Tap e inizia a minare Bitcoin! 🚀";
-
+      const shareText = "Unisciti alla mia Cloud Mining Farm e guadagna Bitcoin reali! 🚀";
       if (navigator.share) {
-        try {
-          await navigator.share({
-            title: 'Satoshi Tap',
-            text: shareText,
-            url: referralLink
-          });
-        } catch(e) {}
+        try { await navigator.share({ title: 'Satoshi Mining', text: shareText, url: referralLink }); } catch(e) {}
       } else {
         const url = `https://t.me/share/url?url=${encodeURIComponent(referralLink)}&text=${encodeURIComponent(shareText)}`;
         if (tg) tg.openTelegramLink(url);
@@ -670,15 +596,10 @@
 
     function copyReferral() {
       startMusicOnFirstInteraction();
-      if (navigator.clipboard) {
-        navigator.clipboard.writeText(referralLink);
-        alert("Link di invito copiato!");
-      } else {
-        prompt("Copia il tuo link:", referralLink);
-      }
+      navigator.clipboard.writeText(referralLink);
+      alert("Link di invito copiato!");
     }
 
-    // 8. GUIDA MODAL
     function openHowTo() {
       startMusicOnFirstInteraction();
       document.getElementById('guide-modal').style.display = 'flex';
@@ -688,12 +609,10 @@
       document.getElementById('guide-modal').style.display = 'none';
     }
 
-    // 9. NAVIGATION
     function switchTab(tabName, element) {
       startMusicOnFirstInteraction();
       document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
       document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-
       document.getElementById(`screen-${tabName}`).classList.add('active');
       element.classList.add('active');
     }
