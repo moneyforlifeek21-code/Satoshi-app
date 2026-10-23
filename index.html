@@ -91,11 +91,6 @@
       transition: all 0.2s ease;
     }
 
-    .icon-btn:active {
-      transform: scale(0.95);
-      background: rgba(255, 255, 255, 0.15);
-    }
-
     /* SCHERMATE PRINCIPALI */
     .screen {
       display: none;
@@ -228,6 +223,13 @@
       font-size: 13px;
       color: #94a3b8;
       font-weight: 600;
+    }
+
+    .btc-ticker-live {
+      font-size: 11px;
+      color: #34d399;
+      margin-top: 4px;
+      font-weight: 700;
     }
 
     /* FORM AZIONI */
@@ -549,6 +551,7 @@
       <p>Benvenuto nella piattaforma di cloud mining di ultima generazione:</p>
       <ul>
         <li><strong>Rig Olografico Attivo:</strong> Il tuo sistema estrae Satoshi in tempo reale 24/7.</li>
+        <li><strong>Prezzo BTC Live:</strong> Monitoraggio costante delle quotazioni di mercato in tempo reale.</li>
         <li><strong>Ricariche Dirette:</strong> Deposita in modo sicuro e acquista pacchetti ad alta resa.</li>
       </ul>
       <button class="btn-close" onclick="closeHowTo()">Ho Capito!</button>
@@ -577,6 +580,7 @@
           <span>₿</span> <span id="user-balance">0.00000000</span>
         </div>
         <div class="fiat-equivalent" id="fiat-val">Valore stimato: ~$0.00</div>
+        <div class="btc-ticker-live" id="btc-live-price">Prezzo BTC Live: Caricamento...</div>
       </div>
 
       <div class="action-form">
@@ -774,16 +778,36 @@
 
     let balance = parseFloat(localStorage.getItem('btc_balance')) || 0.00000000;
     let totalHashrate = parseInt(localStorage.getItem('btc_hashrate')) || 10;
+    let currentBtcPrice = 90000; // Valore di fallback iniziale
     
     let selectedRig = { name: '', ghs: 0, priceUsdt: 0, monthlyYieldUsdt: 0 };
+
+    // Funzione per recuperare il prezzo live del Bitcoin da API pubblica
+    async function fetchLiveBtcPrice() {
+      try {
+        const response = await fetch('https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=usd');
+        const data = await response.json();
+        if (data && data.bitcoin && data.bitcoin.usd) {
+          currentBtcPrice = data.bitcoin.usd;
+          document.getElementById('btc-live-price').innerText = `Prezzo BTC Live: ~$${currentBtcPrice.toLocaleString()} USD`;
+          updateUI();
+        }
+      } catch (e) {
+        console.log("Impossibile aggiornare il prezzo live, uso il valore predefinito.");
+        document.getElementById('btc-live-price').innerText = `Prezzo BTC Live: ~$${currentBtcPrice.toLocaleString()} USD`;
+      }
+    }
+
+    // Aggiorna il prezzo all'avvio e ogni 60 secondi
+    fetchLiveBtcPrice();
+    setInterval(fetchLiveBtcPrice, 60000);
 
     updateUI();
 
     function updateUI() {
       document.getElementById('user-balance').innerText = balance.toFixed(8);
-      const btcPriceUsd = 90000;
-      const fiatVal = (balance * btcPriceUsd).toFixed(2);
-      document.getElementById('fiat-val').innerText = `Valore stimato: ~$${fiatVal}`;
+      const fiatVal = (balance * currentBtcPrice).toFixed(2);
+      document.getElementById('fiat-val').innerText = `Valore stimato: ~$${fiatVal} USD`;
       document.getElementById('total-hashrate').innerText = `${totalHashrate} GH/s`;
       
       const monthlyUsd = (totalHashrate * 0.20).toFixed(2);
@@ -792,8 +816,7 @@
 
     setInterval(() => {
       const monthlyUsd = totalHashrate * 0.20;
-      const btcPriceUsd = 90000;
-      const monthlyBtc = monthlyUsd / btcPriceUsd;
+      const monthlyBtc = monthlyUsd / currentBtcPrice;
       const incrementPerSecond = monthlyBtc / 2592000;
 
       balance += incrementPerSecond;
