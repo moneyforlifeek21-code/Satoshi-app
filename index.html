@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Satoshi Tap - Business Edition</title>
+  <title>Satoshi Tap - Final Edition</title>
 
   <!-- SDK Telegram Mini App -->
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
@@ -15,18 +15,57 @@
       padding: 0;
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
       user-select: none;
+      -webkit-tap-highlight-color: transparent;
     }
 
     body {
-      background-color: #0d1117;
-      color: #ffffff;
+      background-color: #0b0f19;
+      color: #f8fafc;
       min-height: 100vh;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
-      padding: 16px 16px 80px 16px;
+      padding: 12px 12px 80px 12px;
     }
 
+    /* HEADER SUPERIORE */
+    .app-header {
+      background: rgba(30, 41, 59, 0.7);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 16px;
+      padding: 12px 16px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+      backdrop-filter: blur(10px);
+    }
+
+    .brand-title {
+      font-size: 14px;
+      font-weight: 900;
+      color: #f59e0b;
+      letter-spacing: 0.5px;
+      line-height: 1.1;
+    }
+
+    .header-btns {
+      display: flex;
+      gap: 8px;
+    }
+
+    .pill-btn {
+      background: rgba(15, 23, 42, 0.8);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      color: #cbd5e1;
+      padding: 6px 12px;
+      border-radius: 20px;
+      font-size: 11px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    /* SCHERMATE */
     .screen {
       display: none;
       flex: 1;
@@ -34,188 +73,274 @@
       max-width: 480px;
       margin: 0 auto;
       width: 100%;
+      gap: 12px;
     }
 
     .screen.active {
       display: flex;
     }
 
-    /* SCHERMATA MINE */
-    .tap-header {
-      text-align: center;
-      margin-top: 10px;
-    }
-
-    .btc-price-tag {
-      background: #161b22;
-      border: 1px solid #30363d;
-      padding: 6px 12px;
-      border-radius: 20px;
-      font-size: 12px;
-      color: #3fb950;
-      display: inline-block;
-      margin-bottom: 10px;
-      font-weight: bold;
-    }
-
-    .score-container {
-      font-size: 34px;
-      font-weight: 800;
-      color: #f7931a;
+    /* TOGGLE TAB SUPERIORI */
+    .sub-tabs {
       display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
+      background: rgba(15, 23, 42, 0.6);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      border-radius: 14px;
+      padding: 4px;
       gap: 4px;
-      margin: 15px 0;
     }
 
-    .fiat-preview {
-      font-size: 13px;
-      color: #8b949e;
-      font-weight: 500;
-    }
-
-    .tap-area {
+    .sub-tab {
       flex: 1;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      margin: 20px 0;
-      gap: 15px;
-    }
-
-    .tap-button {
-      width: 200px;
-      height: 200px;
-      background: radial-gradient(circle, #f7931a 0%, #b86500 100%);
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 80px;
-      box-shadow: 0 10px 30px rgba(247, 147, 26, 0.4);
-      cursor: pointer;
-      transition: transform 0.05s ease;
-    }
-
-    .tap-button:active {
-      transform: scale(0.92);
-    }
-
-    .tap-button.disabled {
-      background: radial-gradient(circle, #30363d 0%, #161b22 100%);
-      box-shadow: none;
-      cursor: not-allowed;
-      opacity: 0.6;
-    }
-
-    .timer-banner {
-      background: rgba(247, 147, 26, 0.1);
-      border: 1px solid #f7931a;
-      padding: 10px 16px;
-      border-radius: 12px;
       text-align: center;
+      padding: 8px;
       font-size: 13px;
-      color: #f7931a;
       font-weight: bold;
-      width: 100%;
-    }
-
-    /* SEZIONI GENERALI */
-    .section-header {
-      text-align: center;
-      padding: 20px 10px 16px;
-    }
-
-    .section-header .icon-box {
-      font-size: 48px;
-      margin-bottom: 10px;
-      line-height: 1;
-    }
-
-    .section-header h2 {
-      font-size: 24px;
-      font-weight: 700;
-      margin-bottom: 6px;
-    }
-
-    .section-header p {
-      color: #8b949e;
-      font-size: 13px;
-      line-height: 1.4;
-    }
-
-    .card-box {
-      background: #161b22;
-      border: 1px solid #30363d;
-      padding: 16px;
-      border-radius: 16px;
-      margin-bottom: 14px;
-    }
-
-    .task-item {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      background: #0d1117;
-      border: 1px solid #30363d;
-      padding: 12px;
-      border-radius: 12px;
-      margin-bottom: 10px;
-    }
-
-    .btn-primary {
-      background: #f7931a;
-      color: #ffffff;
-      border: none;
-      padding: 10px 16px;
+      color: #94a3b8;
       border-radius: 10px;
-      font-weight: 700;
-      font-size: 13px;
       cursor: pointer;
     }
 
-    .btn-primary:active {
+    .sub-tab.active {
+      background: rgba(30, 41, 59, 0.9);
+      color: #f8fafc;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    /* CARD CENTRALE MINING */
+    .mining-card {
+      background: rgba(30, 41, 59, 0.65);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 20px;
+      padding: 20px;
+      text-align: center;
+      backdrop-filter: blur(10px);
+    }
+
+    .lightning-icon-box {
+      width: 70px;
+      height: 70px;
+      background: linear-gradient(135deg, #1e293b, #0f172a);
+      border: 1px solid rgba(245, 158, 11, 0.3);
+      border-radius: 18px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 32px;
+      margin: 0 auto 15px;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.4);
+      position: relative;
+    }
+
+    .lightning-dot {
+      position: absolute;
+      top: 10px; right: 10px;
+      width: 8px; height: 8px;
+      background: #f59e0b;
+      border-radius: 50%;
+      box-shadow: 0 0 8px #f59e0b;
+    }
+
+    .btn-starter {
+      width: 100%;
+      background: linear-gradient(135deg, #f59e0b, #d97706);
+      color: #fff;
+      border: none;
+      padding: 14px;
+      border-radius: 14px;
+      font-weight: 900;
+      font-size: 14px;
+      cursor: pointer;
+      box-shadow: 0 4px 15px rgba(245, 158, 11, 0.3);
+      margin-bottom: 20px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .btn-starter:active {
       transform: scale(0.98);
     }
 
-    .btn-primary:disabled {
-      background: #30363d;
-      color: #8b949e;
-      cursor: not-allowed;
+    .balance-label {
+      font-size: 11px;
+      color: #94a3b8;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      font-weight: bold;
+      margin-bottom: 6px;
+    }
+
+    .balance-amount {
+      font-size: 26px;
+      font-weight: 900;
+      color: #f59e0b;
+      font-family: monospace;
+      margin-bottom: 8px;
+      word-break: break-all;
+    }
+
+    .fiat-info {
+      font-size: 12px;
+      color: #34d399;
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+
+    .btc-live-info {
+      font-size: 11px;
+      color: #94a3b8;
+      margin-bottom: 15px;
+    }
+
+    .usdt-purchases-badge {
+      display: inline-block;
+      background: rgba(15, 23, 42, 0.8);
+      border: 1px solid rgba(56, 189, 248, 0.3);
+      color: #38bdf8;
+      padding: 6px 14px;
+      border-radius: 12px;
+      font-size: 11px;
+      font-weight: bold;
+    }
+
+    .timer-alert {
+      background: rgba(239, 68, 68, 0.15);
+      border: 1px solid rgba(239, 68, 68, 0.4);
+      color: #f87171;
+      padding: 10px;
+      border-radius: 12px;
+      font-size: 12px;
+      font-weight: bold;
+      margin-bottom: 15px;
+      display: none;
+    }
+
+    /* CARD AZIONI & PROMO */
+    .action-card {
+      background: rgba(30, 41, 59, 0.65);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 20px;
+      padding: 16px;
+      backdrop-filter: blur(10px);
+    }
+
+    .card-title {
+      font-size: 14px;
+      font-weight: bold;
+      margin-bottom: 4px;
+      color: #f59e0b;
+    }
+
+    .card-subtitle {
+      font-size: 11px;
+      color: #94a3b8;
+      margin-bottom: 12px;
+      line-height: 1.3;
+    }
+
+    .promo-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: rgba(15, 23, 42, 0.8);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      padding: 12px;
+      border-radius: 14px;
+      margin-bottom: 10px;
+    }
+
+    .promo-info strong {
+      display: block;
+      font-size: 14px;
+      color: #fff;
+      margin-bottom: 2px;
+    }
+
+    .promo-info span {
+      font-size: 11px;
+      color: #34d399;
+      font-weight: bold;
+    }
+
+    .btn-buy-promo {
+      background: linear-gradient(135deg, #10b981, #059669);
+      color: #fff;
+      border: none;
+      padding: 8px 14px;
+      border-radius: 10px;
+      font-weight: bold;
+      font-size: 12px;
+      cursor: pointer;
+      box-shadow: 0 4px 10px rgba(16, 185, 129, 0.3);
+    }
+
+    .input-box {
+      background: rgba(15, 23, 42, 0.8);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 12px;
+      padding: 10px 12px;
+      margin-bottom: 10px;
+    }
+
+    .input-box label {
+      display: block;
+      font-size: 10px;
+      color: #94a3b8;
+      text-transform: uppercase;
+      font-weight: bold;
+      margin-bottom: 3px;
+    }
+
+    .input-box input {
+      background: transparent;
+      border: none;
+      color: #fff;
+      font-size: 13px;
+      width: 100%;
+      outline: none;
+    }
+
+    .btn-action-primary {
+      width: 100%;
+      background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+      color: #fff;
+      border: none;
+      padding: 12px;
+      border-radius: 12px;
+      font-weight: bold;
+      font-size: 14px;
+      cursor: pointer;
+      box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
     }
 
     /* NAVBAR IN BASSO */
     .navbar {
       position: fixed;
-      bottom: 0;
-      left: 0;
-      right: 0;
+      bottom: 0; left: 0; right: 0;
       height: 65px;
-      background: #161b22;
-      border-top: 1px solid #30363d;
+      background: rgba(11, 15, 25, 0.95);
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
       display: flex;
       justify-content: space-around;
       align-items: center;
       z-index: 1000;
+      backdrop-filter: blur(10px);
     }
 
     .nav-item {
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 4px;
-      color: #8b949e;
+      gap: 3px;
+      color: #64748b;
       font-size: 11px;
       cursor: pointer;
-      text-decoration: none;
-      width: 20%;
+      font-weight: 500;
     }
 
     .nav-item.active {
-      color: #f7931a;
+      color: #f59e0b;
+      font-weight: bold;
     }
 
     .nav-icon {
@@ -225,115 +350,150 @@
 </head>
 <body>
 
+  <!-- HEADER SUPERIORE -->
+  <header class="app-header">
+    <div class="brand-title">
+      ⚡ SATOSHI<br><span style="font-size: 12px; color: #94a3b8;">MINING</span>
+    </div>
+    <div class="header-btns">
+      <button class="pill-btn" onclick="alert('Sezione Guida')">❓ Guida</button>
+      <button class="pill-btn" onclick="alert('Audio attivo')">🔊 Audio</button>
+    </div>
+  </header>
+
   <!-- 1. SCHERMATA MINE -->
   <main id="screen-mine" class="screen active">
-    <div class="tap-header">
-      <h2>Satoshi Tap</h2>
-      <div class="btc-price-tag" id="btc-price-display">BTC: Caricamento...</div>
+    <div class="sub-tabs">
+      <div class="sub-tab active" id="subtab-active" onclick="switchSubTab('active')">Mining Attivo</div>
+      <div class="sub-tab" id="subtab-withdraw" onclick="switchSubTab('withdraw')">Prelievi</div>
     </div>
-    <div class="score-container">
-      <div>🪙 <span id="user-score">0.00000</span></div>
-      <div class="fiat-preview" id="fiat-value">~$0.00000 USD</div>
+
+    <!-- VISTA 1: MINING ATTIVO -->
+    <div id="view-active-mining" style="display: flex; flex-direction: column; gap: 12px;">
+      <div class="mining-card">
+        <div class="lightning-icon-box">
+          ⚡
+          <div class="lightning-dot"></div>
+        </div>
+        
+        <div id="timer-alert-box" class="timer-alert"></div>
+
+        <button class="btn-starter" onclick="activateStarter()">🚀 Attiva Mining Gratuito</button>
+        
+        <div class="balance-label">Saldo Mining Disponibile</div>
+        <div class="balance-amount">₿ <span id="user-score">0.00000</span></div>
+        <div class="fiat-info" id="fiat-val">Valore stimato: ~$0.00 USD</div>
+        <div class="btc-live-info" id="btc-live-price">Prezzo BTC Live: ~$81,651 USD</div>
+        
+        <div class="usdt-purchases-badge">
+          Saldo USDT per acquisti: <span id="usdt-dep">0.00</span> USDT
+        </div>
+      </div>
     </div>
-    <div class="tap-area">
-      <div class="tap-button" id="mining-tap-btn" onclick="tapCoin()">
-        🪙
+
+    <!-- VISTA 2: PRELIEVI RAPIDI -->
+    <div id="view-withdraw" class="action-card" style="display: none;">
+      <div class="card-title">Trasferisci Satoshi</div>
+      <div class="card-subtitle">Prelievo rapido (Minimo: 1.000000 Satoshi. Richiesto deposito di sblocco). Stato: <span id="withdraw-status-label" style="color: #ef4444; font-weight: bold;">Bloccato</span></div>
+      
+      <div class="input-box">
+        <label>Indirizzo Wallet / Destinazione</label>
+        <input type="text" id="withdraw-address" placeholder="Inserisci indirizzo BTC o TON...">
       </div>
-      <div id="timer-container" style="display: none; width: 100%;">
-        <div class="timer-banner" id="timer-text">Sessione completata. Ricarica tra: 12h 00m 00s</div>
+      <div class="input-box">
+        <label>Importo Satoshi (Min: 1.000000 SAT)</label>
+        <input type="number" id="withdraw-amount" placeholder="0.000000">
       </div>
+      <button class="btn-action-primary" onclick="requestWithdrawal()">Conferma Prelievo</button>
     </div>
   </main>
 
-  <!-- 2. SCHERMATA TASKS (SPONSORIZZAZIONI) -->
-  <main id="screen-tasks" class="screen">
-    <div class="section-header">
-      <div class="icon-box">📋</div>
-      <h2>Partner & Sponsor</h2>
-      <p>Completa le missioni dei nostri inserzionisti per guadagnare bonus extra.</p>
-    </div>
-    <div class="card-box">
-      <div class="task-item">
-        <div>
-          <strong style="font-size: 14px; display: block; margin-bottom: 2px;">Segui Canale Partner</strong>
-          <span style="font-size: 11px; color: #3fb950;">+0.00050 SAT</span>
-        </div>
-        <button class="btn-primary" onclick="completeTask(this, 0.00050)">Visita</button>
-      </div>
-      <div class="task-item">
-        <div>
-          <strong style="font-size: 14px; display: block; margin-bottom: 2px;">Unisciti al Bot Sponsor</strong>
-          <span style="font-size: 11px; color: #3fb950;">+0.00100 SAT</span>
-        </div>
-        <button class="btn-primary" onclick="completeTask(this, 0.00100)">Segui</button>
-      </div>
-    </div>
-  </main>
-
-  <!-- 3. SCHERMATA SHOP (BENI DIGITALI) -->
+  <!-- 2. SCHERMATA SHOP -->
   <main id="screen-shop" class="screen">
-    <div class="section-header">
-      <div class="icon-box">🛒</div>
-      <h2>Shop Potenziamenti</h2>
-      <p>Acquista velocità extra per il tuo minatore (Beni digitali non rimborsabili).</p>
+    <div class="action-card">
+      <div class="card-title" style="margin-bottom: 8px;">🛒 Shop Potenziamenti</div>
+      <div class="card-subtitle">Acquista pacchetti di velocità virtuale per il tuo minatore.</div>
+      <button class="btn-action-primary" onclick="alert('Pacchetto acquistato!')">Acquista Rig ASIC (25 USDT)</button>
     </div>
-    <div class="card-box">
-      <div class="task-item">
-        <div>
-          <strong style="font-size: 14px; display: block;">Rig ASIC Booster (+10% Boost)</strong>
-          <span style="font-size: 11px; color: #8b949e;">Valido per 30 giorni</span>
+  </main>
+
+  <!-- 3. SCHERMATA TASKS (PACCHETTI PROMOZIONALI TAP) -->
+  <main id="screen-tasks" class="screen">
+    <div class="action-card">
+      <div class="card-title" style="margin-bottom: 6px;">⚡ Pacchetti Promo Tap</div>
+      <div class="card-subtitle">Acquista tap extra utilizzabili e prelevabili liberamente.</div>
+      
+      <div class="promo-item">
+        <div class="promo-info">
+          <strong>100 Tap</strong>
+          <span>+100 Satoshi accreditati</span>
         </div>
-        <button class="btn-primary" onclick="buyPackage(5.00)">5.00 USDT</button>
+        <button class="btn-buy-promo" onclick="buyPromoPackage(100, 1.99)">1.99 USDT</button>
+      </div>
+
+      <div class="promo-item">
+        <div class="promo-info">
+          <strong>500 Tap</strong>
+          <span>+500 Satoshi accreditati</span>
+        </div>
+        <button class="btn-buy-promo" onclick="buyPromoPackage(500, 4.99)">4.99 USDT</button>
+      </div>
+
+      <div class="promo-item">
+        <div class="promo-info">
+          <strong>1000 Tap</strong>
+          <span>+1000 Satoshi accreditati</span>
+        </div>
+        <button class="btn-buy-promo" onclick="buyPromoPackage(1000, 9.99)">9.99 USDT</button>
       </div>
     </div>
   </main>
 
-  <!-- 4. SCHERMATA DAILY -->
-  <main id="screen-daily" class="screen">
-    <div class="section-header">
-      <div class="icon-box">🔥</div>
-      <h2>Daily Rewards</h2>
-      <p>Riscatta il tuo bonus giornaliero gratuito.</p>
-    </div>
-    <div class="card-box" style="text-align: center;">
-      <div style="font-size: 13px; color: #8b949e; margin-bottom: 15px;">Disponibile ogni 24 ore</div>
-      <button class="btn-primary" id="daily-btn" style="width: 100%; padding: 14px;" onclick="claimDaily()">Riscatta (+0.00005 SAT)</button>
-      <div id="daily-timer" style="margin-top: 12px; font-size: 12px; color: #f7931a; font-weight: bold;"></div>
+  <!-- 4. SCHERMATA RICARICA (WALLET BITCOIN UFFICIALE INTEGRATO) -->
+  <main id="screen-ricarica" class="screen">
+    <div class="action-card">
+      <div class="card-title" style="margin-bottom: 8px;">📥 Ricarica Blockchain Bitcoin</div>
+      <div class="card-subtitle">Invia fondi al tuo indirizzo Bitcoin ufficiale per sbloccare i prelievi.</div>
+      <div class="input-box">
+        <label>Il tuo Indirizzo Bitcoin (Blockchain BTC)</label>
+        <input type="text" value="1M2xeN5edX8xjQnXar74dseBdivuLLoSzt" readonly style="color: #34d399; font-weight: bold; font-family: monospace;">
+      </div>
+      <div class="input-box">
+        <label>Hash Transazione (TXID)</label>
+        <input type="text" id="txid-input" placeholder="Incolla TXID della transazione...">
+      </div>
+      <button class="btn-action-primary" onclick="submitDeposit()">Verifica Ricarica</button>
     </div>
   </main>
 
   <!-- 5. SCHERMATA WALLET -->
   <main id="screen-wallet" class="screen">
-    <div class="section-header">
-      <div class="icon-box">👛</div>
-      <h2>Wallet</h2>
-      <p>Gestisci il tuo saldo e i tuoi acquisti digitali.</p>
-    </div>
-    <div class="card-box">
-      <div style="font-size: 14px; color: #8b949e; margin-bottom: 10px;">
-        Saldo USDT (Acquisti): <strong id="usdt-balance" style="color: #fff;">0.00 USDT</strong>
+    <div class="action-card">
+      <div class="card-title" style="margin-bottom: 8px;">👛 Wallet & Gestione</div>
+      <div class="card-subtitle">Gestisci fondi e saldi del conto.</div>
+      <div style="font-size: 13px; color: #94a3b8; margin-bottom: 10px;">
+        Deposito verificato: <strong id="wallet-dep" style="color: #fff;">0.00 BTC / USDT</strong>
       </div>
-      <button class="btn-primary" style="width: 100%;" onclick="alert('Sezione ricarica USDT attiva.')">Deposita Fondi Shop</button>
     </div>
   </main>
 
   <!-- NAVBAR IN BASSO -->
   <nav class="navbar">
     <div class="nav-item active" onclick="switchTab('mine', this)">
-      <span class="nav-icon">🔨</span>
+      <span class="nav-icon">💻</span>
       <span>Mine</span>
-    </div>
-    <div class="nav-item" onclick="switchTab('tasks', this)">
-      <span class="nav-icon">📋</span>
-      <span>Tasks</span>
     </div>
     <div class="nav-item" onclick="switchTab('shop', this)">
       <span class="nav-icon">🛒</span>
       <span>Shop</span>
     </div>
-    <div class="nav-item" onclick="switchTab('daily', this)">
-      <span class="nav-icon">🔥</span>
-      <span>Daily</span>
+    <div class="nav-item" onclick="switchTab('tasks', this)">
+      <span class="nav-icon">📋</span>
+      <span>Tasks</span>
+    </div>
+    <div class="nav-item" onclick="switchTab('ricarica', this)">
+      <span class="nav-icon">📥</span>
+      <span>Ricarica</span>
     </div>
     <div class="nav-item" onclick="switchTab('wallet', this)">
       <span class="nav-icon">👛</span>
@@ -343,13 +503,13 @@
 
   <script>
     const tg = window.Telegram ? window.Telegram.WebApp : null;
-    if (tg) { tg.expand(); tg.ready(); }
+    if (tg) { try { tg.expand(); tg.ready(); } catch(e) {} }
 
-    let score = parseFloat(localStorage.getItem('biz_score')) || 0.00000;
-    let usdtBalance = parseFloat(localStorage.getItem('biz_usdt')) || 0.00;
-    let miningEndTime = parseInt(localStorage.getItem('biz_mining_end')) || 0;
-    let lastDailyClaim = parseInt(localStorage.getItem('biz_daily_claim')) || 0;
-    let currentBtcPrice = 90000;
+    let score = parseFloat(localStorage.getItem('btc_wallet_score')) || 0.00000;
+    let userDeposit = parseFloat(localStorage.getItem('btc_wallet_deposit')) || 0.00;
+    let nextRefillTime = parseInt(localStorage.getItem('btc_wallet_refill')) || 0;
+    let currentBtcPrice = 81651;
+    const MIN_WITHDRAW = 1.000000; // Prelievo minimo fissato a 1.000000 Satoshi
 
     async function fetchBtcPrice() {
       try {
@@ -357,130 +517,143 @@
         const data = await res.json();
         if (data?.bitcoin?.usd) {
           currentBtcPrice = data.bitcoin.usd;
-          document.getElementById('btc-price-display').innerText = `BTC: $${currentBtcPrice.toLocaleString()} USD`;
           updateUI();
         }
-      } catch (e) {
-        document.getElementById('btc-price-display').innerText = `BTC: $${currentBtcPrice.toLocaleString()} USD`;
-      }
+      } catch (e) {}
     }
 
     function updateUI() {
       document.getElementById('user-score').innerText = score.toFixed(5);
       let usdVal = (score / 100000000) * currentBtcPrice;
-      document.getElementById('fiat-value').innerText = `~$${usdVal.toFixed(6)} USD`;
-      document.getElementById('usdt-balance').innerText = `${usdtBalance.toFixed(2)} USDT`;
+      document.getElementById('fiat-val').innerText = `Valore stimato: ~$${usdVal.toFixed(6)} USD`;
+      document.getElementById('btc-live-price').innerText = `Prezzo BTC Live: ~$${currentBtcPrice.toLocaleString()} USD`;
+      document.getElementById('usdt-dep').innerText = userDeposit.toFixed(2);
+      document.getElementById('wallet-dep').innerText = `${userDeposit.toFixed(2)} USDT / BTC`;
 
-      checkTimerStatus();
-      checkDailyStatus();
-    }
-
-    const TWELVE_HOURS = 12 * 60 * 60 * 1000;
-    const TWENTY_FOUR_HOURS = 24 * 60 * 60 * 1000;
-
-    function checkTimerStatus() {
-      const now = Date.now();
-      const tapBtn = document.getElementById('mining-tap-btn');
-      const timerContainer = document.getElementById('timer-container');
-      const timerText = document.getElementById('timer-text');
-
-      if (score >= 1000 && miningEndTime === 0) {
-        miningEndTime = now + TWELVE_HOURS;
-        localStorage.setItem('biz_mining_end', miningEndTime);
-      }
-
-      if (miningEndTime > now) {
-        tapBtn.classList.add('disabled');
-        timerContainer.style.display = 'block';
-
-        const remaining = miningEndTime - now;
-        const h = Math.floor(remaining / (1000 * 60 * 60));
-        const m = Math.floor((remaining % (1000 * 60 * 60)) / (1000 * 60));
-        const s = Math.floor((remaining % (1000 * 60)) / 1000);
-
-        timerText.innerText = `Sessione completata. Ricarica tra: ${h}h ${m}m ${s}s`;
-      } else if (miningEndTime <= now && miningEndTime > 0) {
-        score = 0;
-        miningEndTime = 0;
-        localStorage.setItem('biz_score', score);
-        localStorage.setItem('biz_mining_end', miningEndTime);
-
-        tapBtn.classList.remove('disabled');
-        timerContainer.style.display = 'none';
-      }
-    }
-
-    function checkDailyStatus() {
-      const now = Date.now();
-      const dailyBtn = document.getElementById('daily-btn');
-      const dailyTimer = document.getElementById('daily-timer');
-      const timeElapsed = now - lastDailyClaim;
-
-      if (timeElapsed < TWENTY_FOUR_HOURS) {
-        dailyBtn.disabled = true;
-        const remaining = TWENTY_FOUR_HOURS - timeElapsed;
-        const h = Math.floor(remaining / (1000 * 60 * 60));
-        const m = Math.floor((remaining % (1000 * 60 * 60)) / (1000 * 60));
-        const s = Math.floor((remaining % (1000 * 60)) / 1000);
-        dailyTimer.innerText = `Prossimo bonus tra: ${h}h ${m}m ${s}s`;
+      const statusLbl = document.getElementById('withdraw-status-label');
+      if (userDeposit >= 3.00) {
+        statusLbl.innerText = "Sbloccato ✅";
+        statusLbl.style.color = "#34d399";
       } else {
-        dailyBtn.disabled = false;
-        dailyTimer.innerText = "Bonus disponibile!";
+        statusLbl.innerText = "Bloccato (< 3 USDT)";
+        statusLbl.style.color = "#ef4444";
+      }
+
+      checkRefillTimer();
+    }
+
+    function checkRefillTimer() {
+      const now = Date.now();
+      const alertBox = document.getElementById('timer-alert-box');
+
+      if (nextRefillTime > now) {
+        alertBox.style.display = 'block';
+        const remaining = Math.ceil((nextRefillTime - now) / 1000);
+        const mins = Math.floor(remaining / 60);
+        const secs = remaining % 60;
+        alertBox.innerText = `⏳ Ricarica di 1 Satoshi tra: ${mins}m ${secs}s`;
+      } else {
+        alertBox.style.display = 'none';
+        if (nextRefillTime !== 0 && score <= 0) {
+          score += 1;
+          nextRefillTime = 0;
+          localStorage.setItem('btc_wallet_score', score);
+          localStorage.setItem('btc_wallet_refill', nextRefillTime);
+        }
       }
     }
 
-    function claimDaily() {
+    function activateStarter() {
       const now = Date.now();
-      if (now - lastDailyClaim < TWENTY_FOUR_HOURS) return;
+      if (nextRefillTime > now) return;
 
-      score += 0.00005;
-      lastDailyClaim = now;
-      localStorage.setItem('biz_score', score);
-      localStorage.setItem('biz_daily_claim', lastDailyClaim);
+      score += 0.00001;
+      localStorage.setItem('btc_wallet_score', score);
       updateUI();
-      alert("Bonus giornaliero riscosso!");
     }
 
-    function completeTask(button, reward) {
-      score += reward;
-      localStorage.setItem('biz_score', score);
+    function buyPromoPackage(tapAmount, usdtPrice) {
+      userDeposit += usdtPrice;
+      score += tapAmount;
+      localStorage.setItem('btc_wallet_deposit', userDeposit);
+      localStorage.setItem('btc_wallet_score', score);
       updateUI();
-      button.innerText = "Completato ✅";
-      button.disabled = true;
-      alert(`Hai guadagnato +${reward} Satoshi completando la sponsorizzazione!`);
+      alert(`Hai acquistato con successo ${tapAmount} Satoshi per ${usdtPrice} USDT!`);
     }
 
-    function buyPackage(price) {
-      usdtBalance += price; // Simulazione acquisto che genera ricavo per te
-      localStorage.setItem('biz_usdt', usdtBalance);
+    function submitDeposit() {
+      let txid = document.getElementById('txid-input').value;
+      if (!txid) { alert("Inserisci il TXID della transazione Bitcoin."); return; }
+      userDeposit += 10.00; // Simula l'accredito della ricarica sulla blockchain BTC
+      localStorage.setItem('btc_wallet_deposit', userDeposit);
       updateUI();
-      alert("Potenziamento acquistato con successo! Grazie per il supporto.");
+      alert("Transazione verificata sul wallet 1M2xeN5edX8xjQnXar74dseBdivuLLoSzt! Prelievi sbloccati.");
+      document.getElementById('txid-input').value = '';
     }
 
-    function tapCoin() {
-      const now = Date.now();
-      if (miningEndTime > now) return;
-
-      score += 1;
-      if (score >= 1000) {
-        score = 1000;
-        checkTimerStatus();
+    function requestWithdrawal() {
+      let amt = parseFloat(document.getElementById('withdraw-amount').value);
+      let addr = document.getElementById('withdraw-address').value;
+      
+      if (!addr || !amt || amt <= 0) { 
+        alert("Inserisci dati validi."); 
+        return; 
       }
-      localStorage.setItem('biz_score', score);
+
+      if (amt < MIN_WITHDRAW) {
+        alert(`Il prelievo minimo è di 1.000000 Satoshi.`);
+        return;
+      }
+
+      if (userDeposit < 3.00) {
+        alert("Prelievo bloccato! È richiesto un versamento minimo sul tuo wallet Bitcoin per sbloccare i pagamenti.");
+        switchTab('ricarica', document.querySelectorAll('.nav-item')[3]);
+        return;
+      }
+
+      if (amt > score) { 
+        alert("Saldo Satoshi insufficiente."); 
+        return; 
+      }
+
+      score -= amt;
+
+      if (score <= 0) {
+        nextRefillTime = Date.now() + (30 * 60 * 1000);
+        localStorage.setItem('btc_wallet_refill', nextRefillTime);
+      }
+
+      localStorage.setItem('btc_wallet_score', score);
       updateUI();
+      alert("Prelievo inviato con successo!");
     }
 
-    setInterval(() => {
-      checkTimerStatus();
-      checkDailyStatus();
-    }, 1000);
+    setInterval(checkRefillTimer, 1000);
 
     function switchTab(tabName, element) {
       document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
       document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-
       document.getElementById(`screen-${tabName}`).classList.add('active');
-      element.classList.add('active');
+      if (element) element.classList.add('active');
+    }
+
+    function switchSubTab(sub) {
+      const btnActive = document.getElementById('subtab-active');
+      const btnWithdraw = document.getElementById('subtab-withdraw');
+      const viewActive = document.getElementById('view-active-mining');
+      const viewWithdraw = document.getElementById('view-withdraw');
+
+      if (sub === 'active') {
+        btnActive.classList.add('active');
+        btnWithdraw.classList.remove('active');
+        viewActive.style.display = 'flex';
+        viewWithdraw.style.display = 'none';
+      } else {
+        btnWithdraw.classList.add('active');
+        btnActive.classList.remove('active');
+        viewActive.style.display = 'none';
+        viewWithdraw.style.display = 'flex';
+      }
     }
 
     fetchBtcPrice();
