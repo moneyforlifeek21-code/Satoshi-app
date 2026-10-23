@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Satoshi Tap - Hashrate Edition</title>
+  <title>Satoshi Tap - Micro Hashrate Edition</title>
 
   <!-- SDK Telegram Mini App -->
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
@@ -415,7 +415,7 @@
     </div>
   </main>
 
-  <!-- 2. SCHERMATA SHOP (PACCHETTI HASHRATE) -->
+  <!-- 2. SCHERMATA SHOP (PACCHETTI HASHRATE RIDOTTI) -->
   <main id="screen-shop" class="screen">
     <div class="action-card">
       <div class="card-title" style="margin-bottom: 6px;">🛒 Pacchetti Hashrate Cloud</div>
@@ -423,26 +423,26 @@
       
       <div class="shop-item">
         <div class="shop-info">
-          <strong>Rig Starter (10 TH/s)</strong>
-          <span>+0.10000 Satoshi bonus</span>
+          <strong>Rig Micro (500 GH/s)</strong>
+          <span>+0.01000 Satoshi bonus</span>
         </div>
-        <button class="btn-buy-shop" onclick="buyHashratePackage(10, 0.10000, 10.00)">10.00 USDT</button>
+        <button class="btn-buy-shop" onclick="buyHashratePackage('500 GH/s', 0.01000, 2.50)">2.50 USDT</button>
       </div>
 
       <div class="shop-item">
         <div class="shop-info">
-          <strong>Rig Pro (50 TH/s)</strong>
-          <span>+0.60000 Satoshi bonus</span>
+          <strong>Rig Mini (2 TH/s)</strong>
+          <span>+0.03000 Satoshi bonus</span>
         </div>
-        <button class="btn-buy-shop" onclick="buyHashratePackage(50, 0.60000, 45.00)">45.00 USDT</button>
+        <button class="btn-buy-shop" onclick="buyHashratePackage('2 TH/s', 0.03000, 5.00)">5.00 USDT</button>
       </div>
 
       <div class="shop-item">
         <div class="shop-info">
-          <strong>Rig Elite (150 TH/s)</strong>
-          <span>+2.00000 Satoshi bonus</span>
+          <strong>Rig Standard (5 TH/s)</strong>
+          <span>+0.08000 Satoshi bonus</span>
         </div>
-        <button class="btn-buy-shop" onclick="buyHashratePackage(150, 2.00000, 120.00)">120.00 USDT</button>
+        <button class="btn-buy-shop" onclick="buyHashratePackage('5 TH/s', 0.08000, 10.00)">10.00 USDT</button>
       </div>
     </div>
   </main>
@@ -514,7 +514,7 @@
     const tg = window.Telegram ? window.Telegram.WebApp : null;
     if (tg) { try { tg.expand(); tg.ready(); } catch(e) {} }
 
-    let appData = JSON.parse(localStorage.getItem('satoshi_hashrate_app')) || {
+    let appData = JSON.parse(localStorage.getItem('satoshi_micro_hashrate')) || {
       score: 0.00000,
       deposit: 0.00,
       miningEndTime: 0
@@ -525,7 +525,7 @@
     const TWELVE_HOURS = 12 * 60 * 60 * 1000;
 
     function saveData() {
-      localStorage.setItem('satoshi_hashrate_app', JSON.stringify(appData));
+      localStorage.setItem('satoshi_micro_hashrate', JSON.stringify(appData));
     }
 
     async function fetchBtcPrice() {
@@ -589,13 +589,12 @@
       alert("Sessione di mining manuale avviata con successo per 12 ore!");
     }
 
-    // Funzione acquisto pacchetti hashrate dallo Shop
-    function buyHashratePackage(thPower, bonusScore, usdtPrice) {
+    function buyHashratePackage(powerName, bonusScore, usdtPrice) {
       appData.deposit = Number((appData.deposit + usdtPrice).toFixed(2));
       appData.score = Number((appData.score + bonusScore).toFixed(5));
       saveData();
       updateUI();
-      alert(`Rig da ${thPower} TH/s acquistato con successo! +${bonusScore} Satoshi accreditati.`);
+      alert(`Rig (${powerName}) acquistato con successo! +${bonusScore} Satoshi accreditati.`);
     }
 
     function submitDeposit() {
