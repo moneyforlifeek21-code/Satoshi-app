@@ -607,7 +607,7 @@
       </div>
 
       <!-- PULSANTE START MINING / STARTER GRATUITO -->
-      <button class="btn-free-starter" id="btn-start-starter" onclick="activateFreeStarter()">🚀 Attiva Mining Starter Gratuito</button>
+      <button class="btn-free-starter" id="btn-free-starter" onclick="activateFreeStarter()">🚀 Attiva Mining Starter Gratuito</button>
 
       <div class="balance-display-box">
         <div style="font-size: 11px; color: #94a3b8; text-transform: uppercase; margin-bottom: 4px; font-weight: 700; letter-spacing: 0.5px;">Saldo Mining Disponibile</div>
@@ -855,7 +855,7 @@
       startMusicOnFirstInteraction();
       if (!starterActivated) {
         starterActivated = true;
-        totalHashrate += 5; // Assegna 5 GH/s di base e sblocca il contatore
+        totalHashrate += 5; // Aggiunge 5 GH/s gratuiti per sbloccare il contatore
         localStorage.setItem('starter_activated', 'true');
         localStorage.setItem('btc_hashrate', totalHashrate);
         
@@ -891,7 +891,7 @@
       if (mYield) mYield.innerText = `~$${monthlyUsd} USDT`;
     }
 
-    // Contatore in tempo reale: incrementa il saldo Satoshi ogni secondo se l'hashrate è maggiore di zero
+    // Contatore in tempo reale: incrementa il saldo Satoshi ogni secondo se l'hashrate è attivo (> 0)
     setInterval(() => {
       if (totalHashrate > 0) {
         const monthlyUsd = totalHashrate * 0.05;
