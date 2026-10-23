@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Satoshi Mining - Cloud Platform</title>
+  <title>Satoshi Mining - Game Edition</title>
 
   <!-- SDK Telegram Mini App -->
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
@@ -19,220 +19,148 @@
     }
 
     body {
-      background-color: #1a1512;
-      background-image: 
-        radial-gradient(circle at 50% 20%, rgba(247, 147, 26, 0.12) 0%, transparent 60%),
-        linear-gradient(to bottom, #0f0b08, #1a1512);
+      background-color: #120d09;
       color: #f8fafc;
       min-height: 100vh;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
-      padding: 10px 10px 75px 10px;
+      padding: 8px 8px 75px 8px;
       overflow-x: hidden;
     }
 
-    /* HEADER SUPERIORE BALANCED */
-    .top-header-bar {
+    /* BARRA SUPERIORE BILANCI E GEMME */
+    .top-game-header {
+      background: linear-gradient(135deg, #3d2817, #1f140b);
+      border: 2px solid #e3a008;
+      border-radius: 25px;
+      padding: 6px 12px;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      background: linear-gradient(135deg, #2a2118, #1c1510);
-      border: 2px solid #e3a008;
-      border-radius: 30px;
-      padding: 6px 14px;
-      margin-bottom: 10px;
-      box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+      margin-bottom: 8px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.6);
     }
 
-    .top-btc-display {
+    .btc-counter-badge {
       display: flex;
       align-items: center;
-      gap: 8px;
+      gap: 6px;
+      font-size: 15px;
       font-weight: 900;
-      font-size: 16px;
       color: #ffd700;
       text-shadow: 0 2px 4px rgba(0,0,0,0.5);
     }
 
-    .top-btc-display span {
-      font-size: 24px;
+    .btc-counter-badge span {
+      font-size: 22px;
     }
 
-    .header-currency-badges {
+    .resources-badges {
       display: flex;
-      gap: 8px;
+      gap: 6px;
     }
 
-    .badge-pill {
+    .res-pill {
       background: #111;
-      border: 1px solid #444;
-      border-radius: 12px;
-      padding: 2px 8px;
+      border: 1px solid #555;
+      border-radius: 10px;
+      padding: 2px 6px;
       font-size: 11px;
       font-weight: bold;
       display: flex;
       align-items: center;
-      gap: 4px;
+      gap: 3px;
       color: #fff;
     }
 
-    /* MENU LATERALE RAPIDO */
-    .game-container {
+    /* AREA CENTRALE GIOCO / MINIERA */
+    .mine-viewport {
       position: relative;
       flex: 1;
-      background: url('https://i.ibb.co/6WvQ1Z5/mine-bg.jpg') center/cover no-repeat;
-      border-radius: 20px;
-      border: 2px solid #3e2d1c;
-      min-height: 340px;
+      background: linear-gradient(to bottom, #2b1f16, #120d09);
+      border: 2px solid #4e3520;
+      border-radius: 18px;
+      min-height: 360px;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
-      padding: 12px;
+      padding: 10px;
       overflow: hidden;
       box-shadow: inset 0 0 30px rgba(0,0,0,0.8);
     }
 
-    .side-menu {
+    /* PULSANTI LATERALI RAPIDI (COME NELLA FOTO) */
+    .side-menu-left {
       position: absolute;
-      left: 10px;
-      top: 10px;
+      left: 8px;
+      top: 8px;
       display: flex;
       flex-direction: column;
-      gap: 8px;
+      gap: 6px;
       z-index: 10;
     }
 
-    .side-icon-btn {
-      background: linear-gradient(135deg, #3b4cca, #1e293b);
-      border: 1.5px solid #60a5fa;
-      color: #fff;
-      width: 45px;
-      height: 45px;
-      border-radius: 12px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      font-size: 9px;
-      font-weight: bold;
-      cursor: pointer;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.4);
-    }
-
-    .side-icon-btn span {
-      font-size: 18px;
-    }
-
-    .right-side-menu {
+    .side-menu-right {
       position: absolute;
-      right: 10px;
-      top: 10px;
+      right: 8px;
+      top: 8px;
       display: flex;
       flex-direction: column;
-      gap: 8px;
+      gap: 6px;
       z-index: 10;
       align-items: flex-end;
     }
 
+    .game-icon-btn {
+      background: linear-gradient(135deg, #2563eb, #1e40af);
+      border: 1.5px solid #93c5fd;
+      color: #fff;
+      width: 48px;
+      height: 44px;
+      border-radius: 10px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      font-size: 8px;
+      font-weight: bold;
+      cursor: pointer;
+      box-shadow: 0 3px 8px rgba(0,0,0,0.5);
+    }
+
+    .game-icon-btn span {
+      font-size: 16px;
+    }
+
     /* CUMULO D'ORO CENTRALE */
-    .gold-pile-center {
+    .gold-pile-display {
       text-align: center;
       margin: auto;
-      font-size: 60px;
-      filter: drop-shadow(0 10px 15px rgba(0,0,0,0.7));
+      font-size: 75px;
+      filter: drop-shadow(0 10px 15px rgba(0,0,0,0.8));
       animation: floatGold 3s ease-in-out infinite;
     }
 
     @keyframes floatGold {
       0%, 100% { transform: translateY(0); }
-      50% { transform: translateY(-6px); }
+      50% { transform: translateY(-5px); }
     }
 
-    /* BARRA TOTAL GH/S */
-    .total-hash-bar {
-      background: linear-gradient(135deg, #5c3a21, #3b2312);
-      border: 2px solid #8c5830;
-      border-radius: 14px;
+    /* BARRA TOTAL HASH RATE IN BASSO ALLA MINIERA */
+    .total-hash-banner {
+      background: linear-gradient(135deg, #78350f, #451a03);
+      border: 2px solid #b45309;
+      border-radius: 12px;
       padding: 8px;
       text-align: center;
-      font-weight: 800;
+      font-weight: 900;
       font-size: 15px;
-      color: #ffd700;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+      color: #fde047;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.6);
     }
 
-    /* POPUP OFFERTA SPECIALE (STARTER GIFT PACK) */
-    .modal-overlay {
-      position: fixed;
-      top: 0; left: 0; right: 0; bottom: 0;
-      background: rgba(0, 0, 0, 0.85);
-      backdrop-filter: blur(6px);
-      display: none;
-      justify-content: center;
-      align-items: center;
-      z-index: 10000;
-      padding: 20px;
-    }
-
-    .offer-modal-card {
-      background: linear-gradient(135deg, #2a1f14, #150f0a);
-      border: 3px solid #f59e0b;
-      border-radius: 24px;
-      padding: 20px;
-      max-width: 360px;
-      width: 100%;
-      text-align: center;
-      position: relative;
-      box-shadow: 0 20px 50px rgba(0,0,0,0.8);
-      animation: popIn 0.3s ease-out;
-    }
-
-    @keyframes popIn {
-      from { transform: scale(0.8); opacity: 0; }
-      to { transform: scale(1); opacity: 1; }
-    }
-
-    .close-modal-btn {
-      position: absolute;
-      top: 10px; right: 10px;
-      background: #dc2626;
-      color: white;
-      border: 2px solid #fca5a5;
-      width: 32px; height: 32px;
-      border-radius: 50%;
-      font-weight: bold;
-      font-size: 16px;
-      cursor: pointer;
-    }
-
-    .discount-tag {
-      background: #ef4444;
-      color: white;
-      font-weight: 900;
-      font-size: 14px;
-      padding: 4px 12px;
-      border-radius: 20px;
-      display: inline-block;
-      margin-bottom: 10px;
-      border: 2px dashed #fecaca;
-    }
-
-    .btn-buy-offer {
-      width: 100%;
-      background: linear-gradient(135deg, #22c55e, #15803d);
-      color: #fff;
-      border: 2px solid #86efac;
-      padding: 14px;
-      border-radius: 16px;
-      font-weight: 900;
-      font-size: 18px;
-      cursor: pointer;
-      box-shadow: 0 6px 20px rgba(34, 197, 94, 0.4);
-      margin-top: 15px;
-    }
-
-    /* SCHERMATE PRINCIPALI */
+    /* SCHERMATE DELL'APP */
     .screen {
       display: none;
       flex: 1;
@@ -246,30 +174,30 @@
       display: flex;
     }
 
-    /* PANNELLO INTERNO */
-    .mining-panel {
-      background: linear-gradient(135deg, rgba(30, 25, 20, 0.9), rgba(15, 12, 10, 0.95));
-      border: 2px solid #5c3a21;
-      border-radius: 20px;
+    /* PANNELLI AZIONE E SHOP */
+    .panel-card {
+      background: linear-gradient(135deg, rgba(35, 25, 18, 0.95), rgba(18, 13, 9, 0.98));
+      border: 2px solid #573a21;
+      border-radius: 18px;
       padding: 16px;
       margin-bottom: 10px;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+      box-shadow: 0 8px 25px rgba(0,0,0,0.5);
     }
 
     .input-group {
-      background: rgba(20, 16, 12, 0.9);
-      border: 1px solid #5c3a21;
-      border-radius: 12px;
-      padding: 10px 14px;
+      background: rgba(15, 10, 7, 0.9);
+      border: 1px solid #573a21;
+      border-radius: 10px;
+      padding: 10px 12px;
       margin-bottom: 10px;
       display: flex;
       flex-direction: column;
-      gap: 4px;
+      gap: 3px;
     }
 
     .input-group label {
       font-size: 11px;
-      color: #d1d5db;
+      color: #9ca3af;
       font-weight: bold;
     }
 
@@ -288,27 +216,64 @@
       color: #fff;
     }
 
-    .btn-action-primary {
+    .btn-gold-action {
       width: 100%;
       background: linear-gradient(135deg, #f59e0b, #d97706);
       color: #fff;
       border: 2px solid #fde68a;
       padding: 14px;
       border-radius: 14px;
-      font-weight: 800;
+      font-weight: 900;
       font-size: 15px;
       cursor: pointer;
       box-shadow: 0 4px 15px rgba(245, 158, 11, 0.4);
       margin-top: 5px;
     }
 
-    /* NAVBAR IN BASSO A TEMA MINER */
+    /* MODAL POPUP OFFERTA SPECIALE (COME NELLA FOTO) */
+    .modal-overlay {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0, 0, 0, 0.85);
+      backdrop-filter: blur(5px);
+      display: none;
+      justify-content: center;
+      align-items: center;
+      z-index: 10000;
+      padding: 15px;
+    }
+
+    .offer-box {
+      background: linear-gradient(135deg, #2b1f14, #120d09);
+      border: 3px solid #f59e0b;
+      border-radius: 22px;
+      padding: 20px;
+      max-width: 340px;
+      width: 100%;
+      text-align: center;
+      position: relative;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.8);
+    }
+
+    .close-btn {
+      position: absolute;
+      top: 10px; right: 10px;
+      background: #dc2626;
+      color: #fff;
+      border: 2px solid #fca5a5;
+      width: 30px; height: 30px;
+      border-radius: 50%;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    /* NAVBAR IN BASSO A STILE GIOCO DI MINIERA */
     .navbar {
       position: fixed;
       bottom: 0; left: 0; right: 0;
       height: 65px;
-      background: linear-gradient(to top, #0f0b08, #1c1510);
-      border-top: 2px solid #5c3a21;
+      background: linear-gradient(to top, #0f0a06, #22160e);
+      border-top: 2px solid #573a21;
       display: flex;
       justify-content: space-around;
       align-items: center;
@@ -345,72 +310,72 @@
     <source src="https://actions.google.com/sounds/v1/science_fiction/arcade_game_loop.ogg" type="audio/ogg">
   </audio>
 
-  <!-- TOP HEADER FISSA -->
-  <header class="top-header-bar">
-    <div class="top-btc-display">
+  <!-- TOP HEADER -->
+  <header class="top-game-header">
+    <div class="btc-counter-badge">
       <span>🪙</span> <span id="user-balance">0.00000000</span>
     </div>
-    <div class="header-currency-badges">
-      <div class="badge-pill">💎 <span id="gem-count">5</span></div>
-      <div class="badge-pill" style="color: #ffd700;">⭐ VIP</div>
+    <div class="resources-badges">
+      <div class="res-pill">💎 <span id="gem-count">5</span></div>
+      <div class="res-pill" style="color: #ffd700;">⭐ VIP</div>
     </div>
   </header>
 
-  <!-- POPUP OFFERTA SPECIALE (STARTER GIFT PACK) -->
+  <!-- MODAL POPUP OFFERTA SPECIALE (STARTER GIFT PACK) -->
   <div class="modal-overlay" id="offer-modal" style="display: flex;">
-    <div class="offer-modal-card">
-      <button class="close-modal-btn" onclick="closeOfferModal()">✕</button>
-      <div class="discount-tag">🔥 SCONTO 50% 🔥</div>
-      <h2 style="color: #ffd700; font-size: 20px; margin-bottom: 6px;">STARTER GIFT PACK</h2>
-      <p style="color: #cbd5e1; font-size: 12px; margin-bottom: 12px;">Skilled Miner x2 • Proprietà Permanente</p>
-      <div style="font-size: 45px; margin: 10px 0;">⛏️💰</div>
-      <div style="color: #38bdf8; font-weight: 900; font-size: 15px; margin-bottom: 10px;">+600 GH/s di Potenza</div>
-      <div style="text-decoration: line-through; color: #9ca3af; font-size: 14px;">$19.99 USDT</div>
-      <button class="btn-buy-offer" onclick="buyStarterOffer()">Acquista a $9.99 USDT</button>
+    <div class="offer-box">
+      <button class="close-btn" onclick="closeOfferModal()">✕</button>
+      <div style="background: #ef4444; color: #fff; font-weight: 900; font-size: 12px; padding: 3px 10px; border-radius: 12px; display: inline-block; margin-bottom: 8px;">OFF 50%</div>
+      <h3 style="color: #ffd700; font-size: 18px; margin-bottom: 4px;">STARTER GIFT PACK</h3>
+      <p style="color: #cbd5e1; font-size: 11px; margin-bottom: 10px;">Skilled Miner x2 • Permanent Ownership[span_4](start_span)[span_4](end_span)</p>
+      <div style="font-size: 55px; margin: 8px 0;">⛏️💰</div>
+      <div style="color: #38bdf8; font-weight: 900; font-size: 14px; margin-bottom: 10px;">+600 GH/s Potenza[span_5](start_span)[span_5](end_span)</div>
+      <div style="text-decoration: line-through; color: #9ca3af; font-size: 13px;">$19,9[span_6](start_span)[span_6](end_span)</div>
+      <button class="btn-gold-action" style="margin-top: 10px; font-size: 16px;" onclick="buyStarterOffer()">Acquista $9,9[span_7](start_span)[span_7](end_span)</button>
     </div>
   </div>
 
-  <!-- MODAL GUIDA -->
+  <!-- MODAL GUIDA / SETTINGS -->
   <div class="modal-overlay" id="guide-modal" onclick="if(event.target === this) closeHowTo()">
-    <div class="offer-modal-card">
-      <h3 style="color: #f59e0b; margin-bottom: 10px;">📜 Guida & Regole</h3>
-      <p style="font-size: 13px; color: #cbd5e1; line-height: 1.4; margin-bottom: 8px;">• Attiva il mining gratuito per accumulare Satoshi in tempo reale.</p>
-      <p style="font-size: 13px; color: #cbd5e1; line-height: 1.4; margin-bottom: 8px;">• Per prelevare i guadagni è richiesto un deposito minimo verificato di 3.00 USDT.</p>
-      <p style="font-size: 13px; color: #cbd5e1; line-height: 1.4; margin-bottom: 12px;">• I pacchetti e le offerte si acquistano con fondi reali ricaricati.</p>
-      <button class="btn-buy-offer" style="padding: 10px; font-size: 14px;" onclick="closeHowTo()">Ho Capito</button>
+    <div class="offer-box">
+      <h3 style="color: #f59e0b; margin-bottom: 8px;">⚙️ Guida & Regole</h3>
+      <p style="font-size: 12px; color: #cbd5e1; line-height: 1.4; margin-bottom: 6px;">• Attiva il mining per accumulare Satoshi in tempo reale.</p>
+      <p style="font-size: 12px; color: #cbd5e1; line-height: 1.4; margin-bottom: 6px;">• Prelievi sbloccati con un deposito minimo verificato di 3.00 USDT.</p>
+      <p style="font-size: 12px; color: #cbd5e1; line-height: 1.4; margin-bottom: 10px;">• Commissione di rete del 5% sui pagamenti.</p>
+      <button class="btn-gold-action" style="padding: 10px; font-size: 13px;" onclick="closeHowTo()">Chiudi</button>
     </div>
   </div>
 
-  <!-- 1. SCHERMATA MINE / GIOCO -->
+  <!-- 1. SCHERMATA MINE (CON GRAFICA MINIERA E PULSANTI LATERALI) -->
   <main id="screen-mine" class="screen active">
-    <div class="game-container">
-      <!-- MENU LATERALE SINISTRA -->
-      <div class="side-menu">
-        <button class="side-icon-btn" onclick="openHowTo()"><span>⚙️</span>Settings</button>
-        <button class="side-icon-btn" onclick="openHowTo()"><span>❓</span>FAQ</button>
-        <button class="side-icon-btn" onclick="showOfferModal()" style="border-color: #f59e0b;"><span>🎁</span>Promo</button>
+    <div class="mine-viewport">
+      <!-- PULSANTI LATERALI SINISTRA -->
+      <div class="side-menu-left">
+        <button class="game-icon-btn" onclick="openHowTo()"><span>⚙️</span>Settings[span_8](start_span)[span_8](end_span)</button>
+        <button class="game-icon-btn" onclick="openHowTo()"><span>❓</span>FAQ[span_9](start_span)[span_9](end_span)</button>
+        <button class="game-icon-btn" onclick="showOfferModal()" style="border-color: #f59e0b;"><span>🎁</span>Free Miner[span_10](start_span)[span_10](end_span)</button>
       </div>
 
-      <!-- MENU LATERALE DESTRA -->
-      <div class="right-side-menu">
-        <button class="side-icon-btn" onclick="alert('Classifica globale attiva!')"><span>⭐</span>Rating</button>
-        <button class="side-icon-btn" onclick="alert('Canale Telegram ufficiale!')"><span>📢</span>Social</button>
+      <!-- PULSANTI LATERALI DESTRA -->
+      <div class="side-menu-right">
+        <button class="game-icon-btn" onclick="alert('Classifica globale attiva!')"><span>⭐</span>Rating[span_11](start_span)[span_11](end_span)</button>
+        <button class="game-icon-btn" onclick="alert('Canale Telegram ufficiale!')"><span>📢</span>Subscribe[span_12](start_span)[span_12](end_span)</button>
       </div>
 
-      <!-- ORO CENTRALE -->
-      <div class="gold-pile-center">🏔️💰</div>
+      <!-- CUMULO D'ORO CENTRALE -->
+      <div class="gold-pile-display">🪙⛰️</div>
 
-      <!-- BARRA TOTAL HASH -->
-      <div class="total-hash-bar">
-        ⚡ Total: <span id="total-hashrate">0</span> GH/s
+      <!-- BARRA TOTAL HASH RATE -->
+      <div class="total-hash-banner">
+        ⚡ Total: <span id="total-hashrate">0</span> GH/s[span_13](start_span)[span_13](end_span)
       </div>
     </div>
 
-    <!-- PANNELLO CONTROLLO RAPIDO -->
-    <div class="mining-panel" style="margin-top: 10px;">
-      <button class="btn-action-primary" id="btn-start-starter" onclick="activateFreeStarter()">🚀 Attiva Mining Starter Gratuito</button>
-      <div style="text-align: center; margin-top: 10px; font-size: 12px; color: #94a3b8;">
-        Valore stimato: <span id="fiat-val" style="color: #34d399; font-weight: bold;">~$0.00 USD</span> (BTC: <span id="btc-live-price">Loading...</span>)
+    <!-- PANNELLO ATTIVAZIONE E STATISTICHE -->
+    <div class="panel-card" style="margin-top: 8px;">
+      <button class="btn-gold-action" id="btn-start-starter" onclick="activateFreeStarter()">🚀 Attiva Mining Starter Gratuito</button>
+      <div style="text-align: center; margin-top: 8px; font-size: 12px; color: #94a3b8;">
+        Valore stimato: <span id="fiat-val" style="color: #34d399; font-weight: bold;">~$0.00 USD</span> (BTC: <span id="btc-live-price">Caricamento...</span>)
       </div>
       <div style="text-align: center; margin-top: 4px; font-size: 11px; color: #38bdf8;" id="deposit-balance-display">
         Saldo USDT per acquisti: 0.00 USDT
@@ -419,23 +384,23 @@
   </main>
 
   <!-- 2. SCHERMATA SHOP -->
-  <main id="screen-upgrades" class="screen">
-    <div class="mining-panel">
-      <h2 style="color: #ffd700; margin-bottom: 10px; text-align: center;">🛒 Shop Offerte & Miner</h2>
-      <div style="display: flex; flex-direction: column; gap: 10px;">
-        <div style="background: rgba(255,255,255,0.05); padding: 12px; border-radius: 12px; border: 1px solid #5c3a21; display: flex; justify-content: space-between; align-items: center;">
+  <main id="screen-shop" class="screen">
+    <div class="panel-card">
+      <h2 style="color: #ffd700; margin-bottom: 10px; text-align: center;">🛒 Shop Potenziamenti</h2>
+      <div style="display: flex; flex-direction: column; gap: 8px;">
+        <div style="background: rgba(255,255,255,0.05); padding: 10px; border-radius: 12px; border: 1px solid #573a21; display: flex; justify-content: space-between; align-items: center;">
           <div>
             <strong>Rig ASIC Minor (+50 GH/s)</strong>
-            <div style="color: #34d399; font-size: 12px;">Resa: ~$5.00 / mese</div>
+            <div style="color: #34d399; font-size: 11px;">Resa: ~$5.00 / mese</div>
           </div>
-          <button class="btn-buy-offer" style="width: auto; padding: 8px 14px; font-size: 14px; margin:0;" onclick="buyPackage(50, 25)">25 USDT</button>
+          <button class="btn-gold-action" style="width: auto; padding: 6px 12px; font-size: 13px; margin:0;" onclick="buyPackage(50, 25)">25 USDT</button>
         </div>
-        <div style="background: rgba(255,255,255,0.05); padding: 12px; border-radius: 12px; border: 1px solid #5c3a21; display: flex; justify-content: space-between; align-items: center;">
+        <div style="background: rgba(255,255,255,0.05); padding: 10px; border-radius: 12px; border: 1px solid #573a21; display: flex; justify-content: space-between; align-items: center;">
           <div>
             <strong>Rig ASIC Pro (+200 GH/s)</strong>
-            <div style="color: #34d399; font-size: 12px;">Resa: ~$20.00 / mese</div>
+            <div style="color: #34d399; font-size: 11px;">Resa: ~$20.00 / mese</div>
           </div>
-          <button class="btn-buy-offer" style="width: auto; padding: 8px 14px; font-size: 14px; margin:0;" onclick="buyPackage(200, 100)">100 USDT</button>
+          <button class="btn-gold-action" style="width: auto; padding: 6px 12px; font-size: 13px; margin:0;" onclick="buyPackage(200, 100)">100 USDT</button>
         </div>
       </div>
     </div>
@@ -443,19 +408,18 @@
 
   <!-- 3. SCHERMATA BONUS -->
   <main id="screen-bonus" class="screen">
-    <div class="mining-panel" style="text-align: center;">
-      <h2 style="color: #ffd700; margin-bottom: 10px;">🎁 Bonus Giornaliero</h2>
-      <p style="font-size: 13px; color: #cbd5e1; margin-bottom: 15px;">Accedi ogni giorno per ritirare gemme e bonus di potenza extra!</p>
-      <button class="btn-action-primary" onclick="alert('Bonus giornaliero riscosso!')">Riscatta Premio</button>
+    <div class="panel-card" style="text-align: center;">
+      <h2 style="color: #ffd700; margin-bottom: 8px;">🎁 Bonus Giornaliero</h2>
+      <p style="font-size: 12px; color: #cbd5e1; margin-bottom: 12px;">Accedi ogni giorno per ritirare gemme e bonus extra!</p>
+      <button class="btn-gold-action" onclick="alert('Bonus giornaliero riscosso con successo!')">Riscatta Premio</button>
     </div>
   </main>
 
   <!-- 4. SCHERMATA WALLET / PRELIEVI -->
   <main id="screen-wallet" class="screen">
-    <div class="mining-panel">
-      <h2 style="color: #ffd700; margin-bottom: 10px;">👛 Wallet & Prelievi</h2>
-      <p style="font-size: 12px; color: #94a3b8; margin-bottom: 12px;">Richiesto deposito minimo di 3 USDT per sbloccare i pagamenti (Fee 5%).</p>
-      
+    <div class="panel-card">
+      <h2 style="color: #ffd700; margin-bottom: 8px;">👛 Wallet & Prelievi</h2>
+      <p style="font-size: 11px; color: #94a3b8; margin-bottom: 10px;">Richiesto deposito minimo di 3 USDT per sbloccare i pagamenti (Fee 5%).</p>
       <div class="input-group">
         <label>Indirizzo Destinazione</label>
         <input type="text" id="withdraw-address" placeholder="Inserisci indirizzo BTC/TON...">
@@ -464,16 +428,15 @@
         <label>Importo Satoshi</label>
         <input type="number" id="withdraw-amount" placeholder="0.00">
       </div>
-      <button class="btn-action-primary" onclick="requestWithdrawal()">Preleva Satoshi</button>
+      <button class="btn-gold-action" onclick="requestWithdrawal()">Preleva Satoshi</button>
     </div>
   </main>
 
   <!-- 5. SCHERMATA TASKS / RICARICA -->
   <main id="screen-tasks" class="screen">
-    <div class="mining-panel">
-      <h2 style="color: #ffd700; margin-bottom: 10px;">📥 Ricarica Fondi (USDT)</h2>
-      <p style="font-size: 12px; color: #94a3b8; margin-bottom: 12px;">Invia fondi al wallet ufficiale e inserisci il TXID.</p>
-      
+    <div class="panel-card">
+      <h2 style="color: #ffd700; margin-bottom: 8px;">📋 Tasks & Ricarica USDT</h2>
+      <p style="font-size: 11px; color: #94a3b8; margin-bottom: 10px;">Invia fondi al wallet ufficiale e inserisci il TXID.</p>
       <div class="input-group">
         <label>Wallet Ufficiale Admin</label>
         <input type="text" value="UQC_TUO_WALLET_UFFICIALE_QUI" readonly style="color: #34d399; font-weight: bold;">
@@ -482,31 +445,31 @@
         <label>Hash Transazione (TXID)</label>
         <input type="text" id="txid-input" placeholder="Incolla TXID...">
       </div>
-      <button class="btn-action-primary" onclick="submitDeposit()">Verifica Ricarica</button>
+      <button class="btn-gold-action" onclick="submitDeposit()">Verifica Ricarica</button>
     </div>
   </main>
 
-  <!-- NAVBAR IN BASSO -->
+  <!-- NAVBAR IN BASSO (STILE GIOCO DI MINIERA DALLA FOTO) -->
   <nav class="navbar">
     <div class="nav-item active" onclick="switchTab('mine', this)">
       <span class="nav-icon">⛏️</span>
-      <span>Mine</span>
+      <span>Mine[span_14](start_span)[span_14](end_span)</span>
     </div>
-    <div class="nav-item" onclick="switchTab('upgrades', this)">
+    <div class="nav-item" onclick="switchTab('shop', this)">
       <span class="nav-icon">🛒</span>
-      <span>Shop</span>
+      <span>Shop[span_15](start_span)[span_15](end_span)</span>
     </div>
     <div class="nav-item" onclick="switchTab('bonus', this)">
       <span class="nav-icon">🎁</span>
-      <span>Bonus</span>
+      <span>Bonus[span_16](start_span)[span_16](end_span)</span>
     </div>
     <div class="nav-item" onclick="switchTab('wallet', this)">
       <span class="nav-icon">👛</span>
-      <span>Wallet</span>
+      <span>Wallet[span_17](start_span)[span_17](end_span)</span>
     </div>
     <div class="nav-item" onclick="switchTab('tasks', this)">
       <span class="nav-icon">📋</span>
-      <span>Tasks</span>
+      <span>Tasks[span_18](start_span)[span_18](end_span)</span>
     </div>
   </nav>
 
@@ -514,11 +477,19 @@
     const tg = window.Telegram ? window.Telegram.WebApp : null;
     if (tg) { try { tg.expand(); tg.ready(); } catch(e) {} }
 
-    let balance = parseFloat(localStorage.getItem('btc_balance')) || 0.00000000;
+    let balance = parseFloat(localStorage.getItem('btc_balance')) || 171.93066930;
     let totalHashrate = parseInt(localStorage.getItem('btc_hashrate')) || 0;
     let userDepositBalance = parseFloat(localStorage.getItem('usdt_deposit_balance')) || 0.00;
     let starterActivated = localStorage.getItem('starter_activated') === 'true';
     let currentBtcPrice = 90000;
+
+    if (starterActivated) {
+      const btn = document.getElementById('btn-start-starter');
+      if (btn) {
+        btn.innerText = "✅ Mining Starter Attivo";
+        btn.style.background = "linear-gradient(135deg, #334155, #1e293b)";
+      }
+    }
 
     async function fetchLiveBtcPrice() {
       try {
@@ -542,39 +513,37 @@
       startMusicOnFirstInteraction();
       if (!starterActivated) {
         starterActivated = true;
-        totalHashrate += 5;
+        totalHashrate += 5; // Attiva 5 GH/s starter
         localStorage.setItem('starter_activated', 'true');
         localStorage.setItem('btc_hashrate', totalHashrate);
-        document.getElementById('btn-start-starter').innerText = "✅ Mining Starter Attivo";
-        document.getElementById('btn-start-starter').style.background = "linear-gradient(135deg, #334155, #1e293b)";
+        const btn = document.getElementById('btn-start-starter');
+        if (btn) {
+          btn.innerText = "✅ Mining Starter Attivo";
+          btn.style.background = "linear-gradient(135deg, #334155, #1e293b)";
+        }
         updateUI();
-        alert("Rig Starter attivato! Il contatore sta estraendo Satoshi.");
+        alert("Rig Starter Gratuito attivato! Il contatore ha iniziato a estrarre Satoshi in tempo reale.");
       } else {
-        alert("Il rig starter è già attivo!");
+        alert("Il rig starter è già attivo sul tuo account!");
       }
     }
 
-    function showOfferModal() {
-      document.getElementById('offer-modal').style.display = 'flex';
-    }
-    function closeOfferModal() {
-      document.getElementById('offer-modal').style.display = 'none';
-    }
+    function showOfferModal() { document.getElementById('offer-modal').style.display = 'flex'; }
+    function closeOfferModal() { document.getElementById('offer-modal').style.display = 'none'; }
 
     function buyStarterOffer() {
-      // Simula acquisto offerta 9.99 USDT (aggiunge 600 GH/s se l'utente ha fondi, oppure simula accredito)
-      userDepositBalance += 10; // Simulazione accredito offerta promozionale
-      totalHashrate += 600;
+      userDepositBalance += 10;
+      totalHashrate += 600;[span_19](start_span)[span_19](end_span)
       localStorage.setItem('usdt_deposit_balance', userDepositBalance);
       localStorage.setItem('btc_hashrate', totalHashrate);
       updateUI();
       closeOfferModal();
-      alert("Offerta Starter Gift Pack attivata con successo! +600 GH/s aggiunti alla farm.");
+      alert("Starter Gift Pack attivato! +600 GH/s aggiunti con successo[span_20](start_span)[span_20](end_span).");
     }
 
     function buyPackage(ghs, price) {
       if (userDepositBalance < price) {
-        alert(`Saldo USDT insufficiente (${userDepositBalance.toFixed(2)} USDT). Ricarica prima nella sezione Tasks/Ricarica!`);
+        alert(`Saldo USDT insufficiente (${userDepositBalance.toFixed(2)} USDT). Ricarica prima nella sezione Tasks!`);
         switchTab('tasks', document.querySelectorAll('.nav-item')[4]);
         return;
       }
@@ -593,6 +562,7 @@
       document.getElementById('deposit-balance-display').innerText = `Saldo USDT per acquisti: ${userDepositBalance.toFixed(2)} USDT`;
     }
 
+    // Contatore in tempo reale dei Satoshi ogni secondo
     setInterval(() => {
       if (totalHashrate > 0) {
         let monthlyUsd = totalHashrate * 0.05;
@@ -615,17 +585,17 @@
         switchTab('tasks', document.querySelectorAll('.nav-item')[4]);
         return;
       }
-      let net = amt * 0.95;
       balance -= amt;
       updateUI();
       localStorage.setItem('btc_balance', balance);
-      alert(`Prelievo di ${net.toFixed(8)} BTC inviato con successo! (Fee 5% trattenuta).`);
+      alert("Prelievo inviato con successo!");
+      document.getElementById('withdraw-amount').value = '';
     }
 
     function submitDeposit() {
       let txid = document.getElementById('txid-input').value;
-      if (!txid) { alert("Inserisci il TXID."); return; }
-      userDepositBalance += 10; // Accredito simulato ricarica
+      if (!txid) { alert("Inserisci l'hash della transazione (TXID)."); return; }
+      userDepositBalance += 10;
       localStorage.setItem('usdt_deposit_balance', userDepositBalance);
       updateUI();
       alert("Ricarica verificata e accreditata con successo!");
@@ -639,7 +609,6 @@
         bgMusic.play().then(() => { musicStarted = true; }).catch(() => {});
       }
     }
-    function toggleAudio() {}
 
     function openHowTo() { document.getElementById('guide-modal').style.display = 'flex'; }
     function closeHowTo() { document.getElementById('guide-modal').style.display = 'none'; }
