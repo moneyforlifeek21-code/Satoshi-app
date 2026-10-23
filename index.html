@@ -49,12 +49,6 @@
       border-radius: 18px;
       margin-bottom: 15px;
       box-shadow: 0 4px 15px rgba(0, 0, 0, 0.03);
-      animation: slideDown 0.4s ease-out;
-    }
-
-    @keyframes slideDown {
-      from { transform: translateY(-15px); opacity: 0; }
-      to { transform: translateY(0); opacity: 1; }
     }
 
     .brand {
@@ -91,12 +85,6 @@
       font-size: 13px;
       font-weight: 600;
       cursor: pointer;
-      transition: all 0.2s ease;
-    }
-
-    .icon-btn:active {
-      transform: scale(0.95);
-      background: #e2e8f0;
     }
 
     /* SCHERMATE PRINCIPALI */
@@ -127,7 +115,6 @@
       padding: 20px;
       margin-bottom: 15px;
       box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
-      transition: transform 0.2s ease;
     }
 
     .panel-tabs {
@@ -214,12 +201,6 @@
       display: flex;
       flex-direction: column;
       gap: 4px;
-      transition: border-color 0.2s ease;
-    }
-
-    .input-group:focus-within {
-      border-color: #007aff;
-      box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.1);
     }
 
     .input-group label {
@@ -250,11 +231,6 @@
       cursor: pointer;
       box-shadow: 0 4px 15px rgba(0, 122, 255, 0.3);
       margin-top: 5px;
-      transition: transform 0.15s ease, box-shadow 0.15s ease;
-    }
-
-    .btn-action-primary:active {
-      transform: scale(0.97);
     }
 
     /* STATISTICHE HASH RATE */
@@ -273,24 +249,6 @@
       text-align: left;
       box-shadow: 0 4px 12px rgba(0,0,0,0.03);
       position: relative;
-      overflow: hidden;
-    }
-
-    .stat-card::after {
-      content: '';
-      position: absolute;
-      top: 12px; right: 12px;
-      width: 8px; height: 8px;
-      background: #48bb78;
-      border-radius: 50%;
-      box-shadow: 0 0 8px #48bb78;
-      animation: ledPulse 1.5s infinite;
-    }
-
-    @keyframes ledPulse {
-      0% { opacity: 1; transform: scale(1); }
-      50% { opacity: 0.4; transform: scale(0.85); }
-      100% { opacity: 1; transform: scale(1); }
     }
 
     .stat-card span {
@@ -302,7 +260,7 @@
     }
 
     .stat-card strong {
-      font-size: 18px;
+      font-size: 16px;
       font-weight: 800;
       color: #007aff;
     }
@@ -324,29 +282,49 @@
       justify-content: space-between;
       align-items: center;
       box-shadow: 0 4px 12px rgba(0,0,0,0.03);
-      transition: transform 0.2s ease, box-shadow 0.2s ease;
-    }
-
-    .item-card:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 6px 18px rgba(0,0,0,0.06);
     }
 
     .btn-buy {
       background: linear-gradient(135deg, #00bfff, #007acc);
       color: #fff;
       border: none;
-      padding: 10px 16px;
+      padding: 10px 18px;
       border-radius: 12px;
       font-weight: bold;
       font-size: 13px;
       cursor: pointer;
-      box-shadow: 0 4px 12px rgba(0, 191, 255, 0.3);
-      transition: transform 0.15s ease;
     }
 
-    .btn-buy:active {
-      transform: scale(0.95);
+    /* CHECKOUT USDT */
+    .back-btn {
+      background: #edf2f7;
+      border: none;
+      color: #2d3748;
+      padding: 8px 14px;
+      border-radius: 10px;
+      font-weight: 600;
+      font-size: 13px;
+      cursor: pointer;
+      margin-bottom: 15px;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .checkout-box {
+      background: #ffffff;
+      border: 1px solid #e2e8f0;
+      border-radius: 22px;
+      padding: 24px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+      text-align: center;
+    }
+
+    .price-tag-usdt {
+      font-size: 38px;
+      font-weight: 900;
+      color: #2f855a;
+      margin: 15px 0 5px 0;
     }
 
     /* MODAL GUIDA */
@@ -370,7 +348,6 @@
       max-width: 400px;
       width: 100%;
       color: #1a202c;
-      box-shadow: 0 15px 35px rgba(0,0,0,0.15);
     }
 
     .modal-card h3 {
@@ -423,7 +400,6 @@
       font-weight: 600;
       cursor: pointer;
       width: 20%;
-      transition: color 0.2s ease, transform 0.2s ease;
     }
 
     .nav-item.active {
@@ -433,11 +409,6 @@
 
     .nav-icon {
       font-size: 20px;
-      transition: transform 0.2s ease;
-    }
-
-    .nav-item.active .nav-icon {
-      transform: scale(1.15);
     }
   </style>
 </head>
@@ -462,12 +433,12 @@
   <!-- MODAL GUIDA -->
   <div class="modal-overlay" id="guide-modal" onclick="if(event.target === this) closeHowTo()">
     <div class="modal-card">
-      <h3>🖥️ Pannello Cloud Mining</h3>
-      <p>Gestisci la tua potenza e i tuoi prelievi in modo semplice:</p>
+      <h3>🖥️ Economia e Rendimenti</h3>
+      <p>Ecco come funziona la crescita della tua farm:</p>
       <ul>
-        <li><strong>Saldo in tempo reale:</strong> I Satoshi estratti si aggiornano automaticamente in base ai tuoi Gigahash (GH/s).</li>
-        <li><strong>Potenziamenti in TON:</strong> Acquista più potenza nello Shop investendo in criptovalute.</li>
-        <li><strong>Prelievi trasparenti:</strong> Invia i tuoi Satoshi direttamente al tuo indirizzo wallet esterno.</li>
+        <li><strong>Base Gratuita:</strong> Genera circa $0.30 al mese in Satoshi.</li>
+        <li><strong>Potenziamenti USDT:</strong> Investi (es. $100) per ottenere una resa mensile stimata del ~75% (es. $75 al mese).</li>
+        <li><strong>Prelievi:</strong> I Satoshi estratti sono pronti per essere prelevati sul tuo wallet.</li>
       </ul>
       <button class="btn-close" onclick="closeHowTo()">Ho Capito!</button>
     </div>
@@ -484,9 +455,9 @@
       <div class="balance-display-box">
         <div style="font-size: 11px; color: #718096; text-transform: uppercase; margin-bottom: 6px; font-weight: 700;">Saldo Mining Disponibile</div>
         <div class="crypto-amount">
-          <span>₿</span> <span id="user-balance">0.00935300</span>
+          <span>₿</span> <span id="user-balance">0.00000000</span>
         </div>
-        <div class="fiat-equivalent" id="fiat-val">Valore stimato: ~$720.15</div>
+        <div class="fiat-equivalent" id="fiat-val">Valore stimato: ~$0.00</div>
       </div>
 
       <div class="action-form">
@@ -516,8 +487,8 @@
         <strong id="total-hashrate">10 GH/s</strong>
       </div>
       <div class="stat-card">
-        <span>Resa al Minuto</span>
-        <strong id="mining-speed">+0.60 ₿</strong>
+        <span>Resa Mensile Stimata</span>
+        <strong id="monthly-yield" style="color: #2f855a;">~$0.30 / mese</strong>
       </div>
     </div>
   </main>
@@ -525,31 +496,54 @@
   <!-- 2. SCHERMATA SHOP -->
   <main id="screen-upgrades" class="screen">
     <div style="text-align: center; margin-bottom: 15px;">
-      <h2>🚀 Acquista Potenza (Hash Rate)</h2>
-      <p style="color: #718096; font-size: 13px;">Investi in TON per aumentare i Gigahash</p>
+      <h2>🚀 Shop Potenziamenti</h2>
+      <p style="color: #718096; font-size: 13px;">Investi in USDT per aumentare la potenza e la resa mensile</p>
     </div>
     <div class="card-list">
       <div class="item-card">
         <div>
-          <strong style="color: #1a202c;">Rig ASIC Minor (+50 GH/s)</strong>
-          <p style="color: #718096; font-size: 12px;">Ottimizzato per piccoli investitori</p>
+          <strong style="color: #1a202c; font-size: 15px;">Rig ASIC Minor (+50 GH/s)</strong>
+          <p style="color: #2f855a; font-size: 12px; font-weight:600;">Resa stimata: ~$18.50 / mese</p>
         </div>
-        <button class="btn-buy" onclick="buyHashrate(50, 1.0, 'Rig ASIC Minor')">1.0 TON</button>
+        <button class="btn-buy" onclick="openCheckout('Rig ASIC Minor', 50, 25.00)">Seleziona</button>
       </div>
       <div class="item-card">
         <div>
-          <strong style="color: #1a202c;">Rig ASIC Pro (+150 GH/s)</strong>
-          <p style="color: #718096; font-size: 12px;">Alta potenza di calcolo</p>
+          <strong style="color: #1a202c; font-size: 15px;">Rig ASIC Pro (+200 GH/s)</strong>
+          <p style="color: #2f855a; font-size: 12px; font-weight:600;">Resa stimata: ~$75.00 / mese</p>
         </div>
-        <button class="btn-buy" onclick="buyHashrate(150, 2.5, 'Rig ASIC Pro')">2.5 TON</button>
+        <button class="btn-buy" onclick="openCheckout('Rig ASIC Pro', 200, 100.00)">Seleziona</button>
       </div>
       <div class="item-card">
         <div>
-          <strong style="color: #1a202c;">Farm Data Center (+500 GH/s)</strong>
-          <p style="color: #718096; font-size: 12px;">Massima resa e stabilità</p>
+          <strong style="color: #1a202c; font-size: 15px;">Farm Data Center (+650 GH/s)</strong>
+          <p style="color: #2f855a; font-size: 12px; font-weight:600;">Resa stimata: ~$230.00 / mese</p>
         </div>
-        <button class="btn-buy" onclick="buyHashrate(500, 6.0, 'Farm Data Center')">6.0 TON</button>
+        <button class="btn-buy" onclick="openCheckout('Farm Data Center', 650, 300.00)">Seleziona</button>
       </div>
+    </div>
+  </main>
+
+  <!-- 2B. SCHERMATA DETTAGLIO CHECKOUT USDT -->
+  <main id="screen-checkout" class="screen">
+    <button class="back-btn" onclick="switchTab('upgrades', document.querySelectorAll('.nav-item')[1])">← Torna allo Shop</button>
+    
+    <div class="checkout-box">
+      <div style="font-size: 13px; color: #718096; text-transform: uppercase; font-weight: 700;" id="checkout-title">Rig ASIC Pro</div>
+      <div style="font-size: 14px; color: #007aff; font-weight: 700; margin-top: 4px;" id="checkout-ghs">+200 GH/s</div>
+      
+      <div class="price-tag-usdt" id="checkout-price">100.00 USDT</div>
+      <div style="font-size: 12px; color: #2f855a; font-weight: 600; margin-bottom: 20px;" id="checkout-yield">Ritorno stimato: ~$75.00 / mese</div>
+
+      <div class="input-group" style="text-align: left;">
+        <label>Rete di Pagamento</label>
+        <select style="background:transparent; border:none; color:#1a202c; font-size:14px; outline:none; width:100%; font-weight:600;">
+          <option>USDT (TON Network)</option>
+          <option>USDT (TRC20)</option>
+        </select>
+      </div>
+
+      <button class="btn-action-primary" onclick="confirmUSDTBuy()">Conferma e Paga in USDT</option>
     </div>
   </main>
 
@@ -640,28 +634,64 @@
     const userId = tg?.initDataUnsafe?.user?.id || "12345678";
     const referralLink = `https://t.me/${BOT_USERNAME}?start=ref_${userId}`;
 
-    let balance = parseFloat(localStorage.getItem('btc_balance')) || 0.00935300;
-    let totalHashrate = parseInt(localStorage.getItem('btc_hashrate')) || 10;
+    let balance = parseFloat(localStorage.getItem('btc_balance')) || 0.00000000;
+    let totalHashrate = parseInt(localStorage.getItem('btc_hashrate')) || 10; // 10 GH/s base = ~$0.30/mese
+    
+    let selectedRig = { name: '', ghs: 0, priceUsdt: 0, monthlyYieldUsdt: 0 };
 
     updateUI();
 
     function updateUI() {
       document.getElementById('user-balance').innerText = balance.toFixed(8);
-      const fiatVal = (balance * 77000).toFixed(2);
+      
+      // Calcolo controvalore in USD basato su un prezzo fittizio di BTC (es. $90,000)
+      const btcPriceUsd = 90000;
+      const fiatVal = (balance * btcPriceUsd).toFixed(2);
       document.getElementById('fiat-val').innerText = `Valore stimato: ~$${fiatVal}`;
       document.getElementById('total-hashrate').innerText = `${totalHashrate} GH/s`;
       
-      const speedPerMin = (totalHashrate * 0.06).toFixed(2);
-      document.getElementById('mining-speed').innerText = `+${speedPerMin} ₿`;
+      // Calcolo resa mensile proporzionale ai GH/s (10 GH/s = ~$0.30/mese, 100 GH/s = ~$75/mese)
+      const monthlyUsd = (totalHashrate * 0.75).toFixed(2);
+      document.getElementById('monthly-yield').innerText = `~$${monthlyUsd} / mese`;
     }
 
-    // Motore di mining automatico
+    // Motore di mining automatico in tempo reale (aggiornato al secondo)
     setInterval(() => {
-      const increment = (totalHashrate * 0.06) / 60 / 60;
-      balance += increment;
+      // Resa mensile in USD divisa per secondi in un mese (~2,592,000 secondi), convertita in BTC
+      const monthlyUsd = totalHashrate * 0.75;
+      const btcPriceUsd = 90000;
+      const monthlyBtc = monthlyUsd / btcPriceUsd;
+      const incrementPerSecond = monthlyBtc / 2592000;
+
+      balance += incrementPerSecond;
       updateUI();
       localStorage.setItem('btc_balance', balance);
     }, 1000);
+
+    function openCheckout(name, ghs, priceUsdt) {
+      startMusicOnFirstInteraction();
+      const monthlyYieldUsdt = (priceUsdt * 0.75); // ~75% di ritorno mensile sull'investimento
+      selectedRig = { name, ghs, priceUsdt, monthlyYieldUsdt };
+      
+      document.getElementById('checkout-title').innerText = name;
+      document.getElementById('checkout-ghs').innerText = `+${ghs} GH/s`;
+      document.getElementById('checkout-price').innerText = `${priceUsdt.toFixed(2)} USDT`;
+      document.getElementById('checkout-yield').innerText = `Ritorno stimato: ~$${monthlyYieldUsdt.toFixed(2)} / mese`;
+      
+      switchTab('checkout', document.querySelectorAll('.nav-item')[1]);
+    }
+
+    function confirmUSDTBuy() {
+      startMusicOnFirstInteraction();
+      const confirmPay = confirm(`Procedere con il pagamento di ${selectedRig.priceUsdt.toFixed(2)} USDT per attivare +${selectedRig.ghs} GH/s?`);
+      if (confirmPay) {
+        totalHashrate += selectedRig.ghs;
+        localStorage.setItem('btc_hashrate', totalHashrate);
+        updateUI();
+        alert(`Pagamento completato! Aggiunti +${selectedRig.ghs} GH/s alla tua farm.`);
+        switchTab('mine', document.querySelectorAll('.nav-item')[0]);
+      }
+    }
 
     function setMaxBalance() {
       document.getElementById('withdraw-amount').value = balance.toFixed(8);
@@ -695,17 +725,6 @@
         localStorage.setItem('btc_saved_wallet', addr);
         document.getElementById('withdraw-address').value = addr;
         alert("Indirizzo wallet salvato con successo!");
-      }
-    }
-
-    function buyHashrate(ghs, tonCost, rigName) {
-      startMusicOnFirstInteraction();
-      const confirmBuy = confirm(`Vuoi investire ${tonCost} TON per acquistare ${rigName} (${ghs} GH/s)?`);
-      if (confirmBuy) {
-        totalHashrate += ghs;
-        localStorage.setItem('btc_hashrate', totalHashrate);
-        updateUI();
-        alert(`Investimento completato! Aggiunti +${ghs} GH/s.`);
       }
     }
 
@@ -779,7 +798,10 @@
       document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
       document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
       document.getElementById(`screen-${tabName}`).classList.add('active');
-      element.classList.add('active');
+      if (element && element.classList) {
+        document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+        element.classList.add('active');
+      }
     }
 
     document.addEventListener('click', startMusicOnFirstInteraction, { once: true });
